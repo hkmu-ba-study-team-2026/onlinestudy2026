@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>線上購物研究</title>
+    <title>Online Grocery Shopping Study</title>
     <style>
         :root {
             --bg-color: #f4f6f8;
@@ -23,7 +23,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
@@ -36,7 +36,7 @@
 
         .container {
             background-color: var(--card-bg);
-            max-width: 680px;
+            max-width: 800px;
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -73,17 +73,50 @@
         p.intro {
             font-size: 0.95rem;
             color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .scale-info {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .scale-info h3 {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .scale-info ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 6px;
+            list-style: none;
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin: 25px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
         }
 
         .form-group {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         label.question-title {
             display: block;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--text-primary);
         }
 
@@ -92,59 +125,51 @@
             margin-left: 4px;
         }
 
-        .radio-group, .radio-grid {
-            display: flex;
-            gap: 12px;
-        }
-
-        .radio-grid {
+        /* 7-Point Scale Grid Layout */
+        .scale-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
         }
 
-        .radio-card {
+        .scale-card {
             position: relative;
-            flex: 1;
         }
 
-        .radio-card input[type="radio"] {
+        .scale-card input[type="radio"] {
             position: absolute;
             opacity: 0;
             width: 0;
             height: 0;
         }
 
-        .radio-card label {
-            display: block;
-            text-align: center;
-            padding: 12px 16px;
+        .scale-card label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 4px;
             background-color: #fafafa;
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             color: var(--text-primary);
             transition: all 0.2s ease;
         }
 
-        .radio-card label:hover {
+        .scale-card label:hover {
             border-color: #cbd5e1;
             background-color: #f8fafc;
         }
 
-        .radio-card input[type="radio"]:checked + label {
+        .scale-card input[type="radio"]:checked + label {
             border-color: var(--accent-color);
             background-color: #f1f5f9;
             color: var(--accent-color);
-            font-weight: 600;
+            font-weight: 700;
             box-shadow: 0 0 0 1px var(--accent-color);
-        }
-
-        .radio-card input[type="radio"]:focus-visible + label {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
         }
 
         .input-text {
@@ -177,7 +202,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            margin-top: 10px;
+            margin-top: 30px;
         }
 
         .submit-btn:hover {
@@ -189,24 +214,16 @@
             cursor: not-allowed;
         }
 
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--bg-color);
-            padding-top: 15px;
-        }
-
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .container {
-                padding: 24px;
+                padding: 20px;
             }
-            .radio-group {
-                flex-direction: column;
+            .scale-grid {
+                gap: 4px;
             }
-            .radio-grid {
-                grid-template-columns: 1fr;
+            .scale-card label {
+                padding: 8px 2px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -215,64 +232,214 @@
 
     <div class="container">
         <header>
-            <h1>消費者於線上超市選購食品的考慮因素調查</h1>
-            <p class="intro">您好！這是一份學術性調查問卷，旨在了解消費者在線上超市選購食品時的決策與偏好。本問卷採取匿名方式，所有數據僅供學術統計與分析使用，請安心填寫。</p>
+            <span class="academic-badge">Academic Survey</span>
+            <h1>Consumer Food Choice Factors in Online Grocery Shopping</h1>
+            <p class="intro">Welcome! This academic study investigates consumer decision-making and preferences when purchasing food from online supermarkets. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
         </header>
+
+        <div class="scale-info">
+            <h3>Response Scale Reference:</h3>
+            <ul>
+                <li><strong>1</strong> = Not at all important</li>
+                <li><strong>2</strong> = Not important</li>
+                <li><strong>3</strong> = Slightly unimportant</li>
+                <li><strong>4</strong> = Neither important nor unimportant</li>
+                <li><strong>5</strong> = Slightly important</li>
+                <li><strong>6</strong> = Important</li>
+                <li><strong>7</strong> = Extremely important</li>
+            </ul>
+        </div>
 
         <form id="surveyForm" onsubmit="handleSubmit(event)">
 
+            <!-- Participant ID -->
             <div class="form-group">
-                <label class="question-title" for="participant_id">1. 請輸入您的受試者編號 (Participant ID) <span class="required">*</span></label>
-                <!-- 修改 type="number" 確保輸入必須為純數字 -->
-                <input type="number" id="participant_id" name="participant_id" class="input-text" placeholder="請輸入純數字 (例如：101)" required min="1">
+                <label class="question-title" for="participant_id">Please enter your Participant ID <span class="required">*</span></label>
+                <input type="number" id="participant_id" name="participant_id" class="input-text" placeholder="e.g., 101" required min="1">
             </div>
 
-            <!-- 問題 1：價格重視程度 -->
+            <!-- 1. Taste and sensory enjoyment -->
+            <div class="section-title">Taste and Sensory Enjoyment</div>
             <div class="form-group">
-                <label class="question-title">1. 在選購食品時，您對「價格」的重視程度為何？ <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-card">
-                        <input type="radio" id="price_high" name="price_importance" value="high" required>
-                        <label for="price_high">高</label>
-                    </div>
-                    <div class="radio-card">
-                        <input type="radio" id="price_mid" name="price_importance" value="medium">
-                        <label for="price_mid">中</label>
-                    </div>
-                    <div class="radio-card">
-                        <input type="radio" id="price_low" name="price_importance" value="low">
-                        <label for="price_low">低</label>
-                    </div>
-                </div>
+                <label class="question-title">1. The product tastes good. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_taste_good"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">2. The product has an appealing texture. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_appealing_texture"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">3. The product has an appealing aroma. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_appealing_aroma"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">4. The product provides an enjoyable overall eating experience. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_overall_enjoyable"></div>
             </div>
 
-            <!-- 問題 2：環保重視程度 -->
+            <!-- 2. Freshness and product quality -->
+            <div class="section-title">Freshness and Product Quality</div>
             <div class="form-group">
-                <label class="question-title">2. 在選購食品時，您對「環保/健康」的重視程度為何？ <span class="required">*</span></label>
-                <div class="radio-group">
-                    <div class="radio-card">
-                        <input type="radio" id="eco_high" name="eco_importance" value="high" required>
-                        <label for="eco_high">高</label>
-                    </div>
-                    <div class="radio-card">
-                        <input type="radio" id="eco_mid" name="eco_importance" value="medium">
-                        <label for="eco_mid">中</label>
-                    </div>
-                    <div class="radio-card">
-                        <input type="radio" id="eco_low" name="eco_importance" value="low">
-                        <label for="eco_low">低</label>
-                    </div>
-                </div>
+                <label class="question-title">5. The product is fresh. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_fresh"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">6. The product is of high quality. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_high_quality"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">7. The product’s quality is consistent across purchases. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_consistent_quality"></div>
             </div>
 
-            <!-- 問題 3：預算金額 -->
+            <!-- 3. Health, nutrition, and dietary suitability -->
+            <div class="section-title">Health, Nutrition, and Dietary Suitability</div>
             <div class="form-group">
-                <label class="question-title" for="budget">3. 為預備一餐晚飯的食材，您通常願意在線上超市購物的預算金額為多少？ <span class="required">*</span></label>
-                <input type="number" id="budget" name="budget" class="input-text" placeholder="請輸入金額 (港幣)" min="1" required>
+                <label class="question-title">8. The product is healthy. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_healthy"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">9. The product has good nutritional value. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_nutritional_value"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">10. The product is suitable for my dietary needs. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_dietary_needs"></div>
+            </div>
+
+            <!-- 4. Safety and tolerability -->
+            <div class="section-title">Safety and Tolerability</div>
+            <div class="form-group">
+                <label class="question-title">11. The product is safe to consume. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_safe_consume"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">12. The product does not cause me physical discomfort or adverse reactions. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_no_discomfort"></div>
+            </div>
+
+            <!-- 5. Price and value -->
+            <div class="section-title">Price and Value</div>
+            <div class="form-group">
+                <label class="question-title">13. The product’s price is within my budget. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_within_budget"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">14. The benefits I receive from the product justify its price. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_justify_price"></div>
+            </div>
+
+            <!-- 6. Quantity and portion suitability -->
+            <div class="section-title">Quantity and Portion Suitability</div>
+            <div class="form-group">
+                <label class="question-title">15. The amount of product in the package meets my needs. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_amount_meets_needs"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">16. The serving size is appropriate for me. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_serving_size"></div>
+            </div>
+
+            <!-- 7. Convenience and preparation effort -->
+            <div class="section-title">Convenience and Preparation Effort</div>
+            <div class="form-group">
+                <label class="question-title">17. The product is convenient to use or consume. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_convenient_use"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">18. The product requires little preparation time. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_little_prep_time"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">19. The product requires little preparation effort. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_little_prep_effort"></div>
+            </div>
+
+            <!-- 8. Versatility and adaptability -->
+            <div class="section-title">Versatility and Adaptability</div>
+            <div class="form-group">
+                <label class="question-title">20. The product can be used in different meals or recipes. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_different_meals"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">21. The product is suitable for different consumption situations. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_different_situations"></div>
+            </div>
+
+            <!-- 9. Packaging quality and usability -->
+            <div class="section-title">Packaging Quality and Usability</div>
+            <div class="form-group">
+                <label class="question-title">22. The packaging protects the product effectively. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_protects_product"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">23. The packaging is easy to open. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_easy_open"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">24. The packaging is easy to store. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_easy_store"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">25. The packaging is easy to reseal when necessary. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_easy_reseal"></div>
+            </div>
+
+            <!-- 10. Information accuracy and trust -->
+            <div class="section-title">Information Accuracy and Trust</div>
+            <div class="form-group">
+                <label class="question-title">26. The information provided about the product is accurate. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_info_accurate"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">27. The product’s claims are trustworthy. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_claims_trustworthy"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">28. The product label provides enough information for me to make a purchase decision. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_label_enough_info"></div>
+            </div>
+
+            <!-- 11. Availability, selection, and authenticity -->
+            <div class="section-title">Availability, Selection, and Authenticity</div>
+            <div class="form-group">
+                <label class="question-title">29. The product is easy to find where I normally shop. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_easy_to_find"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">30. The product is available when I want to purchase it. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_available_when_needed"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">31. The product is available in a sufficient variety of options. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_variety_options"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">32. The product is authentic to its stated origin or tradition. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_authentic_origin"></div>
+            </div>
+
+            <!-- 12. Fulfilment and service reliability -->
+            <div class="section-title">Fulfilment and Service Reliability</div>
+            <div class="form-group">
+                <label class="question-title">33. I receive the correct product when placing an order. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_correct_product"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">34. My order arrives within the promised time. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_promised_time"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">35. The product arrives in good condition. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_good_condition"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">36. Customer service resolves problems reliably. <span class="required">*</span></label>
+                <div class="scale-grid" id="q_cs_resolves_problems"></div>
             </div>
 
             <button type="submit" id="submitBtn" class="submit-btn">
-                提交並前往線上購物商城
+                Submit and Proceed to Store
             </button>
         </form>
     </div>
@@ -280,18 +447,43 @@
     <script>
         const API_URL = "/api/recommend";
 
+        // 自動渲染所有題目的 1-7 分單選按鈕
+        const questionIds = [
+            "q_taste_good", "q_appealing_texture", "q_appealing_aroma", "q_overall_enjoyable",
+            "q_fresh", "q_high_quality", "q_consistent_quality",
+            "q_healthy", "q_nutritional_value", "q_dietary_needs",
+            "q_safe_consume", "q_no_discomfort",
+            "q_within_budget", "q_justify_price",
+            "q_amount_meets_needs", "q_serving_size",
+            "q_convenient_use", "q_little_prep_time", "q_little_prep_effort",
+            "q_different_meals", "q_different_situations",
+            "q_protects_product", "q_easy_open", "q_easy_store", "q_easy_reseal",
+            "q_info_accurate", "q_claims_trustworthy", "q_label_enough_info",
+            "q_easy_to_find", "q_available_when_needed", "q_variety_options", "q_authentic_origin",
+            "q_correct_product", "q_promised_time", "q_good_condition", "q_cs_resolves_problems"
+        ];
+
+        questionIds.forEach(qId => {
+            const container = document.getElementById(qId);
+            if (!container) return;
+
+            for (let i = 1; i <= 7; i++) {
+                const card = document.createElement("div");
+                card.className = "scale-card";
+                card.innerHTML = `
+                    <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
+                    <label for="${qId}_${i}">${i}</label>
+                `;
+                container.appendChild(card);
+            }
+        });
+
         const productsList = [
-            { id: 1, name: "Red Fuji Apple", price: 5.99, isEco: true },
-            { id: 2, name: "Whole Milk", price: 12.50, isEco: true },
-            { id: 3, name: "Whole Wheat Bread", price: 8.99, isEco: true },
-            { id: 4, name: "Farm Fresh Eggs", price: 15.00, isEco: true },
-            { id: 5, name: "Natural Mineral Water", price: 2.50, isEco: true },
-            { id: 6, name: "Fresh Beef", price: 18.99, isEco: true },
-            { id: 8, name: "Raw Chicken Legs", price: 9.99, isEco: true },
-            { id: 10, name: "Fresh Cucumber", price: 1.99, isEco: true },
-            { id: 13, name: "Long Grain Rice", price: 6.99, isEco: true },
-            { id: 15, name: "Fresh Avocado", price: 3.49, isEco: true },
-            { id: 16, name: "Fresh Salmon Fillet", price: 22.99, isEco: true },
+            { name: "Red Fuji Apple" },
+            { name: "Whole Milk" },
+            { name: "Whole Wheat Bread" },
+            { name: "Chicken Legs"},
+            { name: "Avocado"},
         ];
 
         async function handleSubmit(event) {
@@ -302,26 +494,27 @@
             const participantNum = parseInt(rawParticipantID, 10);
 
             if (isNaN(participantNum)) {
-                alert('請輸入有效的數字受試者編號！');
+                alert('Please enter a valid numeric Participant ID!');
                 return;
             }
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = (participantNum % 2 !== 0)
-                ? 'AI 正在分析偏好並挑選推薦商品...'
-                : '正在載入到線上超市';
+            submitBtn.textContent = 'Loading the online store...';
 
             localStorage.setItem("participantID", participantNum);
 
-            const targetPage = (participantNum % 2 !== 0)
-                ? 'grocery_ai_page.html'
-                : 'grocery_traditional_page.html';
+            const targetPage = 'grocery_ai_page.html';
+
+            const surveyResponses = {};
+            questionIds.forEach(qId => {
+                surveyResponses[qId] = parseInt(formData.get(qId), 10);
+            });
 
             const userPreferences = {
-                price_sensitivity: formData.get('price_importance'),
-                sustainability_importance: formData.get('eco_importance'),
-                budget: parseFloat(formData.get('budget')) || 0
+                surveyResponses: surveyResponses,
+                price_sensitivity: surveyResponses["q_within_budget"] >= 5 ? "high" : "medium",
+                sustainability_importance: surveyResponses["q_healthy"] >= 5 ? "high" : "medium"
             };
 
             const payload = {
@@ -339,23 +532,20 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`API 伺服器回應錯誤: ${response.status}`);
+                    throw new Error(`API response error: ${response.status}`);
                 }
 
                 const recommendations = await response.json();
-                console.log('AI Nudge 結果:', recommendations);
+                console.log('AI Recommendations Result:', recommendations);
 
                 localStorage.setItem('ai_recommendations', JSON.stringify(recommendations));
                 localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
 
-                // 跳轉至對應頁面
                 window.location.href = targetPage;
 
             } catch (error) {
-                console.error('API 請求失敗:', error);
-                alert('AI 推薦服務連線超時，將跳轉至商城頁面。');
-
-                // 發生錯誤時依然依據單偶數跳轉
+                console.error('API Request Failed:', error);
+                alert('AI recommendation connection timed out. Redirecting to the store page.');
                 window.location.href = targetPage;
             }
         }

@@ -12,23 +12,15 @@ async function getAiRecommendationsFromHf(products, preferences) {
     }
 
     const simplifiedProducts = products.map(p => ({
-        id: p.id,
         name: p.name,
-        price: p.price,
-        isEco: p.isEco
     }));
 
     const prompt = `
-You are an AI recommender system. Select top 3 products.
+You are an AI recommender system. Based on user preferences, write a short sentence, within 20 words, to recommend the products specified below:
 User preferences: ${JSON.stringify(preferences)}
 Products: ${JSON.stringify(simplifiedProducts)}
 
-Output MUST be a valid JSON array:
-[
-  {"rank": 1, "item_id": 1, "reason": "Reason 1"},
-  {"rank": 2, "item_id": 2, "reason": "Reason 2"},
-  {"rank": 3, "item_id": 3, "reason": "Reason 3"}
-]
+Output MUST be a valid String.
 `;
 
     const controller = new AbortController();
