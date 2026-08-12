@@ -278,7 +278,7 @@
     </div>
 
     <script>
-        const NETLIFY_API_URL = "/.netlify/functions/recommend";
+        const API_URL = "/api/recommend";
 
         const productsList = [
             { id: 1, name: "Red Fuji Apple", price: 5.99, isEco: true },
@@ -330,7 +330,7 @@
             };
 
             try {
-                const response = await fetch(NETLIFY_API_URL, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
