@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Admin Dashboard - Firebase Powered</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script>
+      // Firebase 設定
+      const firebaseConfig = {
+        apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+        authDomain: "online-study-2026.firebaseapp.com",
+        databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "online-study-2026",
+        storageBucket: "online-study-2026.firebasestorage.app",
+        messagingSenderId: "359632481591",
+        appId: "1:359632481591:web:31d160c7f772841b16feb2"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -60,15 +82,16 @@
             width: 100%;
             border-collapse: collapse;
             background: white;
-            margin-top: 20px;
+            margin-top: 15px;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         th, td {
-            padding: 14px;
+            padding: 12px 14px;
             text-align: left;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
         }
         th {
             background: #232f3e;
@@ -83,6 +106,15 @@
             border-radius: 6px;
             margin-bottom: 20px;
         }
+        .refresh-btn {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
         .clear-btn {
             padding: 10px 20px;
             background: #f44336;
@@ -94,7 +126,7 @@
         }
         .empty {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: #666;
         }
         .stat-wrap {
@@ -108,65 +140,105 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 220px;
+            flex: 1;
+            min-width: 200px;
         }
         .stat-card p {
-            font-size: 16px;
+            font-size: 15px;
             margin: 8px 0;
         }
         h2 {
             margin: 30px 0 10px;
             color: #222;
         }
+        .badge {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .export-btn {
+            padding: 10px 20px;
+            background: #2e7d32; /* 綠色按鈕 */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .export-btn:hover {
+            background: #1b5e20;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- 登入面板 -->
     <div id="loginPanel" class="login-box">
         <h2>Admin Login</h2>
         <input type="password" id="pwd" placeholder="Enter Password">
         <button onclick="login()">Login</button>
     </div>
 
+    <!-- 管理後台主面板 -->
     <div id="adminPanel" class="admin-content">
         <a href="index.html" class="back-btn">← Back to Shop</a>
-        <button class="clear-btn" onclick="clearAllData()">Clear All Records</button>
+        <button class="refresh-btn" onclick="fetchFirebaseData()">🔄 Refresh Data</button>
+        <button class="export-btn" onclick="exportFirebaseToExcel()">📊 Export All to Excel</button>
+        <button class="clear-btn" onclick="clearFirebaseData()">⚠️ Clear All Firebase Records</button>
 
-        <h2>Overall Statistics</h2>
+        <h2>Overall Statistics (from Firebase)</h2>
         <div class="stat-wrap">
             <div class="stat-card">
-                <p><strong>Total Website Clicks:</strong> <span id="totalClick">0</span></p>
-            </div>
-            <div class="stat-card">
-                <p><strong>Total Amount Spent:</strong> $<span id="totalSpent">0.00</span></p>
-            </div>
-            <div class="stat-card">
-                <p><strong>Total Eco-products:</strong> <span id="totalEco">0</span></p>
+                <p><strong>Total Survey Responses:</strong> <span id="totalSurveys">0</span></p>
             </div>
             <div class="stat-card">
                 <p><strong>Total Orders:</strong> <span id="totalOrder">0</span></p>
             </div>
+            <div class="stat-card">
+                <p><strong>Total Revenue:</strong> $<span id="totalSpent">0.00</span></p>
+            </div>
+            <div class="stat-card">
+                <p><strong>Total Featured Items Sold:</strong> <span id="totalFeatured">0</span></p>
+            </div>
         </div>
 
-        <!-- 订单表格：新增 Participant ID 列 -->
-        <h2>All Purchase Orders</h2>
+        <!-- 1. 結帳訂單表格 -->
+        <h2>Purchase Orders (`checkout_records`)</h2>
         <table>
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Participant ID</th>
-                    <th>Order Time</th>
-                    <th>Order Amount</th>
-                    <th>Eco Products Qty</th>
+                    <th>Checkout Time</th>
+                    <th>Duration</th>
+                    <th>Order Total</th>
+                    <th>Featured Items Qty</th> <!-- 欄位更名 -->
                     <th>Purchased Items</th>
+                    <th>Selection Sequence</th>
                 </tr>
             </thead>
             <tbody id="orderTable"></tbody>
         </table>
 
-        <!-- 弃购表格：新增 Participant ID 列 -->
-        <h2>Abandoned Cart Records (Added but not checkout)</h2>
+        <!-- 2. 問卷回覆表格 -->
+        <h2>Survey Responses (`survey_responses`)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Participant ID</th>
+                    <th>Submitted Time</th>
+                    <th>Responses Summary</th>
+                </tr>
+            </thead>
+            <tbody id="surveyTable"></tbody>
+        </table>
+
+        <!-- 3. 棄購紀錄表格 -->
+        <h2>Abandoned Cart Records (`abandon_carts`)</h2>
         <table>
             <thead>
                 <tr>
@@ -180,8 +252,8 @@
             <tbody id="abandonCartTable"></tbody>
         </table>
 
-        <!-- 浏览日志表格：新增 Participant ID 列 -->
-        <h2>Visitor Browse Records</h2>
+        <!-- 4. 瀏覽日誌表格 -->
+        <h2>Visitor Browse Records (`visit_logs`)</h2>
         <table>
             <thead>
                 <tr>
@@ -214,9 +286,7 @@
         try {
             const response = await fetch("/api/admin-login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ password: inputPassword })
             });
 
@@ -225,10 +295,7 @@
             if (response.ok && result.success) {
                 document.getElementById("loginPanel").style.display = "none";
                 document.getElementById("adminPanel").style.display = "block";
-                loadStatistics();
-                loadOrderRecords();
-                loadAbandonCartLogs();
-                loadLogs();
+                fetchFirebaseData();
             } else {
                 alert(result.message || "Wrong Password!");
                 pwdInput.value = "";
@@ -243,117 +310,320 @@
     }
 
     document.getElementById("pwd").addEventListener("keyup", function(event) {
-        if (event.key === "Enter") {
-            login();
-        }
+        if (event.key === "Enter") login();
     });
 
-    function loadStatistics() {
-        const clickCount = localStorage.getItem("siteClickCount") || 0;
-        const totalMoney = localStorage.getItem("totalSpentMoney") || "0.00";
-        const orderList = JSON.parse(localStorage.getItem("allOrders")) || [];
+    // 核心數據讀取：從 Firebase 載入所有資料
+    async function fetchFirebaseData() {
+        try {
+            // 1. 讀取結帳訂單
+            const ordersSnap = await db.ref('checkout_records').once('value');
+            const ordersData = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
+            renderOrders(ordersData);
 
-        let totalEco = 0;
-        orderList.forEach(item => {
-            totalEco += item.ecoProductCount;
-        });
+            // 2. 讀取問卷數據
+            const surveySnap = await db.ref('survey_responses').once('value');
+            const surveyData = surveySnap.val() ? Object.values(surveySnap.val()) : [];
+            renderSurveys(surveyData);
 
-        document.getElementById("totalClick").innerText = clickCount;
-        document.getElementById("totalSpent").innerText = totalMoney;
-        document.getElementById("totalEco").innerText = totalEco;
-        document.getElementById("totalOrder").innerText = orderList.length;
+            // 3. 讀取棄購紀錄
+            const abandonSnap = await db.ref('abandon_carts').once('value');
+            const abandonData = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
+            renderAbandonCarts(abandonData);
+
+            // 4. 讀取瀏覽紀錄
+            const visitSnap = await db.ref('visit_logs').once('value');
+            const visitData = visitSnap.val() ? Object.values(visitSnap.val()) : [];
+            renderVisitLogs(visitData);
+
+            // 計算全域統計資訊
+            calculateStats(ordersData, surveyData);
+
+        } catch (error) {
+            console.error("Error fetching data from Firebase:", error);
+            alert("Failed to load data from Firebase.");
+        }
     }
 
-    // 渲染订单（读取参与者ID）
-    function loadOrderRecords() {
-        let table = document.getElementById("orderTable");
-        let orders = JSON.parse(localStorage.getItem("allOrders")) || [];
+    // 計算統計數據
+    function calculateStats(orders, surveys) {
+        let totalRevenue = 0;
+        let totalFeatured = 0;
 
+        orders.forEach(o => {
+            totalRevenue += (o.orderTotal || 0);
+            totalFeatured += (o.featuredProductCount || 0); // 讀取 featuredProductCount
+        });
+
+        document.getElementById("totalSurveys").innerText = surveys.length;
+        document.getElementById("totalOrder").innerText = orders.length;
+        document.getElementById("totalSpent").innerText = totalRevenue.toFixed(2);
+        document.getElementById("totalFeatured").innerText = totalFeatured;
+    }
+
+    // 1. 渲染結帳訂單
+    function renderOrders(orders) {
+        const table = document.getElementById("orderTable");
         if (orders.length === 0) {
-            table.innerHTML = `<tr><td colspan="6" class="empty">No order records yet</td></tr>`;
+            table.innerHTML = `<tr><td colspan="8" class="empty">No checkout records in Firebase</td></tr>`;
             return;
         }
 
         table.innerHTML = "";
         orders.forEach((order, idx) => {
-            const pid = order.participantID ?? "--";
-            let itemList = order.items.map(i => `${i.name} ×${i.quantity}`).join("; ");
+            const pid = order.participantID || "--";
+            const itemsStr = (order.finalCartItems || []).map(i => `${i.name} ×${i.quantity}`).join("; ");
+            const seqStr = (order.selectionSequence || []).map(s => `${s.step}.${s.productName}`).join(" ➔ ");
+
             let tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${idx + 1}</td>
-                <td>${pid}</td>
-                <td>${order.time ?? "--"}</td>
-                <td>$${(order.orderTotal ?? 0).toFixed(2)}</td>
-                <td>${order.ecoProductCount ?? 0}</td>
-                <td>${itemList}</td>
+                <td><strong>${pid}</strong></td>
+                <td>${order.checkoutTime || "--"}</td>
+                <td>${order.formattedDuration || "--"}</td>
+                <td>$${(order.orderTotal || 0).toFixed(2)}</td>
+                <td>${order.featuredProductCount || 0}</td> <!-- 顯示 Featured 數量 -->
+                <td>${itemsStr || "--"}</td>
+                <td><small>${seqStr || "None"}</small></td>
             `;
             table.appendChild(tr);
         });
     }
 
-    // 渲染弃购记录（读取参与者ID）
-    function loadAbandonCartLogs(){
-        let table = document.getElementById("abandonCartTable");
-        let abandonLogs = JSON.parse(localStorage.getItem("abandonCartLogs")) || [];
-        if(abandonLogs.length === 0){
-            table.innerHTML = `<tr><td colspan="5" class="empty">No abandoned cart records yet</td>`;
-            return;
-        }
-        table.innerHTML = "";
-        abandonLogs.forEach((log, idx)=>{
-            const pid = log.participantID ?? "--";
-            const itemStr = log.cartItems.map(i=>`${i.name} ×${i.quantity}`).join("; ");
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${idx+1}</td>
-                <td>${pid}</td>
-                <td>${log.abandonTime ?? "--"}</td>
-                <td>$${(log.cartTotal ?? 0).toFixed(2)}</td>
-                <td>${itemStr}</td>
-            `;
-            table.appendChild(tr);
-        })
-    }
-
-    // 渲染浏览日志（读取参与者ID）
-    function loadLogs() {
-        let table = document.getElementById("logTable");
-        let logs = JSON.parse(localStorage.getItem("freshmartVisitLogs")) || [];
-
-        if (logs.length === 0) {
-            table.innerHTML = `<tr><td colspan="5" class="empty">No records yet</td></tr>`;
+    // 2. 渲染問卷
+    function renderSurveys(surveys) {
+        const table = document.getElementById("surveyTable");
+        if (surveys.length === 0) {
+            table.innerHTML = `<tr><td colspan="4" class="empty">No survey responses in Firebase</td></tr>`;
             return;
         }
 
         table.innerHTML = "";
-        logs.forEach((log, i) => {
-            const pid = log.participantID ?? "--";
-            const enter = log.enter ?? "--";
-            const leave = log.leave ?? "--";
-            const showTime = log.showTime ?? "--";
+        surveys.forEach((s, idx) => {
+            const pid = s.participantID || "--";
+            const responseCount = s.responses ? Object.keys(s.responses).length : 0;
 
             let tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${i+1}</td>
-                <td>${pid}</td>
-                <td>${enter}</td>
-                <td>${leave}</td>
-                <td>${showTime}</td>
+                <td>${idx + 1}</td>
+                <td><strong>${pid}</strong></td>
+                <td>${s.submittedAt || "--"}</td>
+                <td><span class="badge">${responseCount} Questions Answered</span></td>
             `;
             table.appendChild(tr);
         });
     }
 
-    // 清空全部数据
-    function clearAllData() {
-        if (confirm("Confirm clear ALL records? This operation cannot be restored!")) {
-            localStorage.removeItem("freshmartVisitLogs");
-            localStorage.removeItem("siteClickCount");
-            localStorage.removeItem("totalSpentMoney");
-            localStorage.removeItem("allOrders");
-            localStorage.removeItem("abandonCartLogs");
-            localStorage.removeItem("participantID"); // 同步删除参与者ID
-            location.reload();
+    // 3. 渲染棄購紀錄
+    function renderAbandonCarts(abandonLogs) {
+        const table = document.getElementById("abandonCartTable");
+        if (abandonLogs.length === 0) {
+            table.innerHTML = `<tr><td colspan="5" class="empty">No abandoned cart records in Firebase</td></tr>`;
+            return;
+        }
+
+        table.innerHTML = "";
+        abandonLogs.forEach((log, idx) => {
+            const pid = log.participantID || "--";
+            const itemsStr = (log.cartItems || []).map(i => `${i.name} ×${i.quantity}`).join("; ");
+
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><strong>${pid}</strong></td>
+                <td>${log.abandonTime || "--"}</td>
+                <td>$${(log.cartTotal || 0).toFixed(2)}</td>
+                <td>${itemsStr || "--"}</td>
+            `;
+            table.appendChild(tr);
+        });
+    }
+
+    // 4. 渲染瀏覽日誌
+    function renderVisitLogs(logs) {
+        const table = document.getElementById("logTable");
+        if (logs.length === 0) {
+            table.innerHTML = `<tr><td colspan="5" class="empty">No visit logs in Firebase</td></tr>`;
+            return;
+        }
+
+        table.innerHTML = "";
+        logs.forEach((log, idx) => {
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><strong>${log.participantID || "--"}</strong></td>
+                <td>${log.enter || "--"}</td>
+                <td>${log.leave || "--"}</td>
+                <td>${log.showTime || "--"}</td>
+            `;
+            table.appendChild(tr);
+        });
+    }
+
+    // 清空 Firebase 中的所有測試數據
+    async function clearFirebaseData() {
+        if (confirm("⚠️ Are you sure you want to CLEAR ALL RECORDS in Firebase Database? This cannot be undone!")) {
+            try {
+                await Promise.all([
+                    db.ref('checkout_records').remove(),
+                    db.ref('survey_responses').remove(),
+                    db.ref('abandon_carts').remove(),
+                    db.ref('visit_logs').remove()
+                ]);
+                alert("All Firebase records cleared successfully.");
+                fetchFirebaseData();
+            } catch (err) {
+                console.error("Error clearing Firebase data:", err);
+                alert("Failed to clear Firebase data.");
+            }
+        }
+    }
+
+    async function exportFirebaseToExcel() {
+        const exportBtn = document.querySelector(".export-btn");
+        exportBtn.disabled = true;
+        exportBtn.innerText = "⏳ Exporting...";
+
+        try {
+            // 1. 同時抓取所有 Firebase 節點數據
+            const [ordersSnap, surveySnap, abandonSnap, visitSnap] = await Promise.all([
+                db.ref('checkout_records').once('value'),
+                db.ref('survey_responses').once('value'),
+                db.ref('abandon_carts').once('value'),
+                db.ref('visit_logs').once('value')
+            ]);
+
+            const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
+            const surveys = surveySnap.val() ? Object.values(surveySnap.val()) : [];
+            const abandons = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
+            const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
+
+            // 2. 收集所有不重複的 Participant ID
+            const allPIDs = new Set([
+                ...orders.map(o => o.participantID),
+                ...surveys.map(s => s.participantID),
+                ...abandons.map(a => a.participantID),
+                ...visits.map(v => v.participantID)
+            ].filter(pid => pid && pid !== ""));
+
+            // 3. 建立 Participant ID 核心對照 Map
+            const masterDataMap = {};
+
+            allPIDs.forEach(pid => {
+                // 初始化每個受試者的預設資料結構
+                masterDataMap[pid] = {
+                    "Participant ID": pid,
+                    "Enter Time": "",
+                    "Leave Time": "",
+                    "Visit Duration (s)": 0,
+                    "Has Checkout": "No",
+                    "Checkout Time": "",
+                    "Checkout Duration (s)": 0,
+                    "Order Total ($)": 0,
+                    "Featured Items Qty": 0,
+                    "Has Abandoned Cart": "No",
+                    "Abandon Cart Total ($)": 0
+                };
+
+                // 動態初始化 Item_1 到 Item_19 欄位（預設數量皆為 0）
+                for (let i = 1; i <= 19; i++) {
+                    masterDataMap[pid][`Item_${i}_Qty`] = 0;
+                }
+            });
+
+            // --- 填入 Visit Logs 資料 ---
+            visits.forEach(v => {
+                const pid = v.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Enter Time"] = v.enter || "";
+                    masterDataMap[pid]["Leave Time"] = v.leave || "";
+                    masterDataMap[pid]["Visit Duration (s)"] = v.totalSecond || 0;
+                }
+            });
+
+            // --- 填入 Checkout Orders 資料與商品矩陣 (Item 1-19) ---
+            orders.forEach(o => {
+                const pid = o.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Has Checkout"] = "Yes";
+                    masterDataMap[pid]["Checkout Time"] = o.checkoutTime || "";
+                    masterDataMap[pid]["Checkout Duration (s)"] = o.durationSeconds || 0;
+                    masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
+                    masterDataMap[pid]["Featured Items Qty"] = o.featuredProductCount || 0;
+
+                    // 填入各 Item ID 的購買數量
+                    if (Array.isArray(o.finalCartItems)) {
+                        o.finalCartItems.forEach(item => {
+                            if (item.id && item.id >= 1 && item.id <= 19) {
+                                masterDataMap[pid][`Item_${item.id}_Qty`] += (item.quantity || 0);
+                            }
+                        });
+                    }
+                }
+            });
+
+            // --- 填入 Abandoned Carts 資料 ---
+            abandons.forEach(a => {
+                const pid = a.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Has Abandoned Cart"] = "Yes";
+                    masterDataMap[pid]["Abandon Cart Total ($)"] = a.cartTotal || 0;
+                }
+            });
+
+            // --- 填入 Survey Responses 資料（展開問卷題目）---
+            surveys.forEach(s => {
+                const pid = s.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Survey Submitted Time"] = s.submittedAt || "";
+                    if (s.responses) {
+                        Object.keys(s.responses).forEach(qKey => {
+                            masterDataMap[pid][`Survey_${qKey}`] = s.responses[qKey];
+                        });
+                    }
+                }
+            });
+
+            // 4. 建立 Excel 工作簿 (Workbook)
+            const wb = XLSX.utils.book_new();
+
+            // --- Sheet 1: Master Merged Data (依 Participant ID 合併之總表) ---
+            const masterRows = Object.values(masterDataMap);
+            const wsMaster = XLSX.utils.json_to_sheet(masterRows);
+            XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
+
+            // --- Sheet 2: Selection Sequence Detailed Log (選購歷史順序細節) ---
+            const sequenceRows = [];
+            orders.forEach(o => {
+                const pid = o.participantID;
+                if (Array.isArray(o.selectionSequence)) {
+                    o.selectionSequence.forEach(seq => {
+                        sequenceRows.push({
+                            "Participant ID": pid,
+                            "Step": seq.step,
+                            "Product ID": seq.productId || "",
+                            "Product Name": seq.productName || "",
+                            "Quantity": seq.quantity || 1,
+                            "Timestamp": seq.timestamp || ""
+                        });
+                    });
+                }
+            });
+            const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
+            XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
+
+            // 5. 匯出下載 Excel 檔案
+            const dateStr = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `FreshMart_Research_MasterData_${dateStr}.xlsx`);
+
+            alert("Excel export completed successfully!");
+        } catch (err) {
+            console.error("Failed to export Excel:", err);
+            alert("Export failed, please check browser console.");
+        } finally {
+            exportBtn.disabled = false;
+            exportBtn.innerText = "📊 Export All to Excel";
         }
     }
 </script>

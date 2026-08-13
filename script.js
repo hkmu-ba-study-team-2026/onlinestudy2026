@@ -1,57 +1,97 @@
-const products = [
-    { id: 1, name: "Red Fuji Apple", price: 5.99, isEco: true },
-    { id: 2, name: "Whole Milk", price: 12.50, isEco: true },
-    { id: 3, name: "Whole Wheat Bread", price: 8.99, isEco: true },
-    { id: 4, name: "Farm Fresh Eggs", price: 15.00, isEco: true },
-    { id: 5, name: "Natural Mineral Water", price: 2.50, isEco: true },
-    { id: 6, name: "Fresh Beef", price: 18.99, isEco: true },
-    { id: 7, name: "Moisturizing Body Wash", price: 7.99, isEco: false },
-    { id: 8, name: "Raw Chicken Legs", price: 9.99, isEco: true },
-    { id: 9, name: "Dark Chocolate", price: 4.99, isEco: false },
-    { id: 10, name: "Fresh Cucumber", price: 1.99, isEco: true },
-    { id: 11, name: "Vanilla Ice Cream", price: 3.99, isEco: false },
-    { id: 12, name: "Ballpoint Pen", price: 2.49, isEco: false },
-    { id: 13, name: "Long Grain Rice", price: 6.99, isEco: true },
-    { id: 14, name: "Nourishing Shampoo", price: 8.49, isEco: false },
-    { id: 15, name: "Fresh Avocado", price: 3.49, isEco: true },
-    { id: 16, name: "Fresh Salmon Fillet", price: 22.99, isEco: true },
-    { id: 17, name: "Green Apple Pack", price: 6.49, isEco: true },
-    { id: 18, name: "Organic Banana Bunch", price: 2.99, isEco: true },
-    { id: 19, name: "Roma Tomato Box", price: 4.29, isEco: true },
-    { id: 20, name: "Fresh Lemon Bag", price: 3.50, isEco: true },
-    { id: 21, name: "Frozen Shrimp Pack", price: 14.99, isEco: true },
-    { id: 22, name: "Premium Pork Chops", price: 12.49, isEco: true },
-    { id: 23, name: "Ground Turkey", price: 10.99, isEco: true },
-    { id: 24, name: "Cod Fish Fillets", price: 19.99, isEco: true }
-];
+// ==================== Firebase & 頁面追蹤初始化 ====================
+// 1. 紀錄頁面進入時間
+const pageStartTime = Date.now();
 
+// 2. 用於追蹤「加入購物車次序」的陣列
+let selectionSequence = [];
+
+// 全域變數
 let cart = [];
-const allCards = document.querySelectorAll('.product-card');
 let currentPID = "";
 
-document.addEventListener('DOMContentLoaded', function () {
-    function getPID() {
-        let pid = localStorage.getItem("participantID");
-        // 如果沒有找到 ID（例如用戶直接輸入網址進入），可給予預設值或引導回問卷
-        if (!pid || pid.trim() === "") {
-            pid = "Anonymous";
-            localStorage.setItem("participantID", pid);
-        }
-        return pid.trim();
+// 取得 Participant ID
+function getPID() {
+    let pid = localStorage.getItem("participantID");
+    if (!pid || pid.trim() === "") {
+        pid = "Anonymous";
+        localStorage.setItem("participantID", pid);
     }
+    return pid.trim();
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    // 點擊按鈕後關閉 Modal 並進入頁面
+    const modal = document.getElementById('welcomeModal');
+    const closeBtn = document.getElementById('closeModalBtn');
     currentPID = getPID();
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
 });
 
-let clickCount = parseInt(localStorage.getItem('siteClickCount')) || 0;
-let totalSpent = parseFloat(localStorage.getItem('totalSpentMoney')) || 0;
-let orderList = JSON.parse(localStorage.getItem('allOrders')) || [];
-let abandonCartLogs = JSON.parse(localStorage.getItem('abandonCartLogs')) || [];
+/**
+ * 每次使用者將商品加入購物車時呼叫此函式，統一追蹤選購順序
+ */
+function trackAddToCart(product, quantity = 1) {
+    const sequenceItem = {
+        step: selectionSequence.length + 1,
+        productId: product.id,
+        productName: product.name,
+        quantity: quantity,
+        timestamp: new Date().toISOString()
+    };
 
+    selectionSequence.push(sequenceItem);
+    console.log("當前選購次序紀錄:", selectionSequence);
+}
+
+// ==================== 商品資料庫 ====================
+const products = [
+    // 1. Featured items (精選商品區) - id: 1 ~ 5
+    { id: 1, name: "Red Fuji Apple", price: 5.99, isFeatured: true },
+    { id: 2, name: "Whole Milk", price: 12.50, isFeatured: true },
+    { id: 3, name: "Whole Wheat Bread", price: 8.99, isFeatured: true },
+    { id: 4, name: "Organic Chicken Legs", price: 9.99, isFeatured: true },
+    { id: 5, name: "Fresh Avocado", price: 3.49, isFeatured: true },
+
+    // 2. Fresh Fruits (水果類) - id: 6 ~ 8
+    { id: 6, name: "Green Apple Pack", price: 6.49, isFeatured: false },
+    { id: 7, name: "Organic Banana Bunch", price: 2.99, isFeatured: false },
+    { id: 8, name: "Fresh Lemon Bag", price: 3.50, isFeatured: false },
+
+    // 3. Fresh Vegetables (蔬菜類) - id: 9 ~ 10
+    { id: 9, name: "Roma Tomato Box", price: 4.29, isFeatured: false },
+    { id: 10, name: "Fresh Cucumber", price: 1.99, isFeatured: false },
+
+    // 4. Fresh Meat (肉類) - id: 11 ~ 13
+    { id: 11, name: "Fresh Beef", price: 18.99, isFeatured: false },
+    { id: 12, name: "Premium Pork Chops", price: 12.49, isFeatured: false },
+    { id: 13, name: "Ground Turkey", price: 10.99, isFeatured: false },
+
+    // 5. Seafood Market (海鮮類) - id: 14 ~ 16
+    { id: 14, name: "Salmon Fillet", price: 22.99, isFeatured: false },
+    { id: 15, name: "Frozen Shrimp Pack", price: 14.99, isFeatured: false },
+    { id: 16, name: "Cod Fish Fillets", price: 19.99, isFeatured: false },
+
+    // 6. Pantry & Dairy Staples (其他食品/雜貨類) - id: 17 ~ 19
+    { id: 17, name: "Farm Eggs", price: 15.00, isFeatured: false },
+    { id: 18, name: "Long Grain Rice", price: 6.99, isFeatured: false },
+    { id: 19, name: "Mineral Water", price: 2.50, isFeatured: false }
+];
+
+// 本地數據初始化
+let clickCount = parseInt(localStorage.getItem('siteClickCount')) || 0;
+
+// 全局點擊統計
 document.addEventListener('click', function () {
     clickCount++;
     localStorage.setItem('siteClickCount', clickCount);
 });
 
+// 頁面關閉前寫入離場日誌
 const visitStart = new Date();
 window.addEventListener('beforeunload', function () {
     const end = new Date();
@@ -62,17 +102,19 @@ window.addEventListener('beforeunload', function () {
     const duration = `${min} 分 ${s} 秒`;
 
     const logObj = {
-        participantID: currentPID,
+        participantID: currentPID || getPID(),
         enter: visitStart.toLocaleString(),
         leave: end.toLocaleString(),
         totalSecond: sec,
         showTime: duration
     };
-    let logs = JSON.parse(localStorage.getItem('freshmartVisitLogs')) || [];
-    logs.push(logObj);
-    localStorage.setItem('freshmartVisitLogs', JSON.stringify(logs));
+
+    if (typeof db !== 'undefined') {
+        db.ref('visit_logs').push(logObj);
+    }
 });
 
+// ==================== UI 與 分類篩選 ====================
 document.querySelectorAll('.cate-filter').forEach(item => {
     item.addEventListener('click', function () {
         const type = this.dataset.type;
@@ -82,20 +124,42 @@ document.querySelectorAll('.cate-filter').forEach(item => {
             } else {
                 card.style.display = 'none';
             }
-        })
-    })
-})
+        });
+    });
+});
 
+// ==================== 購物車邏輯 ====================
+
+// 補上缺少的 addToCart 函式 👈 (關鍵修正)
+function addToCart(product) {
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1
+        });
+    }
+    updateCart();
+}
+
+// 按下商品的 Add to Cart 按鈕
 document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-        const pid = parseInt(this.dataset.id);
-        const item = products.find(p => p.id === pid);
-        const exist = cart.find(c => c.id === pid);
-        if (exist) exist.quantity += 1;
-        else cart.push({ id: pid, name: item.name, price: item.price, quantity: 1 });
-        updateCart();
-    })
-})
+    btn.addEventListener('click', function() {
+        const productId = parseInt(this.getAttribute('data-id'));
+        const product = products.find(p => p.id === productId);
+
+        if (product) {
+            addToCart(product);
+            trackAddToCart(product, 1); // 紀錄選購順序
+        } else {
+            console.error(`找不到 ID 為 ${productId} 的商品，請確認 HTML 的 data-id 設定`);
+        }
+    });
+});
 
 function updateCart() {
     const cartCountEl = document.getElementById('cart-count');
@@ -105,7 +169,9 @@ function updateCart() {
 
     let totalNum = 0;
     cart.forEach(i => totalNum += i.quantity);
-    cartCountEl.textContent = totalNum;
+    if (cartCountEl) cartCountEl.textContent = totalNum;
+
+    if (!cartItemsEl) return;
 
     if (cart.length === 0) {
         cartItemsEl.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
@@ -125,21 +191,32 @@ function updateCart() {
                 </div>
             `;
             cartItemsEl.appendChild(div);
-        })
+        });
     }
 
     let sum = 0;
     cart.forEach(i => sum += i.price * i.quantity);
-    subTotalEl.textContent = `$${sum.toFixed(2)}`;
-    totalEl.textContent = `$${sum.toFixed(2)}`;
+    if (subTotalEl) subTotalEl.textContent = `$${sum.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `$${sum.toFixed(2)}`;
 }
 
 function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
+
     item.quantity += delta;
-    if (item.quantity <= 0) removeItem(id);
-    else updateCart();
+
+    // 如果是增加數量，紀錄一次選購動作
+    if (delta > 0) {
+        const product = products.find(p => p.id === id);
+        if (product) trackAddToCart(product, 1);
+    }
+
+    if (item.quantity <= 0) {
+        removeItem(id);
+    } else {
+        updateCart();
+    }
 }
 
 function removeItem(id) {
@@ -154,57 +231,94 @@ function removeItem(id) {
 function recordAbandon(cartData) {
     let sum = 0;
     cartData.forEach(i => sum += i.price * i.quantity);
-    const items = cartData.map(i => ({ name: i.name, quantity: i.quantity, price: i.price }));
+    const items = cartData.map(i => ({ id: i.id, name: i.name, quantity: i.quantity, price: i.price }));
     const log = {
-        participantID: currentPID,
+        participantID: currentPID || getPID(),
         abandonTime: new Date().toLocaleString(),
         cartItems: items,
         cartTotal: sum
     };
-    abandonCartLogs.push(log);
-    localStorage.setItem('abandonCartLogs', JSON.stringify(abandonCartLogs));
+
+    if (typeof db !== 'undefined') {
+        db.ref('abandon_carts').push(log);
+    }
 }
 
-document.getElementById('clear-cart').addEventListener('click', function () {
+document.getElementById('clear-cart')?.addEventListener('click', function () {
     if (cart.length > 0) recordAbandon([...cart]);
     cart = [];
     updateCart();
-})
+});
 
-document.getElementById('checkout-btn').addEventListener('click', function () {
+// ==================== Checkout 結帳 & Firebase 資料上傳 ====================
+document.getElementById('checkout-btn')?.addEventListener('click', async function () {
     if (cart.length === 0) {
         alert("Your cart is empty, cannot checkout");
         return;
     }
+
+    const checkoutBtn = this;
+    checkoutBtn.disabled = true;
+    checkoutBtn.innerText = "Processing Checkout...";
+
+    const pageEndTime = Date.now();
+    const durationInSeconds = Math.floor((pageEndTime - pageStartTime) / 1000);
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = durationInSeconds % 60;
+    const formattedDuration = `${minutes}m ${seconds}s (${durationInSeconds} seconds)`;
+
     let total = 0;
-    let ecoCnt = 0;
-    cart.forEach(item => {
+    let featuredCnt = 0;
+
+    const itemsArr = cart.map(item => {
         total += item.price * item.quantity;
         const prod = products.find(p => p.id === item.id);
-        if (prod.isEco) ecoCnt += item.quantity;
-    })
-    const itemsArr = cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price }));
-    const order = {
-        participantID: currentPID,
-        time: new Date().toLocaleString(),
-        items: itemsArr,
-        ecoProductCount: ecoCnt,
+        if (prod && prod.isFeatured) featuredCnt += item.quantity;
+
+        return {
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+        };
+    });
+
+    const checkoutFirebaseData = {
+        participantID: currentPID || getPID(),
+        checkoutTime: new Date().toLocaleString(),
+        durationSeconds: durationInSeconds,
+        formattedDuration: formattedDuration,
+        finalCartItems: itemsArr,
+        selectionSequence: selectionSequence,
+        featuredProductCount: featuredCnt,
         orderTotal: total
     };
-    orderList.push(order);
-    localStorage.setItem('allOrders', JSON.stringify(orderList));
-    totalSpent += total;
-    localStorage.setItem('totalSpentMoney', totalSpent.toFixed(2));
+
+    try {
+        if (typeof db !== 'undefined') {
+            await db.ref('checkout_records').push(checkoutFirebaseData);
+            console.log("Checkout record saved to Firebase successfully!");
+        }
+    } catch (error) {
+        console.error("Failed to save checkout to Firebase:", error);
+    }
+
     alert(`Checkout Success!\nTotal: $${total.toFixed(2)}`);
     cart = [];
+    selectionSequence = [];
     updateCart();
-})
 
+    checkoutBtn.disabled = false;
+    checkoutBtn.innerText = "Checkout";
+});
+
+// Tab 切換 UI
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-    })
-})
+    });
+});
 
+// 初始化購物車 UI
 updateCart();
