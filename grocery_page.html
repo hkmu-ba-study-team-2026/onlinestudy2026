@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshMart | AI Recommended Grocery</title>
+    <title>FreshMart | Recommended Grocery</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .product-card {
@@ -29,55 +29,78 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            background: #ffffff;
+            border-radius: 8px;
         }
 
-        /* 全域 AI 推薦 Banner (綠色風格) */
-        .ai-banner {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 1px solid #bbf7d0;
-            border-left: 5px solid #16a34a;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin: 15px 0 20px 0;
+        /* -------------------------------------------------------------
+           [1] 精選區塊頂部列 (標題與獨立右側預算)
+        ------------------------------------------------------------- */
+        .featured-header-bar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.08);
+            margin-bottom: 20px;
         }
-        .ai-banner-content p {
-            font-size: 14px;
-            color: #14532d;
-            font-weight: 600;
+
+        /* -------------------------------------------------------------
+           [2] 推薦 Banner 包覆框
+        ------------------------------------------------------------- */
+        .rec-banner {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 2px solid #22c55e;
+            border-left: 8px solid #15803d;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+        }
+        .rec-banner-content p {
+            font-size: 16px;
+            color: #064e3b;
+            font-weight: 700;
+            line-height: 1.5;
             margin: 0;
         }
 
-        /* AI Nudge 個別商品推薦高亮與標籤樣式 */
-        .ai-recommended-card {
-            border: 2px solid #16a34a !important;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
+        /* -------------------------------------------------------------
+           [3] 個別商品推薦高亮與標籤
+        ------------------------------------------------------------- */
+        .recommended-card {
+            border: 3px solid #16a34a !important;
+            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.25) !important;
+            transform: translateY(-2px);
         }
-        .ai-badge {
+        .rec-badge {
             position: absolute;
-            top: 6px;
-            right: 6px;
+            top: -10px;
+            right: 10px;
             background: #16a34a;
             color: #ffffff;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            z-index: 2;
-        }
-        .ai-nudge-box {
-            background: #fefce8;
-            border-left: 3px solid #eab308;
-            padding: 6px 8px;
-            margin: 8px 0;
-            border-radius: 4px;
             font-size: 12px;
-            color: #854d0e;
-            line-height: 1.4;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .nudge-box {
+            background: #fef9c3;
+            border: 1.5px solid #fde047;
+            border-left: 5px solid #eab308;
+            padding: 10px 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #713f12;
+            line-height: 1.5;
             text-align: left;
+            box-shadow: 0 2px 5px rgba(234, 179, 8, 0.15);
         }
 
         /* 搜尋無結果提示樣式 */
@@ -88,6 +111,30 @@
             color: #6b7280;
             font-size: 16px;
         }
+
+        /* -------------------------------------------------------------
+           [4] 獨立在最右側的預算餘額標籤
+        ------------------------------------------------------------- */
+        .budget-badge {
+            font-size: 18px;
+            font-weight: 800;
+            color: #14532d;
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
+            letter-spacing: 0.5px;
+        }
+        .budget-badge.low-budget {
+            color: #991b1b;
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+            animation: pulse 2s infinite;
+        }
     </style>
 </head>
 <body>
@@ -95,9 +142,12 @@
 <div id="welcomeModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 9999;">
     <div style="background: #ffffff; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
         <h3 style="color: #16a34a; margin-bottom: 12px; font-size: 20px;">Welcome to FreshMart</h3>
-        <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">
+        <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
             Please simulate an online grocery shopping task to select ingredients required for preparing three days' worth of meals.
         </p>
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; margin-bottom: 24px;">
+            Shopping Budget Limit: $100.00 USD
+        </div>
         <button id="closeModalBtn" style="background: #16a34a; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px;">
             I Understand & Continue
         </button>
@@ -121,7 +171,7 @@
     </div>
 </header>
 
-<!-- 二級導航（選單同步更新至新分類） -->
+<!-- 二級導航 -->
 <section class="sub-nav">
     <div class="container sub-wrap">
         <a href="#products" class="wf-logo link-normal">Whole Foods Market</a>
@@ -136,58 +186,67 @@
     </div>
 </section>
 
-<!-- 1. 精選商品區 Featured Items (僅保留 5 項指定商品) -->
+<!-- 1. 精選商品區 Featured Items -->
 <section id="products" class="products-section">
     <div class="container">
-        <div class="cate-head">
-            <h2>Featured items</h2>
+        <!-- [1] 頂部獨立列：標題在左，餘額在最右 -->
+        <div class="featured-header-bar">
+            <h2 style="margin: 0;">Featured items</h2>
+            <div id="budgetDisplay" class="budget-badge">
+                Remaining Budget: $<span id="remainingBudget">100.00</span>
+            </div>
         </div>
 
-        <div id="bannerContainer"></div>
+        <!-- 綠色背景包覆框：包含 Nudge 文字與商品 Grid -->
+        <div class="rec-banner" id="featuredBanner">
+            <!-- [2] Nudge 提示文字 -->
+            <div id="bannerTextContainer" class="rec-banner-content"></div>
 
-        <div class="products-grid" id="productWrap">
-            <div class="product-card" data-id="1" data-type="produce">
-                <div class="product-image"><img src="apple.png" alt="Apple"></div>
-                <div class="product-info">
-                    <h3>Red Fuji Apple</h3>
-                    <p>$5.99</p>
-                    <button class="add-btn" data-id="1">Add to Cart</button>
+            <!-- [3] Items 商品網格 -->
+            <div class="products-grid" id="productWrap">
+                <div class="product-card" data-id="1" data-type="featured">
+                    <div class="product-image"><img src="apple.png" alt="Apple"></div>
+                    <div class="product-info">
+                        <h3>Red Fuji Apple</h3>
+                        <p>$5.99</p>
+                        <button class="add-btn" data-id="1">Add to Cart</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card" data-id="2" data-type="dairy">
-                <div class="product-image"><img src="milk.png" alt="Milk"></div>
-                <div class="product-info">
-                    <h3>Whole Milk</h3>
-                    <p>$12.50</p>
-                    <button class="add-btn" data-id="2">Add to Cart</button>
+                <div class="product-card" data-id="2" data-type="featured">
+                    <div class="product-image"><img src="milk.png" alt="Milk"></div>
+                    <div class="product-info">
+                        <h3>Whole Milk</h3>
+                        <p>$12.50</p>
+                        <button class="add-btn" data-id="2">Add to Cart</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card" data-id="3" data-type="pantry">
-                <div class="product-image"><img src="bread.png" alt="Bread"></div>
-                <div class="product-info">
-                    <h3>Whole Wheat Bread</h3>
-                    <p>$8.99</p>
-                    <button class="add-btn" data-id="3">Add to Cart</button>
+                <div class="product-card" data-id="3" data-type="featured">
+                    <div class="product-image"><img src="bread.png" alt="Bread"></div>
+                    <div class="product-info">
+                        <h3>Whole Wheat Bread</h3>
+                        <p>$8.99</p>
+                        <button class="add-btn" data-id="3">Add to Cart</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card" data-id="4" data-type="pantry">
-                <div class="product-image"><img src="ChickenLeg.png" alt="ChickenLeg"></div>
-                <div class="product-info">
-                    <h3>Organic Chicken Legs</h3>
-                    <p>$9.99</p>
-                    <button class="add-btn" data-id="4">Add to Cart</button>
+                <div class="product-card" data-id="4" data-type="featured">
+                    <div class="product-image"><img src="ChickenLeg.png" alt="ChickenLeg"></div>
+                    <div class="product-info">
+                        <h3>Organic Chicken Legs</h3>
+                        <p>$9.99</p>
+                        <button class="add-btn" data-id="4">Add to Cart</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="product-card" data-id="5" data-type="produce">
-                <div class="product-image"><img src="Avocado.png" alt="Avocado"></div>
-                <div class="product-info">
-                    <h3>Fresh Avocado</h3>
-                    <p>$3.49</p>
-                    <button class="add-btn" data-id="5">Add to Cart</button>
+                <div class="product-card" data-id="5" data-type="featured">
+                    <div class="product-image"><img src="Avocado.png" alt="Avocado"></div>
+                    <div class="product-info">
+                        <h3>Fresh Avocado</h3>
+                        <p>$3.49</p>
+                        <button class="add-btn" data-id="5">Add to Cart</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -201,15 +260,15 @@
             <h2>Fresh Fruits</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="6" data-type="produce">
-                <div class="product-image"><img src="apple.png" alt="Green Apple"></div>
+            <div class="product-card" data-id="6" data-type="fruits">
+                <div class="product-image"><img src="green-apples.jpg" alt="Green Apple"></div>
                 <div class="product-info">
                     <h3>Green Apple Pack</h3>
                     <p>$6.49</p>
                     <button class="add-btn" data-id="6">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="7" data-type="produce">
+            <div class="product-card" data-id="7" data-type="fruits">
                 <div class="product-image"><img src="banana.png" alt="Banana"></div>
                 <div class="product-info">
                     <h3>Organic Banana Bunch</h3>
@@ -217,7 +276,7 @@
                     <button class="add-btn" data-id="7">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="8" data-type="produce">
+            <div class="product-card" data-id="8" data-type="fruits">
                 <div class="product-image"><img src="lemon.png" alt="Lemon"></div>
                 <div class="product-info">
                     <h3>Fresh Lemon Bag</h3>
@@ -236,7 +295,7 @@
             <h2>Fresh Vegetables</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="9" data-type="produce">
+            <div class="product-card" data-id="9" data-type="vegetables">
                 <div class="product-image"><img src="tomato.png" alt="Tomato"></div>
                 <div class="product-info">
                     <h3>Roma Tomato Box</h3>
@@ -244,7 +303,7 @@
                     <button class="add-btn" data-id="9">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="10" data-type="produce">
+            <div class="product-card" data-id="10" data-type="vegetables">
                 <div class="product-image"><img src="Cucumber.png" alt="Cucumber"></div>
                 <div class="product-info">
                     <h3>Fresh Cucumber</h3>
@@ -263,7 +322,7 @@
             <h2>Fresh Meat</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="11" data-type="pantry">
+            <div class="product-card" data-id="11" data-type="meat">
                 <div class="product-image"><img src="Beef.png" alt="Beef"></div>
                 <div class="product-info">
                     <h3>Fresh Beef</h3>
@@ -271,7 +330,7 @@
                     <button class="add-btn" data-id="11">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="12" data-type="pantry">
+            <div class="product-card" data-id="12" data-type="meat">
                 <div class="product-image"><img src="porkchop.png" alt="Pork Chop"></div>
                 <div class="product-info">
                     <h3>Premium Pork Chops</h3>
@@ -279,7 +338,7 @@
                     <button class="add-btn" data-id="12">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="13" data-type="pantry">
+            <div class="product-card" data-id="13" data-type="meat">
                 <div class="product-image"><img src="turkey.png" alt="Turkey"></div>
                 <div class="product-info">
                     <h3>Ground Turkey</h3>
@@ -298,7 +357,7 @@
             <h2>Seafood Market</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="14" data-type="dairy">
+            <div class="product-card" data-id="14" data-type="seafood">
                 <div class="product-image"><img src="Salmon.png" alt="Salmon"></div>
                 <div class="product-info">
                     <h3>Salmon Fillet</h3>
@@ -306,7 +365,7 @@
                     <button class="add-btn" data-id="14">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="15" data-type="dairy">
+            <div class="product-card" data-id="15" data-type="seafood">
                 <div class="product-image"><img src="shrimp.png" alt="Shrimp"></div>
                 <div class="product-info">
                     <h3>Frozen Shrimp Pack</h3>
@@ -314,7 +373,7 @@
                     <button class="add-btn" data-id="15">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="16" data-type="dairy">
+            <div class="product-card" data-id="16" data-type="seafood">
                 <div class="product-image"><img src="cod.png" alt="Cod"></div>
                 <div class="product-info">
                     <h3>Cod Fish Fillets</h3>
@@ -333,28 +392,28 @@
             <h2>Pantry & Dairy Staples</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="4" data-type="dairy">
+            <div class="product-card" data-id="17" data-type="dairy">
                 <div class="product-image"><img src="eggs.png" alt="Eggs"></div>
                 <div class="product-info">
                     <h3>Farm Eggs</h3>
                     <p>$15.00</p>
-                    <button class="add-btn" data-id="4">Add to Cart</button>
+                    <button class="add-btn" data-id="17">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="13" data-type="pantry">
+            <div class="product-card" data-id="18" data-type="pantry">
                 <div class="product-image"><img src="Rice.png" alt="Rice"></div>
                 <div class="product-info">
                     <h3>Long Grain Rice</h3>
                     <p>$6.99</p>
-                    <button class="add-btn" data-id="13">Add to Cart</button>
+                    <button class="add-btn" data-id="18">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="5" data-type="snack">
-                <div class="product-image"><img src="water.png" alt="Water"></div>
+            <div class="product-card" data-id="19" data-type="dairy">
+                <div class="product-image"><img src="greek-yogurt.png" alt="Greek-Yogurt"></div>
                 <div class="product-info">
-                    <h3>Mineral Water</h3>
+                    <h3>Greek Yogurt</h3>
                     <p>$2.50</p>
-                    <button class="add-btn" data-id="5">Add to Cart</button>
+                    <button class="add-btn" data-id="19">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -396,14 +455,79 @@
 <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    // --- 1. AI 推薦渲染邏輯 ---
-    const rawAiData = localStorage.getItem('recommendations');
+    // --- 0. 預算上限 (USD 100) 與防超額邏輯 ---
+    const MAX_BUDGET = 100.00;
 
-    if (rawAiData) {
+    function updateRemainingBudgetDisplay() {
+        let currentTotal = 0;
+        if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+            cart.forEach(item => {
+                currentTotal += (item.price * item.quantity);
+            });
+        }
+
+        const remaining = MAX_BUDGET - currentTotal;
+        const remainingEl = document.getElementById('remainingBudget');
+        const budgetDisplay = document.getElementById('budgetDisplay');
+
+        if (remainingEl) {
+            remainingEl.innerText = Math.max(0, remaining).toFixed(2);
+        }
+
+        if (budgetDisplay) {
+            if (remaining <= 20) {
+                budgetDisplay.classList.add('low-budget');
+            } else {
+                budgetDisplay.classList.remove('low-budget');
+            }
+        }
+    }
+
+    // 監聽並攔截按鈕點擊：檢查預算限制
+    document.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const productId = parseInt(this.getAttribute('data-id'));
+            const product = (typeof products !== 'undefined') ? products.find(p => p.id === productId) : null;
+
+            if (product) {
+                let currentTotal = 0;
+                if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                    cart.forEach(item => currentTotal += (item.price * item.quantity));
+                }
+
+                // 檢查加入該商品後是否超過預算
+                if (currentTotal + product.price > MAX_BUDGET) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    alert(`Cannot add "${product.name}" ($${product.price.toFixed(2)})!\nYour remaining budget is $${(MAX_BUDGET - currentTotal).toFixed(2)}, which exceeds the $100.00 budget limit.`);
+                    return false;
+                }
+            }
+
+            setTimeout(updateRemainingBudgetDisplay, 50);
+        }, true);
+    });
+
+    // 當購物車變動時更新預算
+    const originalUpdateCart = window.updateCart;
+    if (typeof originalUpdateCart === 'function') {
+        window.updateCart = function() {
+            originalUpdateCart();
+            updateRemainingBudgetDisplay();
+        };
+    }
+
+    // 初始化顯示
+    updateRemainingBudgetDisplay();
+
+    // --- 1. 推薦資料渲染邏輯 ---
+    const rawRecData = localStorage.getItem('recommendations');
+
+    if (rawRecData) {
         try {
-            const data = JSON.parse(rawAiData);
+            const data = JSON.parse(rawRecData);
 
-            // 解析文字推薦
+            // 解析文字推薦並填入綠色內框上方
             let textSentence = null;
             if (typeof data === 'string') {
                 textSentence = data;
@@ -412,30 +536,24 @@ document.addEventListener('DOMContentLoaded', function(){
             }
 
             if (textSentence) {
-                const bannerContainer = document.getElementById('bannerContainer');
-                bannerContainer.innerHTML = `
-                    <div class="ai-banner">
-                        <div class="ai-banner-content">
-                            <p>${textSentence}</p>
-                        </div>
-                    </div>
-                `;
+                const bannerTextContainer = document.getElementById('bannerTextContainer');
+                bannerTextContainer.innerHTML = `<p>${textSentence}</p>`;
             }
 
             if (Array.isArray(data)) {
                 data.forEach(rec => {
                     const card = document.querySelector(`.product-card[data-id="${rec.item_id}"]`);
                     if (card) {
-                        card.classList.add('ai-recommended-card');
+                        card.classList.add('recommended-card');
 
-                        const aiBadge = document.createElement('span');
-                        aiBadge.className = 'ai-badge';
-                        aiBadge.innerText = `Recommended Choice #${rec.rank}`;
-                        card.appendChild(aiBadge);
+                        const recBadge = document.createElement('span');
+                        recBadge.className = 'rec-badge';
+                        recBadge.innerText = `★ Recommended #${rec.rank}`;
+                        card.appendChild(recBadge);
 
                         const productInfo = card.querySelector('.product-info');
                         const nudgeBox = document.createElement('div');
-                        nudgeBox.className = 'ai-nudge-box';
+                        nudgeBox.className = 'nudge-box';
                         nudgeBox.innerHTML = `<strong>Tip:</strong> ${rec.reason}`;
 
                         const addBtn = productInfo.querySelector('.add-btn');
@@ -456,7 +574,6 @@ document.addEventListener('DOMContentLoaded', function(){
     function performSearch() {
         const query = searchInput.value.toLowerCase().trim();
 
-        // 走訪所有商品卡片
         allCards.forEach(card => {
             const titleEl = card.querySelector('.product-info h3');
             const titleText = titleEl ? titleEl.innerText.toLowerCase() : '';
@@ -468,7 +585,6 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
 
-        // 檢查各區塊是否完全沒有搜尋結果，若無結果顯示提示
         document.querySelectorAll('.products-section').forEach(section => {
             const grid = section.querySelector('.products-grid');
             if (!grid) return;
@@ -489,7 +605,6 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    // 即時輸入與點擊搜尋
     if (searchInput) {
         searchInput.addEventListener('input', performSearch);
         searchInput.addEventListener('keypress', function(e) {

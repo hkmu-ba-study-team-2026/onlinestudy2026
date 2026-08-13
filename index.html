@@ -27,27 +27,37 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
-            padding: 40px 20px;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* 鎖定全螢幕高度 */
+            overflow: hidden; /* 防止視窗出現外層滾動條 */
         }
 
         .container {
             background-color: var(--card-bg);
             max-width: 800px;
             width: 100%;
+            height: calc(100vh - 40px); /* 扣除 body padding 的高度 */
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            padding: 40px;
+            padding: 30px;
             border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column; /* 垂直佈局 */
+        }
+
+        /* 頂部固定區域 (包含 Header、7分制說明與測試按鈕) */
+        .fixed-top-section {
+            flex-shrink: 0; /* 禁止被擠壓 */
+            border-bottom: 2px solid var(--bg-color);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
         }
 
         header {
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 12px;
         }
 
         .academic-badge {
@@ -60,63 +70,94 @@
             background-color: #edf2f7;
             padding: 4px 10px;
             border-radius: 4px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            text-decoration: none;
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         p.intro {
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             color: var(--text-secondary);
-            margin-bottom: 15px;
         }
 
         .scale-info {
             background-color: #f8fafc;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 30px;
-            font-size: 0.9rem;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 0.85rem;
         }
 
         .scale-info h3 {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
             color: var(--text-primary);
         }
 
         .scale-info ul {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 4px 10px;
             list-style: none;
             color: var(--text-secondary);
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin: 25px 0 15px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--border-color);
+        /* 測試用隨機填寫按鈕樣式 */
+        .dev-autofill-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            border: 1px dashed #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dev-autofill-btn:hover {
+            background-color: #cbd5e1;
+            color: #2d3748;
+        }
+
+        /* 下方獨立滾動的表單區域 */
+        #surveyForm {
+            flex: 1; /* 佔滿剩餘垂直空間 */
+            overflow-y: auto; /* 開啟垂直滾動 */
+            padding-right: 12px; /* 留出滾動條空間 */
+            margin-top: 10px;
+        }
+
+        /* 自訂滾動條樣式 */
+        #surveyForm::-webkit-scrollbar {
+            width: 6px;
+        }
+        #surveyForm::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        #surveyForm::-webkit-scrollbar-track {
+            background-color: #f1f5f9;
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         label.question-title {
             display: block;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--text-primary);
         }
 
@@ -148,12 +189,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px 4px;
+            padding: 8px 4px;
             background-color: #fafafa;
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-primary);
             transition: all 0.2s ease;
@@ -172,24 +213,6 @@
             box-shadow: 0 0 0 1px var(--accent-color);
         }
 
-        .input-text {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            background-color: #fafafa;
-            color: var(--text-primary);
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .input-text:focus {
-            border-color: var(--accent-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1);
-        }
-
         .submit-btn {
             display: block;
             width: 100%;
@@ -202,7 +225,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            margin-top: 30px;
+            margin: 30px 0 10px 0;
         }
 
         .submit-btn:hover {
@@ -215,15 +238,22 @@
         }
 
         @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
             .container {
-                padding: 20px;
+                padding: 16px;
+                height: calc(100vh - 20px);
             }
             .scale-grid {
                 gap: 4px;
             }
             .scale-card label {
-                padding: 8px 2px;
-                font-size: 0.8rem;
+                padding: 6px 2px;
+                font-size: 0.75rem;
+            }
+            .scale-info ul {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -233,7 +263,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script>
-  // Firebase 設定資訊 (已修正拼字錯誤: cconst -> const)
   const firebaseConfig = {
     apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
     authDomain: "online-study-2026.firebaseapp.com",
@@ -244,7 +273,6 @@
     appId: "1:359632481591:web:31d160c7f772841b16feb2"
   };
 
-  // 初始化 Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 </script>
@@ -252,29 +280,43 @@
 <body>
 
     <div class="container">
-        <header>
-            <a href="admin.html" class="academic-badge">Academic Survey</a>
-            <h1>Consumer Food Choice Investigation</h1>
-            <p class="intro">Welcome! This is an academic survey. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
-        </header>
+        <!-- 頂部固定區域 -->
+        <div class="fixed-top-section">
+            <header>
+                <a href="admin.html" class="academic-badge">Academic Survey</a>
+                <h1>Consumer Food Choice Investigation</h1>
+                <p class="intro">Welcome! This is an academic survey. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
+            </header>
 
-        <div class="scale-info">
-            <h3>Please complete the following survey with reference to the following Response Scale Reference:</h3>
-            <ul>
-                <li><strong>1</strong> = Not at all important</li>
-                <li><strong>2</strong> = Not important</li>
-                <li><strong>3</strong> = Slightly unimportant</li>
-                <li><strong>4</strong> = Neither important nor unimportant</li>
-                <li><strong>5</strong> = Slightly important</li>
-                <li><strong>6</strong> = Important</li>
-                <li><strong>7</strong> = Extremely important</li>
-            </ul>
+            <div class="scale-info">
+                <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
+                <ul>
+                    <li><strong>1</strong> = Not at all important</li>
+                    <li><strong>2</strong> = Not important</li>
+                    <li><strong>3</strong> = Slightly unimportant</li>
+                    <li><strong>4</strong> = Neither important nor unimportant</li>
+                    <li><strong>5</strong> = Slightly important</li>
+                    <li><strong>6</strong> = Important</li>
+                    <li><strong>7</strong> = Extremely important</li>
+                </ul>
+            </div>
+
+            <!-- 臨時隨機填寫按鈕 -->
+            <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random)</button>
         </div>
 
+        <!-- 可獨立滾動的問卷表單（已移除 Sub-titles） -->
         <form id="surveyForm" onsubmit="handleSubmit(event)">
 
-            <!-- 1. Taste and sensory enjoyment -->
-            <div class="section-title">Taste and Sensory Enjoyment</div>
+            <div class="form-group" style="background: #eef2f7; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                <label class="question-title" style="font-size: 1rem; color: #1e293b;">
+                    Participant ID <span class="required">*</span>
+                </label>
+                <input type="text" id="inputParticipantID" name="inputParticipantID" required
+                       placeholder="Please enter your Participant ID (e.g., P001)"
+                       style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.95rem; margin-top: 6px;">
+            </div>
+
             <div class="form-group">
                 <label class="question-title">1. The product tastes good. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_taste_good"></div>
@@ -292,8 +334,6 @@
                 <div class="scale-grid" id="q_overall_enjoyable"></div>
             </div>
 
-            <!-- 2. Freshness and product quality -->
-            <div class="section-title">Freshness and Product Quality</div>
             <div class="form-group">
                 <label class="question-title">5. The product is fresh. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_fresh"></div>
@@ -307,8 +347,6 @@
                 <div class="scale-grid" id="q_consistent_quality"></div>
             </div>
 
-            <!-- 3. Health, nutrition, and dietary suitability -->
-            <div class="section-title">Health, Nutrition, and Dietary Suitability</div>
             <div class="form-group">
                 <label class="question-title">8. The product is healthy. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_healthy"></div>
@@ -322,8 +360,6 @@
                 <div class="scale-grid" id="q_dietary_needs"></div>
             </div>
 
-            <!-- 4. Safety and tolerability -->
-            <div class="section-title">Safety and Tolerability</div>
             <div class="form-group">
                 <label class="question-title">11. The product is safe to consume. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_safe_consume"></div>
@@ -333,8 +369,6 @@
                 <div class="scale-grid" id="q_no_discomfort"></div>
             </div>
 
-            <!-- 5. Price and value -->
-            <div class="section-title">Price and Value</div>
             <div class="form-group">
                 <label class="question-title">13. The product’s price is within my budget. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_within_budget"></div>
@@ -344,8 +378,6 @@
                 <div class="scale-grid" id="q_justify_price"></div>
             </div>
 
-            <!-- 6. Quantity and portion suitability -->
-            <div class="section-title">Quantity and Portion Suitability</div>
             <div class="form-group">
                 <label class="question-title">15. The amount of product in the package meets my needs. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_amount_meets_needs"></div>
@@ -355,8 +387,6 @@
                 <div class="scale-grid" id="q_serving_size"></div>
             </div>
 
-            <!-- 7. Convenience and preparation effort -->
-            <div class="section-title">Convenience and Preparation Effort</div>
             <div class="form-group">
                 <label class="question-title">17. The product is convenient to use or consume. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_convenient_use"></div>
@@ -370,8 +400,6 @@
                 <div class="scale-grid" id="q_little_prep_effort"></div>
             </div>
 
-            <!-- 8. Versatility and adaptability -->
-            <div class="section-title">Versatility and Adaptability</div>
             <div class="form-group">
                 <label class="question-title">20. The product can be used in different meals or recipes. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_different_meals"></div>
@@ -381,8 +409,6 @@
                 <div class="scale-grid" id="q_different_situations"></div>
             </div>
 
-            <!-- 9. Packaging quality and usability -->
-            <div class="section-title">Packaging Quality and Usability</div>
             <div class="form-group">
                 <label class="question-title">22. The packaging protects the product effectively. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_protects_product"></div>
@@ -400,8 +426,6 @@
                 <div class="scale-grid" id="q_easy_reseal"></div>
             </div>
 
-            <!-- 10. Information accuracy and trust -->
-            <div class="section-title">Information Accuracy and Trust</div>
             <div class="form-group">
                 <label class="question-title">26. The information provided about the product is accurate. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_info_accurate"></div>
@@ -415,8 +439,6 @@
                 <div class="scale-grid" id="q_label_enough_info"></div>
             </div>
 
-            <!-- 11. Availability, selection, and authenticity -->
-            <div class="section-title">Availability, Selection, and Authenticity</div>
             <div class="form-group">
                 <label class="question-title">29. The product is easy to find where I normally shop. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_easy_to_find"></div>
@@ -434,8 +456,6 @@
                 <div class="scale-grid" id="q_authentic_origin"></div>
             </div>
 
-            <!-- 12. Fulfilment and service reliability -->
-            <div class="section-title">Fulfilment and Service Reliability</div>
             <div class="form-group">
                 <label class="question-title">33. I receive the correct product when placing an order. <span class="required">*</span></label>
                 <div class="scale-grid" id="q_correct_product"></div>
@@ -493,6 +513,17 @@
             }
         });
 
+        // 隨機自動填寫問卷（開發測試用）
+        function autoFillRandom() {
+            questionIds.forEach(qId => {
+                const randomVal = Math.floor(Math.random() * 7) + 1;
+                const radio = document.getElementById(`${qId}_${randomVal}`);
+                if (radio) {
+                    radio.checked = true;
+                }
+            });
+        }
+
         const productsList = ["Red Fuji Apple", "Whole Milk", "Whole Wheat Bread", "Chicken Legs", "Avocado"];
 
         function generateRandomParticipantID() {
@@ -511,31 +542,24 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Saving responses & Loading store...';
 
-            const participantNum = generateRandomParticipantID();
+            // 1. 抓取用戶輸入的 Participant ID 取代隨機生成的 ID
+            const inputPid = document.getElementById('inputParticipantID').value.trim();
+            if (!inputPid) {
+                alert("Please enter a valid Participant ID.");
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit and Proceed to Store';
+                return;
+            }
+            const participantNum = inputPid;
             localStorage.setItem("participantID", participantNum);
 
-            const targetPage = 'grocery_ai_page.html';
+            const targetPage = 'grocery_page.html';
 
             const formData = new FormData(event.target);
             const surveyResponses = {};
             questionIds.forEach(qId => {
                 surveyResponses[qId] = parseInt(formData.get(qId), 10);
             });
-
-            // 1. 同步將問卷回答上傳至 Firebase Realtime Database
-            const firebaseData = {
-                participantID: participantNum,
-                submittedAt: new Date().toLocaleString(),
-                responses: surveyResponses
-            };
-
-            try {
-                // 使用 Firebase 的 push 寫入 'survey_responses' 節點
-                await db.ref('survey_responses').push(firebaseData);
-                console.log('Survey responses saved to Firebase successfully!');
-            } catch (dbError) {
-                console.error('Failed to save to Firebase:', dbError);
-            }
 
             // 2. 準備請求推薦 API 的 Payload
             const userPreferences = {
@@ -547,33 +571,54 @@
                 preferences: userPreferences
             };
 
-            // 3. 呼叫推薦 API 並跳轉
+            let aiNudgeText = "";
+
+            // 3. 呼叫推薦 API 並獲取 AI Nudge 文案
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
+                if (response.ok) {
+                    const recommendations = await response.json();
+                    console.log('Recommendations Result:', recommendations);
+
+                    if (typeof recommendations === 'string') {
+                        aiNudgeText = recommendations;
+                    } else if (recommendations && recommendations.recommendation) {
+                        aiNudgeText = recommendations.recommendation;
+                    }
+
+                    localStorage.setItem('recommendations', JSON.stringify(recommendations));
+                    localStorage.setItem('ai_nudge_text', aiNudgeText);
+                    localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+                } else {
                     throw new Error(`API response error: ${response.status}`);
                 }
-
-                const recommendations = await response.json();
-                console.log('Recommendations Result:', recommendations);
-
-                localStorage.setItem('recommendations', JSON.stringify(recommendations));
-                localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
-
-                window.location.href = targetPage;
-
             } catch (error) {
                 console.error('API Request Failed:', error);
-                alert('Connection timed out. Redirecting to the store page.');
-                window.location.href = targetPage;
+                aiNudgeText = 'Results generated based on your preference.';
+                localStorage.setItem('ai_nudge_text', aiNudgeText);
             }
+
+            // 4. 將問卷回答與紀錄的 AI Nudge 一併寫入 Firebase Realtime Database
+            const firebaseData = {
+                participantID: participantNum,
+                submittedAt: new Date().toLocaleString(),
+                aiNudgeText: aiNudgeText, // 紀錄每位用戶獲得的 AI nudge 文案
+                responses: surveyResponses
+            };
+
+            try {
+                await db.ref('survey_responses').push(firebaseData);
+                console.log('Survey responses saved to Firebase successfully!');
+            } catch (dbError) {
+                console.error('Failed to save to Firebase:', dbError);
+            }
+
+            window.location.href = targetPage;
         }
     </script>
 </body>

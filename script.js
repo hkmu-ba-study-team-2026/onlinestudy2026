@@ -9,6 +9,9 @@ let selectionSequence = [];
 let cart = [];
 let currentPID = "";
 
+// 固定的 19 個商品清單（1 ~ 19）
+const ALL_19_ITEMS = Array.from({ length: 19 }, (_, i) => i + 1);
+
 // 取得 Participant ID
 function getPID() {
     let pid = localStorage.getItem("participantID");
@@ -48,6 +51,34 @@ function trackAddToCart(product, quantity = 1) {
     console.log("當前選購次序紀錄:", selectionSequence);
 }
 
+/**
+ * 將點擊歷史轉換為 19 個商品的第一次購買順序地圖
+ * 重複購買以第一個為準，未買留空 ""
+ */
+function generateItemSequenceMap(seqArray) {
+    const itemFirstOrder = {};
+
+    if (Array.isArray(seqArray)) {
+        seqArray.forEach((record) => {
+            const pId = record.productId || record.id;
+            const stepNum = record.step;
+
+            if (pId && !itemFirstOrder.hasOwnProperty(pId)) {
+                itemFirstOrder[pId] = stepNum;
+            }
+        });
+    }
+
+    const resultMap = {};
+    ALL_19_ITEMS.forEach(itemId => {
+        resultMap[`Seq_Item_${itemId}`] = itemFirstOrder.hasOwnProperty(itemId)
+            ? itemFirstOrder[itemId]
+            : "";
+    });
+
+    return resultMap;
+}
+
 // ==================== 商品資料庫 ====================
 const products = [
     // 1. Featured items (精選商品區) - id: 1 ~ 5
@@ -79,7 +110,7 @@ const products = [
     // 6. Pantry & Dairy Staples (其他食品/雜貨類) - id: 17 ~ 19
     { id: 17, name: "Farm Eggs", price: 15.00, isFeatured: false },
     { id: 18, name: "Long Grain Rice", price: 6.99, isFeatured: false },
-    { id: 19, name: "Mineral Water", price: 2.50, isFeatured: false }
+    { id: 19, name: "Greek Yogurt", price: 2.50, isFeatured: false }
 ];
 
 // 本地數據初始化
@@ -129,8 +160,6 @@ document.querySelectorAll('.cate-filter').forEach(item => {
 });
 
 // ==================== 購物車邏輯 ====================
-
-// 補上缺少的 addToCart 函式 👈 (關鍵修正)
 function addToCart(product) {
     const existingItem = cart.find(item => item.id === product.id);
     if (existingItem) {
@@ -206,7 +235,6 @@ function changeQty(id, delta) {
 
     item.quantity += delta;
 
-    // 如果是增加數量，紀錄一次選購動作
     if (delta > 0) {
         const product = products.find(p => p.id === id);
         if (product) trackAddToCart(product, 1);
@@ -283,13 +311,18 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         };
     });
 
+    // 生成 19 個商品的順序地圖 (Seq_Item_1 ~ Seq_Item_19)
+    const itemSequenceMap = generateItemSequenceMap(selectionSequence);
+
     const checkoutFirebaseData = {
         participantID: currentPID || getPID(),
         checkoutTime: new Date().toLocaleString(),
+        aiNudgeText: localStorage.getItem('ai_nudge_text') || "",
         durationSeconds: durationInSeconds,
         formattedDuration: formattedDuration,
         finalCartItems: itemsArr,
         selectionSequence: selectionSequence,
+        itemSequenceMap: itemSequenceMap, // 寫入資料庫
         featuredProductCount: featuredCnt,
         orderTotal: total
     };
