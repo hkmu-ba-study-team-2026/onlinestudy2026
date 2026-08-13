@@ -82,35 +82,35 @@ function generateItemSequenceMap(seqArray) {
 // ==================== 商品資料庫 ====================
 const products = [
     // 1. Featured items (精選商品區) - id: 1 ~ 5
-    { id: 1, name: "Red Fuji Apple", price: 5.99, isFeatured: true },
-    { id: 2, name: "Whole Milk", price: 12.50, isFeatured: true },
-    { id: 3, name: "Whole Wheat Bread", price: 8.99, isFeatured: true },
-    { id: 4, name: "Organic Chicken Legs", price: 9.99, isFeatured: true },
-    { id: 5, name: "Fresh Avocado", price: 3.49, isFeatured: true },
+    { id: 1, name: "Red Fuji Apple", price: 3.99, isFeatured: true },
+    { id: 2, name: "Whole Milk", price: 4.29, isFeatured: true },
+    { id: 3, name: "Whole Wheat Bread", price: 3.49, isFeatured: true },
+    { id: 4, name: "Organic Chicken Legs", price: 5.99, isFeatured: true },
+    { id: 5, name: "Fresh Avocado", price: 2.49, isFeatured: true },
 
     // 2. Fresh Fruits (水果類) - id: 6 ~ 8
-    { id: 6, name: "Green Apple Pack", price: 6.49, isFeatured: false },
-    { id: 7, name: "Organic Banana Bunch", price: 2.99, isFeatured: false },
-    { id: 8, name: "Fresh Lemon Bag", price: 3.50, isFeatured: false },
+    { id: 6, name: "Green Apple Pack", price: 3.49, isFeatured: false },
+    { id: 7, name: "Organic Banana Bunch", price: 1.99, isFeatured: false },
+    { id: 8, name: "Fresh Lemon Bag", price: 2.99, isFeatured: false },
 
     // 3. Fresh Vegetables (蔬菜類) - id: 9 ~ 10
-    { id: 9, name: "Roma Tomato Box", price: 4.29, isFeatured: false },
-    { id: 10, name: "Fresh Cucumber", price: 1.99, isFeatured: false },
+    { id: 9, name: "Roma Tomato Box", price: 2.99, isFeatured: false },
+    { id: 10, name: "Fresh Cucumber", price: 0.99, isFeatured: false },
 
     // 4. Fresh Meat (肉類) - id: 11 ~ 13
-    { id: 11, name: "Fresh Beef", price: 18.99, isFeatured: false },
-    { id: 12, name: "Premium Pork Chops", price: 12.49, isFeatured: false },
-    { id: 13, name: "Ground Turkey", price: 10.99, isFeatured: false },
+    { id: 11, name: "Fresh Beef", price: 14.99, isFeatured: false },
+    { id: 12, name: "Premium Pork Chops", price: 8.99, isFeatured: false },
+    { id: 13, name: "Ground Turkey", price: 5.49, isFeatured: false },
 
     // 5. Seafood Market (海鮮類) - id: 14 ~ 16
-    { id: 14, name: "Salmon Fillet", price: 22.99, isFeatured: false },
-    { id: 15, name: "Frozen Shrimp Pack", price: 14.99, isFeatured: false },
-    { id: 16, name: "Cod Fish Fillets", price: 19.99, isFeatured: false },
+    { id: 14, name: "Salmon Fillet", price: 13.99, isFeatured: false },
+    { id: 15, name: "Frozen Shrimp Pack", price: 9.99, isFeatured: false },
+    { id: 16, name: "Cod Fish Fillets", price: 11.99, isFeatured: false },
 
     // 6. Pantry & Dairy Staples (其他食品/雜貨類) - id: 17 ~ 19
-    { id: 17, name: "Farm Eggs", price: 15.00, isFeatured: false },
-    { id: 18, name: "Long Grain Rice", price: 6.99, isFeatured: false },
-    { id: 19, name: "Greek Yogurt", price: 2.50, isFeatured: false }
+    { id: 17, name: "Farm Eggs", price: 4.49, isFeatured: false },
+    { id: 18, name: "Long Grain Rice", price: 4.99, isFeatured: false },
+    { id: 19, name: "Greek Yogurt", price: 1.49, isFeatured: false }
 ];
 
 // 本地數據初始化
