@@ -256,3 +256,90 @@ body {
 .admin-link:hover {
     color: #ff9900;
 }
+/* 修改 scale-card label，讓內容垂直排列並保持彈性高度 */
+.scale-card label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    background-color: #fafafa;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    min-height: 54px; /* 設定最小高度，避免有文字與沒文字的卡片高度不一致 */
+    text-align: center;
+}
+
+/* 數字樣式 */
+.scale-num {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* 下方提示文字樣式 */
+.scale-hint {
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    line-height: 1.1;
+}
+
+/* 當被选中時，提示文字也微調顏色 */
+.scale-card input[type="radio"]:checked + label .scale-hint {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+/* 卡片容器：改為 Flex 垂直對齊，讓按鍵與提示分開 */
+.scale-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 按鍵本體：恢復原有的簡潔樣式 */
+.scale-card label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 42px;
+    background-color: #fafafa;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.scale-card label:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.scale-card input[type="radio"]:checked + label {
+    border-color: var(--accent-color);
+    background-color: #f1f5f9;
+    color: var(--accent-color);
+    box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+.scale-hint {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    text-align: center;
+    line-height: 1.2;
+    width: 100%;
+    display: block;
+}

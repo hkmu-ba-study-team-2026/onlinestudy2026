@@ -432,9 +432,16 @@
             for (let i = 1; i <= 7; i++) {
                 const card = document.createElement("div");
                 card.className = "scale-card";
+
+                let hintText = "";
+                if (i === 1) hintText = '<span class="scale-hint">Not at all important</span>';
+                if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
+                if (i === 7) hintText = '<span class="scale-hint">Extremely important</span>';
+
                 card.innerHTML = `
                     <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
                     <label for="${qId}_${i}">${i}</label>
+                    ${hintText}
                 `;
                 container.appendChild(card);
             }
