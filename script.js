@@ -2,6 +2,9 @@
 // 1. 紀錄頁面進入時間
 const pageStartTime = Date.now();
 
+// 設定 Checkout 完成後按下 OK 跳轉的目標網址
+const NEXT_PAGE_URL = "https://next-page-url.com";
+
 // 2. 用於追蹤「加入購物車次序」的陣列
 let selectionSequence = [];
 
@@ -9,7 +12,7 @@ let selectionSequence = [];
 let cart = [];
 let currentPID = "";
 
-// 固定的 19 個商品清單（1 ~ 19）
+// 商品清單
 const ALL_19_ITEMS = Array.from({ length: 19 }, (_, i) => i + 1);
 
 // 取得 Participant ID
@@ -52,7 +55,7 @@ function trackAddToCart(product, quantity = 1) {
 }
 
 /**
- * 將點擊歷史轉換為 19 個商品的第一次購買順序地圖
+ * 將點擊歷史轉換為商品的第一次購買順序地圖
  * 重複購買以第一個為準，未買留空 ""
  */
 function generateItemSequenceMap(seqArray) {
@@ -311,7 +314,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         };
     });
 
-    // 生成 19 個商品的順序地圖 (Seq_Item_1 ~ Seq_Item_19)
+    // 生成商品的順序地圖 (Seq_Item_1 ~ Seq_Item_19)
     const itemSequenceMap = generateItemSequenceMap(selectionSequence);
 
     const checkoutFirebaseData = {
@@ -336,14 +339,27 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         console.error("Failed to save checkout to Firebase:", error);
     }
 
-    alert(`Checkout Success!\nTotal: $${total.toFixed(2)}`);
+    // 清空購物車與選購紀錄
     cart = [];
     selectionSequence = [];
     updateCart();
 
     checkoutBtn.disabled = false;
     checkoutBtn.innerText = "Checkout";
+
+    // 顯示 Checkout 完成的 Dialog Modal（取代原先的 alert）
+    const completionModal = document.getElementById("checkoutCompletionModal");
+    if (completionModal) {
+        completionModal.style.display = "flex";
+    }
 });
+
+/**
+ * 用戶按下 Dialog Modal 的 OK / Confirm 按鈕後觸發
+ */
+function handleCheckoutModalConfirm() {
+    window.location.href = NEXT_PAGE_URL;
+}
 
 // Tab 切換 UI
 document.querySelectorAll('.tab-btn').forEach(btn => {

@@ -24,6 +24,65 @@
     <title>FreshMart Academy</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            padding: 24px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-title {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .modal-message {
+            font-size: 0.95rem;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal-btn.confirm-btn {
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .modal-btn.confirm-btn:hover {
+            background-color: #1d4ed8;
+        }
+
         .product-card {
             position: relative;
             display: flex;
@@ -33,9 +92,6 @@
             border-radius: 8px;
         }
 
-        /* -------------------------------------------------------------
-           [1] 精選區塊頂部列 (標題與獨立右側預算)
-        ------------------------------------------------------------- */
         .featured-header-bar {
             display: flex;
             justify-content: space-between;
@@ -43,9 +99,6 @@
             margin-bottom: 20px;
         }
 
-        /* -------------------------------------------------------------
-           [2] 推薦 Banner 包覆框
-        ------------------------------------------------------------- */
         .rec-banner {
             background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
             border: 2px solid #22c55e;
@@ -66,9 +119,6 @@
             margin: 0;
         }
 
-        /* -------------------------------------------------------------
-           [3] 個別商品推薦高亮與標籤
-        ------------------------------------------------------------- */
         .recommended-card {
             border: 3px solid #16a34a !important;
             box-shadow: 0 6px 18px rgba(22, 163, 74, 0.25) !important;
@@ -103,7 +153,6 @@
             box-shadow: 0 2px 5px rgba(234, 179, 8, 0.15);
         }
 
-        /* 搜尋無結果提示樣式 */
         .no-results-msg {
             grid-column: 1 / -1;
             text-align: center;
@@ -112,9 +161,6 @@
             font-size: 16px;
         }
 
-        /* -------------------------------------------------------------
-           [4] 獨立在最右側的預算餘額標籤
-        ------------------------------------------------------------- */
         .budget-badge {
             font-size: 18px;
             font-weight: 800;
@@ -154,7 +200,6 @@
     </div>
 </div>
 
-<!-- 頂部導航 Amazon 風格 -->
 <header class="top-nav">
     <div class="container top-wrap">
         <div class="brand-logo">
@@ -171,7 +216,6 @@
     </div>
 </header>
 
-<!-- 二級導航 -->
 <section class="sub-nav">
     <div class="container sub-wrap">
         <nav class="sub-menu">
@@ -185,10 +229,9 @@
     </div>
 </section>
 
-<!-- 1. 精選商品區 Featured Items -->
 <section id="products" class="products-section">
     <div class="container">
-        <!-- [1] 頂部獨立列：標題在左，餘額在最右 -->
+
         <div class="featured-header-bar">
             <h2 style="margin: 0;">Featured eco-sustainable items</h2>
             <div id="budgetDisplay" class="budget-badge">
@@ -196,12 +239,9 @@
             </div>
         </div>
 
-        <!-- 綠色背景包覆框：包含 Nudge 文字與商品 Grid -->
         <div class="rec-banner" id="featuredBanner">
-            <!-- [2] Nudge 提示文字 -->
-            <div id="bannerTextContainer" class="rec-banner-content"></div>
 
-            <!-- [3] Items 商品網格 -->
+            <div id="bannerTextContainer" class="rec-banner-content"></div>
             <div class="products-grid" id="productWrap">
                 <div class="product-card" data-id="1" data-type="featured">
                     <div class="product-image"><img src="apple.png" alt="Apple"></div>
@@ -252,7 +292,6 @@
     </div>
 </section>
 
-<!-- 2. 水果類 Fresh Fruits -->
 <section id="fruits" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -287,7 +326,6 @@
     </div>
 </section>
 
-<!-- 3. 蔬菜類 Fresh Vegetables -->
 <section id="vegetables" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -314,7 +352,6 @@
     </div>
 </section>
 
-<!-- 4. 肉類 Meat Selection -->
 <section id="meat" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -349,7 +386,6 @@
     </div>
 </section>
 
-<!-- 5. 海鮮類 Seafood Market -->
 <section id="seafood" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -384,7 +420,6 @@
     </div>
 </section>
 
-<!-- 6. 其他食品 Pantry, Dairy & Drinks -->
 <section id="pantry-dairy" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -450,11 +485,24 @@
     </div>
 </footer>
 
+<div id="checkoutCompletionModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3 class="modal-title">Notice</h3>
+        <p class="modal-message">
+            Thank you for completing the survey and checkout process! You will now be redirected to the next page.
+        </p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn confirm-btn" onclick="handleCheckoutModalConfirm()">
+                OK / Confirm
+            </button>
+        </div>
+    </div>
+</div>
+
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    // --- 0. 預算上限 (USD 100) 與防超額邏輯 ---
     const MAX_BUDGET = 100.00;
 
     function updateRemainingBudgetDisplay() {
@@ -482,7 +530,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    // 監聽並攔截按鈕點擊：檢查預算限制
     document.querySelectorAll('.add-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             const productId = parseInt(this.getAttribute('data-id'));
@@ -494,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function(){
                     cart.forEach(item => currentTotal += (item.price * item.quantity));
                 }
 
-                // 檢查加入該商品後是否超過預算
                 if (currentTotal + product.price > MAX_BUDGET) {
                     e.stopImmediatePropagation();
                     e.preventDefault();
@@ -507,7 +553,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }, true);
     });
 
-    // 當購物車變動時更新預算
     const originalUpdateCart = window.updateCart;
     if (typeof originalUpdateCart === 'function') {
         window.updateCart = function() {
@@ -516,17 +561,14 @@ document.addEventListener('DOMContentLoaded', function(){
         };
     }
 
-    // 初始化顯示
     updateRemainingBudgetDisplay();
 
-    // --- 1. 推薦資料渲染邏輯 ---
     const rawRecData = localStorage.getItem('recommendations');
 
     if (rawRecData) {
         try {
             const data = JSON.parse(rawRecData);
 
-            // 解析文字推薦並填入綠色內框上方
             let textSentence = null;
             if (typeof data === 'string') {
                 textSentence = data;
@@ -565,7 +607,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    // --- 3. 搜尋功能 ---
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
     const allCards = document.querySelectorAll('.product-card');

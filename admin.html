@@ -7,11 +7,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
-      // Firebase 設定
       const firebaseConfig = {
         apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
         authDomain: "online-study-2026.firebaseapp.com",
@@ -159,7 +157,7 @@
         }
         .export-btn {
             padding: 10px 20px;
-            background: #2e7d32; /* 綠色按鈕 */
+            background: #2e7d32;
             color: white;
             border: none;
             border-radius: 6px;
@@ -175,14 +173,12 @@
 <body>
 
 <div class="container">
-    <!-- 登入面板 -->
     <div id="loginPanel" class="login-box">
         <h2>Admin Login</h2>
         <input type="password" id="pwd" placeholder="Enter Password">
         <button onclick="login()">Login</button>
     </div>
 
-    <!-- 管理後台主面板 -->
     <div id="adminPanel" class="admin-content">
         <a href="index.html" class="back-btn">← Back to Shop</a>
         <button class="refresh-btn" onclick="fetchFirebaseData()">🔄 Refresh Data</button>
@@ -205,7 +201,6 @@
             </div>
         </div>
 
-        <!-- 1. 結帳訂單表格 -->
         <h2>Purchase Orders (`checkout_records`)</h2>
         <table>
             <thead>
@@ -215,7 +210,7 @@
                     <th>Checkout Time</th>
                     <th>Duration</th>
                     <th>Order Total</th>
-                    <th>Featured Items Qty</th> <!-- 欄位更名 -->
+                    <th>Featured Items Qty</th>
                     <th>Purchased Items</th>
                     <th>Selection Sequence</th>
                 </tr>
@@ -223,7 +218,6 @@
             <tbody id="orderTable"></tbody>
         </table>
 
-        <!-- 2. 問卷回覆表格 -->
         <h2>Survey Responses (`survey_responses`)</h2>
         <table>
             <thead>
@@ -237,7 +231,6 @@
             <tbody id="surveyTable"></tbody>
         </table>
 
-        <!-- 3. 棄購紀錄表格 -->
         <h2>Abandoned Cart Records (`abandon_carts`)</h2>
         <table>
             <thead>
@@ -252,7 +245,6 @@
             <tbody id="abandonCartTable"></tbody>
         </table>
 
-        <!-- 4. 瀏覽日誌表格 -->
         <h2>Visitor Browse Records (`visit_logs`)</h2>
         <table>
             <thead>
@@ -313,30 +305,24 @@
         if (event.key === "Enter") login();
     });
 
-    // 核心數據讀取：從 Firebase 載入所有資料
     async function fetchFirebaseData() {
         try {
-            // 1. 讀取結帳訂單
             const ordersSnap = await db.ref('checkout_records').once('value');
             const ordersData = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
             renderOrders(ordersData);
 
-            // 2. 讀取問卷數據
             const surveySnap = await db.ref('survey_responses').once('value');
             const surveyData = surveySnap.val() ? Object.values(surveySnap.val()) : [];
             renderSurveys(surveyData);
 
-            // 3. 讀取棄購紀錄
             const abandonSnap = await db.ref('abandon_carts').once('value');
             const abandonData = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
             renderAbandonCarts(abandonData);
 
-            // 4. 讀取瀏覽紀錄
             const visitSnap = await db.ref('visit_logs').once('value');
             const visitData = visitSnap.val() ? Object.values(visitSnap.val()) : [];
             renderVisitLogs(visitData);
 
-            // 計算全域統計資訊
             calculateStats(ordersData, surveyData);
 
         } catch (error) {
@@ -345,14 +331,13 @@
         }
     }
 
-    // 計算統計數據
     function calculateStats(orders, surveys) {
         let totalRevenue = 0;
         let totalFeatured = 0;
 
         orders.forEach(o => {
             totalRevenue += (o.orderTotal || 0);
-            totalFeatured += (o.featuredProductCount || 0); // 讀取 featuredProductCount
+            totalFeatured += (o.featuredProductCount || 0);
         });
 
         document.getElementById("totalSurveys").innerText = surveys.length;
@@ -361,7 +346,6 @@
         document.getElementById("totalFeatured").innerText = totalFeatured;
     }
 
-    // 1. 渲染結帳訂單
     function renderOrders(orders) {
         const table = document.getElementById("orderTable");
         if (orders.length === 0) {
@@ -390,7 +374,6 @@
         });
     }
 
-    // 2. 渲染問卷
     function renderSurveys(surveys) {
         const table = document.getElementById("surveyTable");
         if (surveys.length === 0) {
@@ -414,7 +397,6 @@
         });
     }
 
-    // 3. 渲染棄購紀錄
     function renderAbandonCarts(abandonLogs) {
         const table = document.getElementById("abandonCartTable");
         if (abandonLogs.length === 0) {
@@ -439,7 +421,6 @@
         });
     }
 
-    // 4. 渲染瀏覽日誌
     function renderVisitLogs(logs) {
         const table = document.getElementById("logTable");
         if (logs.length === 0) {
@@ -461,7 +442,6 @@
         });
     }
 
-    // 清空 Firebase 中的所有測試數據
     async function clearFirebaseData() {
         if (confirm("⚠️ Are you sure you want to CLEAR ALL RECORDS in Firebase Database? This cannot be undone!")) {
             try {
@@ -486,7 +466,6 @@
             exportBtn.innerText = "⏳ Exporting...";
 
             try {
-                // 1. 同時抓取所有 Firebase 節點數據
                 const [ordersSnap, surveySnap, abandonSnap, visitSnap] = await Promise.all([
                     db.ref('checkout_records').once('value'),
                     db.ref('survey_responses').once('value'),
@@ -499,7 +478,6 @@
                 const abandons = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
                 const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
 
-                // 2. 收集所有不重複的 Participant ID
                 const allPIDs = new Set([
                     ...orders.map(o => o.participantID),
                     ...surveys.map(s => s.participantID),
@@ -507,11 +485,9 @@
                     ...visits.map(v => v.participantID)
                 ].filter(pid => pid && pid !== ""));
 
-                // 3. 建立 Participant ID 核心對照 Map
                 const masterDataMap = {};
 
                 allPIDs.forEach(pid => {
-                    // 初始化每個受試者的預設資料結構
                     masterDataMap[pid] = {
                         "Participant ID": pid,
                         "AI Nudge Text": "",
@@ -527,14 +503,12 @@
                         "Abandon Cart Total ($)": 0
                     };
 
-                    // 動態初始化 Item_1 至 Item_19 數量與順序欄位
                     for (let i = 1; i <= 19; i++) {
                         masterDataMap[pid][`Item_${i}_Qty`] = 0;
-                        masterDataMap[pid][`Seq_Item_${i}`] = ""; // 順序欄位，預設空白
+                        masterDataMap[pid][`Seq_Item_${i}`] = "";
                     }
                 });
 
-                // --- 填入 Visit Logs 資料 ---
                 visits.forEach(v => {
                     const pid = v.participantID;
                     if (masterDataMap[pid]) {
@@ -544,7 +518,6 @@
                     }
                 });
 
-                // --- 填入 Checkout Orders 資料、商品數量與 19 個商品的點擊順序 ---
                 orders.forEach(o => {
                     const pid = o.participantID;
                     if (masterDataMap[pid]) {
@@ -554,7 +527,6 @@
                         masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
                         masterDataMap[pid]["Featured Items Qty"] = o.featuredProductCount || 0;
 
-                        // 1. 填入各 Item ID 的購買數量
                         if (Array.isArray(o.finalCartItems)) {
                             o.finalCartItems.forEach(item => {
                                 if (item.id && item.id >= 1 && item.id <= 19) {
@@ -563,7 +535,6 @@
                             });
                         }
 
-                        // 2. 計算並寫入 19 個商品的點擊/選購順序（重複買以第一個為準，沒買則留空）
                         const itemFirstOrder = {};
                         if (Array.isArray(o.selectionSequence)) {
                             o.selectionSequence.forEach(seq => {
@@ -573,7 +544,6 @@
                                 }
                             });
                         } else if (o.itemSequenceMap) {
-                            // 若 Firebase 中已有先前計算好的 itemSequenceMap
                             Object.assign(itemFirstOrder, o.itemSequenceMap);
                         }
 
@@ -587,7 +557,6 @@
                     }
                 });
 
-                // --- 填入 Abandoned Carts 資料 ---
                 abandons.forEach(a => {
                     const pid = a.participantID;
                     if (masterDataMap[pid]) {
@@ -596,7 +565,6 @@
                     }
                 });
 
-                // --- 填入 Survey Responses 資料（展開問卷題目）---
                 surveys.forEach(s => {
                     const pid = s.participantID;
                     if (masterDataMap[pid]) {
@@ -610,15 +578,11 @@
                     }
                 });
 
-                // 4. 建立 Excel 工作簿 (Workbook)
                 const wb = XLSX.utils.book_new();
-
-                // --- Sheet 1: Master Merged Data (總表包含 Item 1-19 數量與順序) ---
                 const masterRows = Object.values(masterDataMap);
                 const wsMaster = XLSX.utils.json_to_sheet(masterRows);
                 XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
 
-                // --- Sheet 2: Selection Sequence Detailed Log (選購歷史順序細節) ---
                 const sequenceRows = [];
                 orders.forEach(o => {
                     const pid = o.participantID;
@@ -638,7 +602,6 @@
                 const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
                 XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
 
-                // 5. 匯出下載 Excel 檔案
                 const dateStr = new Date().toISOString().split('T')[0];
                 XLSX.writeFile(wb, `FreshMart_Research_MasterData_${dateStr}.xlsx`);
 

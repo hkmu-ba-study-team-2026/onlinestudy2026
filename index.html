@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Grocery Shopping Study</title>
+    <title>Online Shopping Study</title>
     <style>
         :root {
             --bg-color: #f4f6f8;
@@ -31,26 +31,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* 鎖定全螢幕高度 */
-            overflow: hidden; /* 防止視窗出現外層滾動條 */
+            height: 100vh;
+            overflow: hidden;
         }
 
         .container {
             background-color: var(--card-bg);
             max-width: 800px;
             width: 100%;
-            height: calc(100vh - 40px); /* 扣除 body padding 的高度 */
+            height: calc(100vh - 40px);
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             padding: 30px;
             border: 1px solid var(--border-color);
             display: flex;
-            flex-direction: column; /* 垂直佈局 */
+            flex-direction: column;
         }
 
-        /* 頂部固定區域 (包含 Header、7分制說明與測試按鈕) */
         .fixed-top-section {
-            flex-shrink: 0; /* 禁止被擠壓 */
+            flex-shrink: 0;
             border-bottom: 2px solid var(--bg-color);
             margin-bottom: 15px;
             padding-bottom: 15px;
@@ -109,7 +108,6 @@
             color: var(--text-secondary);
         }
 
-        /* 測試用隨機填寫按鈕樣式 */
         .dev-autofill-btn {
             display: inline-block;
             margin-top: 12px;
@@ -129,15 +127,13 @@
             color: #2d3748;
         }
 
-        /* 下方獨立滾動的表單區域 */
         #surveyForm {
-            flex: 1; /* 佔滿剩餘垂直空間 */
-            overflow-y: auto; /* 開啟垂直滾動 */
-            padding-right: 12px; /* 留出滾動條空間 */
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 12px;
             margin-top: 10px;
         }
 
-        /* 自訂滾動條樣式 */
         #surveyForm::-webkit-scrollbar {
             width: 6px;
         }
@@ -259,7 +255,6 @@
     </style>
 </head>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script>
@@ -280,7 +275,7 @@
 <body>
 
     <div class="container">
-        <!-- 頂部固定區域 -->
+
         <div class="fixed-top-section">
             <header>
                 <a href="admin.html" class="academic-badge">Academic Survey</a>
@@ -305,7 +300,6 @@
             <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
         </div>
 
-        <!-- 可獨立滾動的問卷表單（已移除 Sub-titles） -->
         <form id="surveyForm" onsubmit="handleSubmit(event)">
 
             <div class="form-group" style="background: #eef2f7; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
@@ -318,186 +312,119 @@
             </div>
 
             <div class="form-group">
-                <label class="question-title">1. The product tastes good. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_taste_good"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">2. The product has an appealing texture. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_appealing_texture"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">3. The product has an appealing aroma. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_appealing_aroma"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">4. The product provides an enjoyable overall eating experience. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_overall_enjoyable"></div>
+                <label class="question-title">1. The product provides an enjoyable sensory experience. <span class="required">*</span></label>
+                <div class="scale-grid" id="q01_sensory_experience"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">5. The product is fresh. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_fresh"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">6. The product is of high quality. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_high_quality"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">7. The product’s quality is consistent across purchases. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_consistent_quality"></div>
+                <label class="question-title">2. The product is fresh. <span class="required">*</span></label>
+                <div class="scale-grid" id="q02_fresh"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">8. The product is healthy. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_healthy"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">9. The product has good nutritional value. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_nutritional_value"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">10. The product is suitable for my dietary needs. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_dietary_needs"></div>
+                <label class="question-title">3. The product is familiar. <span class="required">*</span></label>
+                <div class="scale-grid" id="q03_familiar"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">11. The product is safe to consume. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_safe_consume"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">12. The product does not cause me physical discomfort or adverse reactions. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_no_discomfort"></div>
+                <label class="question-title">4. The product is of high quality. <span class="required">*</span></label>
+                <div class="scale-grid" id="q04_high_quality"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">13. The product’s price is within my budget. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_within_budget"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">14. The benefits I receive from the product justify its price. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_justify_price"></div>
+                <label class="question-title">5. The product is healthy. <span class="required">*</span></label>
+                <div class="scale-grid" id="q05_healthy"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">15. The amount of product in the package meets my needs. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_amount_meets_needs"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">16. The serving size is appropriate for me. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_serving_size"></div>
+                <label class="question-title">6. The product is safe to consume. <span class="required">*</span></label>
+                <div class="scale-grid" id="q06_safe_to_consume"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">17. The product is convenient to use or consume. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_convenient_use"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">18. The product requires little preparation time. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_little_prep_time"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">19. The product requires little preparation effort. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_little_prep_effort"></div>
+                <label class="question-title">7. The product’s price is within my budget. <span class="required">*</span></label>
+                <div class="scale-grid" id="q07_price_within_budget"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">20. The product can be used in different meals or recipes. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_different_meals"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">21. The product is suitable for different consumption situations. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_different_situations"></div>
+                <label class="question-title">8. The benefits I receive from the product justify its price. <span class="required">*</span></label>
+                <div class="scale-grid" id="q08_price_justified"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">22. The packaging protects the product effectively. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_protects_product"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">23. The packaging is easy to open. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_easy_open"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">24. The packaging is easy to store. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_easy_store"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">25. The packaging is easy to reseal when necessary. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_easy_reseal"></div>
+                <label class="question-title">9. The serving size is appropriate for me. <span class="required">*</span></label>
+                <div class="scale-grid" id="q09_serving_size"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">26. The information provided about the product is accurate. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_info_accurate"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">27. The product’s claims are trustworthy. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_claims_trustworthy"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">28. The product label provides enough information for me to make a purchase decision. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_label_enough_info"></div>
+                <label class="question-title">10. The product is convenient to use or consume. <span class="required">*</span></label>
+                <div class="scale-grid" id="q10_convenient"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">29. The product is easy to find where I normally shop. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_easy_to_find"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">30. The product is available when I want to purchase it. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_available_when_needed"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">31. The product is available in a sufficient variety of options. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_variety_options"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">32. The product is authentic to its stated origin or tradition. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_authentic_origin"></div>
+                <label class="question-title">11. The product can be used in different meals or recipes. <span class="required">*</span></label>
+                <div class="scale-grid" id="q11_versatile_use"></div>
             </div>
 
             <div class="form-group">
-                <label class="question-title">33. I receive the correct product when placing an order. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_correct_product"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">34. My order arrives within the promised time. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_promised_time"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">35. The product arrives in good condition. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_good_condition"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">36. Customer service resolves problems reliably. <span class="required">*</span></label>
-                <div class="scale-grid" id="q_cs_resolves_problems"></div>
+                <label class="question-title">12. The packaging protects the product effectively. <span class="required">*</span></label>
+                <div class="scale-grid" id="q12_packaging_protects"></div>
             </div>
 
-            <button type="submit" id="submitBtn" class="submit-btn">
-                Submit and Proceed to Store
-            </button>
-        </form>
+            <div class="form-group">
+                <label class="question-title">13. The product’s claims are trustworthy. <span class="required">*</span></label>
+                <div class="scale-grid" id="q13_trustworthy_claims"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">14. The product is available when I want to purchase it. <span class="required">*</span></label>
+                <div class="scale-grid" id="q14_available"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">15. The product is produced without exploitation. <span class="required">*</span></label>
+                <div class="scale-grid" id="q15_no_exploitation"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">16. The product is produced in an environmentally friendly way. <span class="required">*</span></label>
+                <div class="scale-grid" id="q16_eco_friendly"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="question-title">17. The product is a local/regional product. <span class="required">*</span></label>
+                <div class="scale-grid" id="q17_local_product"></div>
+            </div>
+
+    <button type="submit" id="submitBtn" class="submit-btn">
+        Submit and Proceed to Store
+    </button>
+</form>
     </div>
 
     <script>
         const API_URL = "/api/recommend";
 
         const questionIds = [
-            "q_taste_good", "q_appealing_texture", "q_appealing_aroma", "q_overall_enjoyable",
-            "q_fresh", "q_high_quality", "q_consistent_quality",
-            "q_healthy", "q_nutritional_value", "q_dietary_needs",
-            "q_safe_consume", "q_no_discomfort",
-            "q_within_budget", "q_justify_price",
-            "q_amount_meets_needs", "q_serving_size",
-            "q_convenient_use", "q_little_prep_time", "q_little_prep_effort",
-            "q_different_meals", "q_different_situations",
-            "q_protects_product", "q_easy_open", "q_easy_store", "q_easy_reseal",
-            "q_info_accurate", "q_claims_trustworthy", "q_label_enough_info",
-            "q_easy_to_find", "q_available_when_needed", "q_variety_options", "q_authentic_origin",
-            "q_correct_product", "q_promised_time", "q_good_condition", "q_cs_resolves_problems"
+            "q01_sensory_experience",
+            "q02_fresh",
+            "q03_familiar",
+            "q04_high_quality",
+            "q05_healthy",
+            "q06_safe_to_consume",
+            "q07_price_within_budget",
+            "q08_price_justified",
+            "q09_serving_size",
+            "q10_convenient",
+            "q11_versatile_use",
+            "q12_packaging_protects",
+            "q13_trustworthy_claims",
+            "q14_available",
+            "q15_no_exploitation",
+            "q16_eco_friendly",
+            "q17_local_product"
         ];
 
-        // 動態生成 1~7 分的選項
         questionIds.forEach(qId => {
             const container = document.getElementById(qId);
             if (!container) return;
@@ -513,7 +440,6 @@
             }
         });
 
-        // 隨機自動填寫問卷（開發測試用）
         function autoFillRandom() {
             questionIds.forEach(qId => {
                 const randomVal = Math.floor(Math.random() * 7) + 1;
@@ -542,7 +468,6 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Saving responses & Loading store...';
 
-            // 1. 抓取用戶輸入的 Participant ID 取代隨機生成的 ID
             const inputPid = document.getElementById('inputParticipantID').value.trim();
             if (!inputPid) {
                 alert("Please enter a valid Participant ID.");
@@ -561,7 +486,6 @@
                 surveyResponses[qId] = parseInt(formData.get(qId), 10);
             });
 
-            // 2. 準備請求推薦 API 的 Payload
             const userPreferences = {
                 surveyResponses: surveyResponses,
             };
@@ -573,7 +497,6 @@
 
             let aiNudgeText = "";
 
-            // 3. 呼叫推薦 API 並獲取 AI Nudge 文案
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -603,11 +526,10 @@
                 localStorage.setItem('ai_nudge_text', aiNudgeText);
             }
 
-            // 4. 將問卷回答與紀錄的 AI Nudge 一併寫入 Firebase Realtime Database
             const firebaseData = {
                 participantID: participantNum,
                 submittedAt: new Date().toLocaleString(),
-                aiNudgeText: aiNudgeText, // 紀錄每位用戶獲得的 AI nudge 文案
+                aiNudgeText: aiNudgeText,
                 responses: surveyResponses
             };
 

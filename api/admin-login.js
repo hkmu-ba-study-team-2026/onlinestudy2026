@@ -1,5 +1,4 @@
 module.exports = async (req, res) => {
-    // 處理 CORS（若有跨域需求）
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -13,7 +12,6 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Vercel 會自動解析 req.body，無需手動 JSON.parse
         const { password: inputPassword } = req.body || {};
         const CORRECT_PASSWORD = process.env.ADMIN_PASSWORD;
 
