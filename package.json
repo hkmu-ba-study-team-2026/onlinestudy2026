@@ -1,7 +1,7 @@
 {
-  "name": "online-grocery-shopping-experiment",
+  "name": "online-study-2026",
   "version": "1.0.0",
-  "description": "This is a web-based interface for simulating online grocery shopping scenarios in user behavior experiments.",
+  "description": "This is a web-based interface for user behavior experiments.",
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
