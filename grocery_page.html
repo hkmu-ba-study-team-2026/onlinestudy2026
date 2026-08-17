@@ -119,6 +119,70 @@
             margin: 0;
         }
 
+        /* ================= 強化版 Nudge 容器樣式 ================= */
+        .rec-banner-content {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 2px solid #16a34a;
+            box-shadow: 0 4px 18px rgba(22, 163, 74, 0.18);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 15px;
+            animation: gentlePulse 3s infinite ease-in-out;
+        }
+
+        /* 呼吸燈微動態：提升注目度但不干擾操作 */
+        @keyframes gentlePulse {
+            0%, 100% {
+                box-shadow: 0 4px 18px rgba(22, 163, 74, 0.18);
+                border-color: #16a34a;
+            }
+            50% {
+                box-shadow: 0 6px 24px rgba(22, 163, 74, 0.35);
+                border-color: #15803d;
+            }
+        }
+
+        /* 左側 AI / 提示專屬徽章 */
+        .nudge-badge-pill {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
+        }
+
+        /* Nudge 主體文字：大字號、深色高對比 */
+        .nudge-text-highlight {
+            color: #064e3b;
+            font-size: 1.12rem;
+            font-weight: 700;
+            line-height: 1.45;
+            margin: 0;
+            letter-spacing: 0.2px;
+        }
+
+        @media (max-width: 600px) {
+            .rec-banner-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 14px;
+            }
+            .nudge-text-highlight {
+                font-size: 1rem;
+            }
+        }
+
         .recommended-card {
             border: 3px solid #16a34a !important;
             box-shadow: 0 6px 18px rgba(22, 163, 74, 0.25) !important;
@@ -242,7 +306,9 @@
         <div class="rec-banner" id="featuredBanner">
 
             <div class="products-grid" id="productWrap">
+                <!-- 1. Red Apple -->
                 <div class="product-card" data-id="1" data-type="featured">
+                    <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/apple.png" alt="Apple"></div>
                     <div class="product-info">
                         <h3>Red Apple</h3>
@@ -252,7 +318,9 @@
                     </div>
                 </div>
 
+                <!-- 2. Whole Milk -->
                 <div class="product-card" data-id="2" data-type="featured">
+                    <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
                     <div class="product-info">
                         <h3>Whole Milk</h3>
@@ -262,7 +330,9 @@
                     </div>
                 </div>
 
+                <!-- 3. Sourdough Bread -->
                 <div class="product-card" data-id="3" data-type="featured">
+                    <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
                     <div class="product-info">
                         <h3>Sourdough Bread</h3>
@@ -272,7 +342,9 @@
                     </div>
                 </div>
 
+                <!-- 4. Chicken Drumsticks -->
                 <div class="product-card" data-id="4" data-type="featured">
+                    <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
                     <div class="product-info">
                         <h3>Chicken Drumsticks</h3>
@@ -282,7 +354,9 @@
                     </div>
                 </div>
 
+                <!-- 5. Avocado -->
                 <div class="product-card" data-id="5" data-type="featured">
+                    <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
                     <div class="product-info">
                         <h3>Avocado</h3>
@@ -291,7 +365,6 @@
                         <button class="add-btn" data-id="5">Add to Cart</button>
                     </div>
                 </div>
-
             </div>
             <div id="bannerTextContainer" class="rec-banner-content"></div>
         </div>
@@ -695,9 +768,14 @@ document.addEventListener('DOMContentLoaded', function(){
                 textSentence = data.recommendation;
             }
 
+            // 在 grocery_page.html 的 rawRecData 處理段落中替換：
             if (textSentence) {
                 const bannerTextContainer = document.getElementById('bannerTextContainer');
-                bannerTextContainer.innerHTML = `<h2>${textSentence}</h2>`;
+                if (bannerTextContainer) {
+                    bannerTextContainer.innerHTML = `
+                        <h2 class="nudge-text-highlight">${textSentence}</p>
+                    `;
+                }
             }
 
             if (Array.isArray(data)) {
