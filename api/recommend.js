@@ -19,7 +19,7 @@ You are an AI recommender system. Based on user preferences, write a short, enga
 User preferences: ${JSON.stringify(preferences)},
 Products: ${JSON.stringify(simplifiedProducts)}.
 
-The recommendation focus on 1-3 major aspects based on the user preferences, but without explicitly mentioning about the extraction from user preferences.
+The recommendation focus on 1-3 major aspects based on the user preferences, and includes promotion of the idea of eco-sustainability of the products, but without explicitly mentioning or indicating about the extraction from user preferences.
 
 Output MUST be plain text only, exactly one short sentence, starting with "These items". Do not wrap into JSON or quotes.
 `;

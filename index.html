@@ -457,7 +457,7 @@
             });
         }
 
-        const productsList = ["Red Fuji Apple", "Whole Milk", "Whole Wheat Bread", "Chicken Legs", "Avocado"];
+        const productsList = ["Red Apple", "Whole Milk", "Sourdough Bread", "Chicken Drumsticks", "Avocado"];
 
         function generateRandomParticipantID() {
             let result = '';
@@ -473,7 +473,7 @@
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Saving responses & Loading store...';
+            submitBtn.textContent = 'Saving responses...';
 
             const inputPid = document.getElementById('inputParticipantID').value.trim();
             if (!inputPid) {

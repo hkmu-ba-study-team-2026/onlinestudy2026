@@ -461,159 +461,176 @@
     }
 
     async function exportFirebaseToExcel() {
-            const exportBtn = document.querySelector(".export-btn");
-            exportBtn.disabled = true;
-            exportBtn.innerText = "⏳ Exporting...";
+    const exportBtn = document.querySelector(".export-btn");
+    exportBtn.disabled = true;
+    exportBtn.innerText = "⏳ Exporting...";
 
-            try {
-                const [ordersSnap, surveySnap, abandonSnap, visitSnap] = await Promise.all([
-                    db.ref('checkout_records').once('value'),
-                    db.ref('survey_responses').once('value'),
-                    db.ref('abandon_carts').once('value'),
-                    db.ref('visit_logs').once('value')
-                ]);
+    try {
+        const [ordersSnap, surveySnap, abandonSnap, visitSnap] = await Promise.all([
+            db.ref('checkout_records').once('value'),
+            db.ref('survey_responses').once('value'),
+            db.ref('abandon_carts').once('value'),
+            db.ref('visit_logs').once('value')
+        ]);
 
-                const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
-                const surveys = surveySnap.val() ? Object.values(surveySnap.val()) : [];
-                const abandons = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
-                const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
+        const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
+        const surveys = surveySnap.val() ? Object.values(surveySnap.val()) : [];
+        const abandons = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
+        const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
 
-                const allPIDs = new Set([
-                    ...orders.map(o => o.participantID),
-                    ...surveys.map(s => s.participantID),
-                    ...abandons.map(a => a.participantID),
-                    ...visits.map(v => v.participantID)
-                ].filter(pid => pid && pid !== ""));
+        const allPIDs = new Set([
+            ...orders.map(o => o.participantID),
+            ...surveys.map(s => s.participantID),
+            ...abandons.map(a => a.participantID),
+            ...visits.map(v => v.participantID)
+        ].filter(pid => pid && pid !== ""));
 
-                const masterDataMap = {};
-
-                allPIDs.forEach(pid => {
-                    masterDataMap[pid] = {
-                        "Participant ID": pid,
-                        "AI Nudge Text": "",
-                        "Enter Time": "",
-                        "Leave Time": "",
-                        "Visit Duration (s)": 0,
-                        "Has Checkout": "No",
-                        "Checkout Time": "",
-                        "Checkout Duration (s)": 0,
-                        "Order Total ($)": 0,
-                        "Featured Items Qty": 0,
-                        "Has Abandoned Cart": "No",
-                        "Abandon Cart Total ($)": 0
-                    };
-
-                    for (let i = 1; i <= 19; i++) {
-                        masterDataMap[pid][`Item_${i}_Qty`] = 0;
-                        masterDataMap[pid][`Seq_Item_${i}`] = "";
-                    }
-                });
-
-                visits.forEach(v => {
-                    const pid = v.participantID;
-                    if (masterDataMap[pid]) {
-                        masterDataMap[pid]["Enter Time"] = v.enter || "";
-                        masterDataMap[pid]["Leave Time"] = v.leave || "";
-                        masterDataMap[pid]["Visit Duration (s)"] = v.totalSecond || 0;
-                    }
-                });
-
-                orders.forEach(o => {
-                    const pid = o.participantID;
-                    if (masterDataMap[pid]) {
-                        masterDataMap[pid]["Has Checkout"] = "Yes";
-                        masterDataMap[pid]["Checkout Time"] = o.checkoutTime || "";
-                        masterDataMap[pid]["Checkout Duration (s)"] = o.durationSeconds || 0;
-                        masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
-                        masterDataMap[pid]["Featured Items Qty"] = o.featuredProductCount || 0;
-
-                        if (Array.isArray(o.finalCartItems)) {
-                            o.finalCartItems.forEach(item => {
-                                if (item.id && item.id >= 1 && item.id <= 19) {
-                                    masterDataMap[pid][`Item_${item.id}_Qty`] += (item.quantity || 0);
-                                }
-                            });
-                        }
-
-                        const itemFirstOrder = {};
-                        if (Array.isArray(o.selectionSequence)) {
-                            o.selectionSequence.forEach(seq => {
-                                const pId = seq.productId;
-                                if (pId && !itemFirstOrder.hasOwnProperty(pId)) {
-                                    itemFirstOrder[pId] = seq.step;
-                                }
-                            });
-                        } else if (o.itemSequenceMap) {
-                            Object.assign(itemFirstOrder, o.itemSequenceMap);
-                        }
-
-                        for (let i = 1; i <= 19; i++) {
-                            if (o.itemSequenceMap && o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
-                                masterDataMap[pid][`Seq_Item_${i}`] = o.itemSequenceMap[`Seq_Item_${i}`];
-                            } else {
-                                masterDataMap[pid][`Seq_Item_${i}`] = itemFirstOrder.hasOwnProperty(i) ? itemFirstOrder[i] : "";
-                            }
-                        }
-                    }
-                });
-
-                abandons.forEach(a => {
-                    const pid = a.participantID;
-                    if (masterDataMap[pid]) {
-                        masterDataMap[pid]["Has Abandoned Cart"] = "Yes";
-                        masterDataMap[pid]["Abandon Cart Total ($)"] = a.cartTotal || 0;
-                    }
-                });
-
-                surveys.forEach(s => {
-                    const pid = s.participantID;
-                    if (masterDataMap[pid]) {
-                        masterDataMap[pid]["AI Nudge Text"] = s.aiNudgeText || "";
-                        masterDataMap[pid]["Survey Submitted Time"] = s.submittedAt || "";
-                        if (s.responses) {
-                            Object.keys(s.responses).forEach(qKey => {
-                                masterDataMap[pid][`Survey_${qKey}`] = s.responses[qKey];
-                            });
-                        }
-                    }
-                });
-
-                const wb = XLSX.utils.book_new();
-                const masterRows = Object.values(masterDataMap);
-                const wsMaster = XLSX.utils.json_to_sheet(masterRows);
-                XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
-
-                const sequenceRows = [];
-                orders.forEach(o => {
-                    const pid = o.participantID;
-                    if (Array.isArray(o.selectionSequence)) {
-                        o.selectionSequence.forEach(seq => {
-                            sequenceRows.push({
-                                "Participant ID": pid,
-                                "Step": seq.step,
-                                "Product ID": seq.productId || "",
-                                "Product Name": seq.productName || "",
-                                "Quantity": seq.quantity || 1,
-                                "Timestamp": seq.timestamp || ""
-                            });
-                        });
-                    }
-                });
-                const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
-                XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
-
-                const dateStr = new Date().toISOString().split('T')[0];
-                XLSX.writeFile(wb, `FreshMart_Research_MasterData_${dateStr}.xlsx`);
-
-                alert("Excel export completed successfully!");
-            } catch (err) {
-                console.error("Failed to export Excel:", err);
-                alert("Export failed, please check browser console.");
-            } finally {
-                exportBtn.disabled = false;
-                exportBtn.innerText = "📊 Export All to Excel";
+        const allSurveyKeys = new Set();
+        surveys.forEach(s => {
+            if (s.responses) {
+                Object.keys(s.responses).forEach(key => allSurveyKeys.add(key));
             }
-        }
+        });
+        const sortedSurveyKeys = Array.from(allSurveyKeys).sort();
+
+        const masterDataMap = {};
+
+        allPIDs.forEach(pid => {
+            masterDataMap[pid] = {
+                "Participant ID": pid,
+                "Survey Submitted Time": "",
+                "AI Nudge Text": ""
+            };
+
+            sortedSurveyKeys.forEach(qKey => {
+                masterDataMap[pid][`Survey_${qKey}`] = "";
+            });
+
+            Object.assign(masterDataMap[pid], {
+                "Enter Time": "",
+                "Leave Time": "",
+                "Visit Duration (s)": 0,
+                "Has Checkout": "No",
+                "Checkout Time": "",
+                "Checkout Duration (s)": 0,
+                "Order Total ($)": 0,
+                "Featured Items Qty": 0,
+                "Has Abandoned Cart": "No",
+                "Abandon Cart Total ($)": 0
+            });
+
+            // 支援 1 ~ 30 項商品欄位
+            for (let i = 1; i <= 30; i++) {
+                masterDataMap[pid][`Item_${i}_Qty`] = 0;
+                masterDataMap[pid][`Seq_Item_${i}`] = "";
+            }
+        });
+
+        surveys.forEach(s => {
+            const pid = s.participantID;
+            if (masterDataMap[pid]) {
+                masterDataMap[pid]["Survey Submitted Time"] = s.submittedAt || "";
+                masterDataMap[pid]["AI Nudge Text"] = s.aiNudgeText || "";
+                if (s.responses) {
+                    Object.keys(s.responses).forEach(qKey => {
+                        masterDataMap[pid][`Survey_${qKey}`] = s.responses[qKey];
+                    });
+                }
+            }
+        });
+
+        visits.forEach(v => {
+            const pid = v.participantID;
+            if (masterDataMap[pid]) {
+                masterDataMap[pid]["Enter Time"] = v.enter || "";
+                masterDataMap[pid]["Leave Time"] = v.leave || "";
+                masterDataMap[pid]["Visit Duration (s)"] = v.totalSecond || 0;
+            }
+        });
+
+        orders.forEach(o => {
+            const pid = o.participantID;
+            if (masterDataMap[pid]) {
+                masterDataMap[pid]["Has Checkout"] = "Yes";
+                masterDataMap[pid]["Checkout Time"] = o.checkoutTime || "";
+                masterDataMap[pid]["Checkout Duration (s)"] = o.durationSeconds || 0;
+                masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
+                masterDataMap[pid]["Featured Items Qty"] = o.featuredProductCount || 0;
+
+                if (Array.isArray(o.finalCartItems)) {
+                    o.finalCartItems.forEach(item => {
+                        if (item.id && item.id >= 1 && item.id <= 30) {
+                            masterDataMap[pid][`Item_${item.id}_Qty`] += (item.quantity || 0);
+                        }
+                    });
+                }
+
+                const itemFirstOrder = {};
+                if (Array.isArray(o.selectionSequence)) {
+                    o.selectionSequence.forEach(seq => {
+                        const pId = seq.productId;
+                        if (pId && !itemFirstOrder.hasOwnProperty(pId)) {
+                            itemFirstOrder[pId] = seq.step;
+                        }
+                    });
+                } else if (o.itemSequenceMap) {
+                    Object.assign(itemFirstOrder, o.itemSequenceMap);
+                }
+
+                for (let i = 1; i <= 30; i++) {
+                    if (o.itemSequenceMap && o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
+                        masterDataMap[pid][`Seq_Item_${i}`] = o.itemSequenceMap[`Seq_Item_${i}`];
+                    } else {
+                        masterDataMap[pid][`Seq_Item_${i}`] = itemFirstOrder.hasOwnProperty(i) ? itemFirstOrder[i] : "";
+                    }
+                }
+            }
+        });
+
+        abandons.forEach(a => {
+            const pid = a.participantID;
+            if (masterDataMap[pid]) {
+                masterDataMap[pid]["Has Abandoned Cart"] = "Yes";
+                masterDataMap[pid]["Abandon Cart Total ($)"] = a.cartTotal || 0;
+            }
+        });
+
+        const wb = XLSX.utils.book_new();
+        const masterRows = Object.values(masterDataMap);
+        const wsMaster = XLSX.utils.json_to_sheet(masterRows);
+        XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
+
+        const sequenceRows = [];
+        orders.forEach(o => {
+            const pid = o.participantID;
+            if (Array.isArray(o.selectionSequence)) {
+                o.selectionSequence.forEach(seq => {
+                    sequenceRows.push({
+                        "Participant ID": pid,
+                        "Step": seq.step,
+                        "Product ID": seq.productId || "",
+                        "Product Name": seq.productName || "",
+                        "Quantity": seq.quantity || 1,
+                        "Timestamp": seq.timestamp || ""
+                    });
+                });
+            }
+        });
+        const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
+        XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
+
+        const dateStr = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `FreshMart_Research_MasterData_${dateStr}.xlsx`);
+
+        alert("Excel export completed successfully!");
+    } catch (err) {
+        console.error("Failed to export Excel:", err);
+        alert("Export failed, please check browser console.");
+    } finally {
+        exportBtn.disabled = false;
+        exportBtn.innerText = "📊 Export All to Excel";
+    }
+}
 </script>
 
 </body>

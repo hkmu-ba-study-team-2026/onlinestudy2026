@@ -192,7 +192,7 @@
             Please simulate an online grocery shopping task to select ingredients required for preparing three days' worth of meals.
         </p>
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; margin-bottom: 24px;">
-            Shopping Budget Limit: $100.00 USD
+            Shopping Budget Limit: $50.00 USD
         </div>
         <button id="closeModalBtn" style="background: #16a34a; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px;">
             I Understand & Continue
@@ -235,59 +235,65 @@
         <div class="featured-header-bar">
             <h2 style="margin: 0;">Featured eco-sustainable items</h2>
             <div id="budgetDisplay" class="budget-badge">
-                Remaining Budget: $<span id="remainingBudget">100.00</span>
+                Remaining Budget: $<span id="remainingBudget">50.00</span>
             </div>
         </div>
 
         <div class="rec-banner" id="featuredBanner">
 
-            <div id="bannerTextContainer" class="rec-banner-content"></div>
             <div class="products-grid" id="productWrap">
                 <div class="product-card" data-id="1" data-type="featured">
-                    <div class="product-image"><img src="apple.png" alt="Apple"></div>
+                    <div class="product-image"><img src="assets/apple.png" alt="Apple"></div>
                     <div class="product-info">
-                        <h3>Red Fuji Apple</h3>
-                        <p>$3.99</p>
+                        <h3>Red Apple</h3>
+                        <h3>1 Count</h3>
+                        <p>$1.47</p>
                         <button class="add-btn" data-id="1">Add to Cart</button>
                     </div>
                 </div>
 
                 <div class="product-card" data-id="2" data-type="featured">
-                    <div class="product-image"><img src="milk.png" alt="Milk"></div>
+                    <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
                     <div class="product-info">
                         <h3>Whole Milk</h3>
-                        <p>$4.29</p>
+                        <h3>64 Ounce</h3>
+                        <p>$4.99</p>
                         <button class="add-btn" data-id="2">Add to Cart</button>
                     </div>
                 </div>
 
                 <div class="product-card" data-id="3" data-type="featured">
-                    <div class="product-image"><img src="bread.png" alt="Bread"></div>
+                    <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
                     <div class="product-info">
-                        <h3>Whole Wheat Bread</h3>
-                        <p>$3.49</p>
+                        <h3>Sourdough Bread</h3>
+                        <h3>24 Ounce</h3>
+                        <p>$5.49</p>
                         <button class="add-btn" data-id="3">Add to Cart</button>
                     </div>
                 </div>
 
                 <div class="product-card" data-id="4" data-type="featured">
-                    <div class="product-image"><img src="ChickenLeg.png" alt="ChickenLeg"></div>
+                    <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
                     <div class="product-info">
-                        <h3>Organic Chicken Legs</h3>
-                        <p>$5.99</p>
+                        <h3>Chicken Drumsticks</h3>
+                        <h3>1 Lb</h3>
+                        <p>$1.77</p>
                         <button class="add-btn" data-id="4">Add to Cart</button>
                     </div>
                 </div>
 
                 <div class="product-card" data-id="5" data-type="featured">
-                    <div class="product-image"><img src="Avocado.png" alt="Avocado"></div>
+                    <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
                     <div class="product-info">
-                        <h3>Fresh Avocado</h3>
-                        <p>$2.49</p>
+                        <h3>Avocado</h3>
+                        <h3>1 Count</h3>
+                        <p>$2.59</p>
                         <button class="add-btn" data-id="5">Add to Cart</button>
                     </div>
                 </div>
+
             </div>
+            <div id="bannerTextContainer" class="rec-banner-content"></div>
         </div>
     </div>
 </section>
@@ -299,27 +305,48 @@
         </div>
         <div class="products-grid">
             <div class="product-card" data-id="6" data-type="fruits">
-                <div class="product-image"><img src="green-apples.jpg" alt="Green Apple"></div>
+                <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
                 <div class="product-info">
-                    <h3>Green Apple Pack</h3>
-                    <p>$3.49</p>
+                    <h3>Strawberries</h3>
+                    <h3>1 Lb</h3>
+                    <p>$2.38</p>
                     <button class="add-btn" data-id="6">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="7" data-type="fruits">
-                <div class="product-image"><img src="banana.png" alt="Banana"></div>
+                <div class="product-image"><img src="assets/blueberry.jpg" alt="Blueberries"></div>
                 <div class="product-info">
-                    <h3>Organic Banana Bunch</h3>
-                    <p>$1.99</p>
+                    <h3>Blueberries</h3>
+                    <h3>1 Pint</h3>
+                    <p>$2.99</p>
                     <button class="add-btn" data-id="7">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="8" data-type="fruits">
-                <div class="product-image"><img src="lemon.png" alt="Lemon"></div>
+                <div class="product-image"><img src="assets/banana.jpg" alt="Banana"></div>
                 <div class="product-info">
-                    <h3>Fresh Lemon Bag</h3>
-                    <p>$2.99</p>
+                    <h3>Banana Bunch</h3>
+                    <h3>4-5 count</h3>
+                    <p>$0.99</p>
                     <button class="add-btn" data-id="8">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="9" data-type="fruits">
+                <div class="product-image"><img src="assets/oranges.jpg" alt="Oranges"></div>
+                <div class="product-info">
+                    <h3>Oranges</h3>
+                    <h3>3 Lb</h3>
+                    <p>$4.99</p>
+                    <button class="add-btn" data-id="9">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="10" data-type="fruits">
+                <div class="product-image"><img src="assets/lemon.jpg" alt="Lemon"></div>
+                <div class="product-info">
+                    <h3>Lemon</h3>
+                    <h3>1 Each</h3>
+                    <p>$0.74</p>
+                    <button class="add-btn" data-id="10">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -332,20 +359,49 @@
             <h2>Fresh Vegetables</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="9" data-type="vegetables">
-                <div class="product-image"><img src="tomato.png" alt="Tomato"></div>
+            <div class="product-card" data-id="11" data-type="vegetables">
+                <div class="product-image"><img src="assets\tomato.jpg" alt="Tomato"></div>
                 <div class="product-info">
-                    <h3>Roma Tomato Box</h3>
-                    <p>$2.99</p>
-                    <button class="add-btn" data-id="9">Add to Cart</button>
+                    <h3>Tomato Cherry</h3>
+                    <h3>10 Ounce</h3>
+                    <p>$2.97</p>
+                    <button class="add-btn" data-id="11">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="10" data-type="vegetables">
-                <div class="product-image"><img src="Cucumber.png" alt="Cucumber"></div>
+            <div class="product-card" data-id="12" data-type="vegetables">
+                <div class="product-image"><img src="assets\sweet-potato.jpg" alt="SweetPotato"></div>
                 <div class="product-info">
-                    <h3>Fresh Cucumber</h3>
-                    <p>$0.99</p>
-                    <button class="add-btn" data-id="10">Add to Cart</button>
+                    <h3>Sweet Potato</h3>
+                    <h3>1 Each</h3>
+                    <p>$1.95</p>
+                    <button class="add-btn" data-id="12">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="13" data-type="vegetables">
+                <div class="product-image"><img src="assets/cucumber.png" alt="Cucumber"></div>
+                <div class="product-info">
+                    <h3>Cucumber</h3>
+                    <h3>16 Oz</h3>
+                    <p>$2.08</p>
+                    <button class="add-btn" data-id="13">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="14" data-type="vegetables">
+                <div class="product-image"><img src="assets/corn.jpg" alt="Corn"></div>
+                <div class="product-info">
+                    <h3>Bi-Color Corn</h3>
+                    <h3>1 Each</h3>
+                    <p>$0.50</p>
+                    <button class="add-btn" data-id="14">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="15" data-type="vegetables">
+                <div class="product-image"><img src="assets/baby-carrots.jpg" alt="Baby Carrot"></div>
+                <div class="product-info">
+                    <h3>Peeled Baby Carrots</h3>
+                    <h3>16 Oz</h3>
+                    <p>$1.32</p>
+                    <button class="add-btn" data-id="15">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -358,28 +414,49 @@
             <h2>Fresh Meat</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="11" data-type="meat">
-                <div class="product-image"><img src="Beef.png" alt="Beef"></div>
+            <div class="product-card" data-id="16" data-type="meat">
+                <div class="product-image"><img src="assets/ground-beef.jpg" alt="Beef"></div>
                 <div class="product-info">
-                    <h3>Fresh Beef</h3>
-                    <p>$14.99</p>
-                    <button class="add-btn" data-id="11">Add to Cart</button>
+                    <h3>Grounded Beef</h3>
+                    <h3>1 Lb</h3>
+                    <p>$6.99</p>
+                    <button class="add-btn" data-id="16">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="12" data-type="meat">
-                <div class="product-image"><img src="porkchop.png" alt="Pork Chop"></div>
+            <div class="product-card" data-id="17" data-type="meat">
+                <div class="product-image"><img src="assets/chicken-breasts.jpg" alt="Chicken Breasts"></div>
                 <div class="product-info">
-                    <h3>Premium Pork Chops</h3>
-                    <p>$8.99</p>
-                    <button class="add-btn" data-id="12">Add to Cart</button>
+                    <h3>Chicken Breasts Fillets</h3>
+                    <h3>1 Lb</h3>
+                    <p>$2.79</p>
+                    <button class="add-btn" data-id="17">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="13" data-type="meat">
-                <div class="product-image"><img src="turkey.png" alt="Turkey"></div>
+            <div class="product-card" data-id="18" data-type="meat">
+                <div class="product-image"><img src="assets/beef-sirloin.jpg" alt="Beef Sirloin"></div>
                 <div class="product-info">
-                    <h3>Ground Turkey</h3>
-                    <p>$5.49</p>
-                    <button class="add-btn" data-id="13">Add to Cart</button>
+                    <h3>Beef Sirloin Steaks</h3>
+                    <h3>1 Lb</h3>
+                    <p>$15.24</p>
+                    <button class="add-btn" data-id="18">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="19" data-type="meat">
+                <div class="product-image"><img src="assets/pork.jpg" alt="Pork Loin"></div>
+                <div class="product-info">
+                    <h3>Pork Loin Chops</h3>
+                    <h3>1 Lb</h3>
+                    <p>$7.38</p>
+                    <button class="add-btn" data-id="19">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="20" data-type="meat">
+                <div class="product-image"><img src="assets/ground-turkey.jpg" alt="Turkey"></div>
+                <div class="product-info">
+                    <h3>Ground Turkey Meat</h3>
+                    <h3>1 Lb</h3>
+                    <p>$5.46</p>
+                    <button class="add-btn" data-id="20">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -392,28 +469,49 @@
             <h2>Seafood Market</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="14" data-type="seafood">
-                <div class="product-image"><img src="Salmon.png" alt="Salmon"></div>
+            <div class="product-card" data-id="21" data-type="seafood">
+                <div class="product-image"><img src="assets/salmon.jpg" alt="Salmon"></div>
                 <div class="product-info">
-                    <h3>Salmon Fillet</h3>
-                    <p>$13.99</p>
-                    <button class="add-btn" data-id="14">Add to Cart</button>
+                    <h3>Smoked Salmon</h3>
+                    <h3>10 Ounce</h3>
+                    <p>$8.98</p>
+                    <button class="add-btn" data-id="21">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="15" data-type="seafood">
-                <div class="product-image"><img src="shrimp.png" alt="Shrimp"></div>
+            <div class="product-card" data-id="22" data-type="seafood">
+                <div class="product-image"><img src="assets/shrimp.jpg" alt="Shrimp"></div>
                 <div class="product-info">
-                    <h3>Frozen Shrimp Pack</h3>
-                    <p>$9.99</p>
-                    <button class="add-btn" data-id="15">Add to Cart</button>
+                    <h3>Raw Shrimp Pack</h3>
+                    <h3>12 Ounce</h3>
+                    <p>$7.64</p>
+                    <button class="add-btn" data-id="22">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="16" data-type="seafood">
-                <div class="product-image"><img src="cod.png" alt="Cod"></div>
+            <div class="product-card" data-id="23" data-type="seafood">
+                <div class="product-image"><img src="assets/cod.jpg" alt="Cod"></div>
                 <div class="product-info">
-                    <h3>Cod Fish Fillets</h3>
-                    <p>$11.99</p>
-                    <button class="add-btn" data-id="16">Add to Cart</button>
+                    <h3>Cod Fillets</h3>
+                    <h3>16 Ounce</h3>
+                    <p>$13.78</p>
+                    <button class="add-btn" data-id="23">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="24" data-type="seafood">
+                <div class="product-image"><img src="assets/fish-fillets.jpg" alt="Fish Fillets"></div>
+                <div class="product-info">
+                    <h3>Breaded Fish Fillets</h3>
+                    <h3>19 Ounce</h3>
+                    <p>$7.99</p>
+                    <button class="add-btn" data-id="24">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="25" data-type="seafood">
+                <div class="product-image"><img src="assets/tilapia.jpg" alt="Tilapia"></div>
+                <div class="product-info">
+                    <h3>Tilapia Fillets</h3>
+                    <h3>12 Ounce</h3>
+                    <p>$5.99</p>
+                    <button class="add-btn" data-id="25">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -423,31 +521,52 @@
 <section id="pantry-dairy" class="products-section">
     <div class="container">
         <div class="cate-head">
-            <h2>Pantry & Dairy Staples</h2>
+            <h2>Dairy, Cheese & Eggs</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="17" data-type="dairy">
-                <div class="product-image"><img src="eggs.png" alt="Eggs"></div>
-                <div class="product-info">
-                    <h3>Farm Eggs</h3>
-                    <p>$4.49</p>
-                    <button class="add-btn" data-id="17">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="18" data-type="pantry">
-                <div class="product-image"><img src="Rice.png" alt="Rice"></div>
-                <div class="product-info">
-                    <h3>Long Grain Rice</h3>
-                    <p>$4.99</p>
-                    <button class="add-btn" data-id="18">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="19" data-type="dairy">
-                <div class="product-image"><img src="greek-yogurt.png" alt="Greek-Yogurt"></div>
+            <div class="product-card" data-id="26" data-type="dairy">
+                <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek-Yogurt"></div>
                 <div class="product-info">
                     <h3>Greek Yogurt</h3>
-                    <p>$1.49</p>
-                    <button class="add-btn" data-id="19">Add to Cart</button>
+                    <h3>32 Ounce</h3>
+                    <p>$4.99</p>
+                    <button class="add-btn" data-id="26">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="27" data-type="dairy">
+                <div class="product-image"><img src="assets/cheddar-cheese.jpg" alt="Cheddar Cheese"></div>
+                <div class="product-info">
+                    <h3>Cheddar Cheese</h3>
+                    <h3>8 Ounce, 10 Slices</h3>
+                    <p>$1.65</p>
+                    <button class="add-btn" data-id="27">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="28" data-type="dairy">
+                <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
+                <div class="product-info">
+                    <h3>Large Brown Eggs</h3>
+                    <h3>12 Count</h3>
+                    <p>$7.49</p>
+                    <button class="add-btn" data-id="28">Add to Cart</button>
+                </div>
+            </div>
+           <div class="product-card" data-id="29" data-type="dairy">
+                <div class="product-image"><img src="assets/butter.jpg" alt="Butter"></div>
+                <div class="product-info">
+                    <h3>Unsalted Butter</h3>
+                    <h3>16 Ounce</h3>
+                    <p>$2.99</p>
+                    <button class="add-btn" data-id="29">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="30" data-type="dairy">
+                <div class="product-image"><img src="assets/4-cheese.jpg" alt="Four Cheese Blend"></div>
+                <div class="product-info">
+                    <h3>Four Cheese Blend</h3>
+                    <h3>8 Ounce</h3>
+                    <p>$1.90</p>
+                    <button class="add-btn" data-id="30">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -503,7 +622,7 @@
 <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    const MAX_BUDGET = 100.00;
+    const MAX_BUDGET = 50.00;
 
     function updateRemainingBudgetDisplay() {
         let currentTotal = 0;
@@ -578,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
             if (textSentence) {
                 const bannerTextContainer = document.getElementById('bannerTextContainer');
-                bannerTextContainer.innerHTML = `<p>${textSentence}</p>`;
+                bannerTextContainer.innerHTML = `<h2>${textSentence}</h2>`;
             }
 
             if (Array.isArray(data)) {

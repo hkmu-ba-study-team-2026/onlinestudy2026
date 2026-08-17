@@ -1,21 +1,14 @@
 // ==================== Firebase & 頁面追蹤初始化 ====================
-// 1. 紀錄頁面進入時間
 const pageStartTime = Date.now();
-
-// 設定 Checkout 完成後按下 OK 跳轉的目標網址
 const NEXT_PAGE_URL = "https://next-page-url.com";
 
-// 2. 用於追蹤「加入購物車次序」的陣列
 let selectionSequence = [];
-
-// 全域變數
 let cart = [];
 let currentPID = "";
 
-// 商品清單
-const ALL_19_ITEMS = Array.from({ length: 19 }, (_, i) => i + 1);
+// 商品清單：更新為 30 個 ID (1 ~ 30)
+const ALL_ITEMS = Array.from({ length: 30 }, (_, i) => i + 1);
 
-// 取得 Participant ID
 function getPID() {
     let pid = localStorage.getItem("participantID");
     if (!pid || pid.trim() === "") {
@@ -26,7 +19,6 @@ function getPID() {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    // 點擊按鈕後關閉 Modal 並進入頁面
     const modal = document.getElementById('welcomeModal');
     const closeBtn = document.getElementById('closeModalBtn');
     currentPID = getPID();
@@ -38,9 +30,6 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 });
 
-/**
- * 每次使用者將商品加入購物車時呼叫此函式，統一追蹤選購順序
- */
 function trackAddToCart(product, quantity = 1) {
     const sequenceItem = {
         step: selectionSequence.length + 1,
@@ -49,23 +38,15 @@ function trackAddToCart(product, quantity = 1) {
         quantity: quantity,
         timestamp: new Date().toISOString()
     };
-
     selectionSequence.push(sequenceItem);
-    console.log("當前選購次序紀錄:", selectionSequence);
 }
 
-/**
- * 將點擊歷史轉換為商品的第一次購買順序地圖
- * 重複購買以第一個為準，未買留空 ""
- */
 function generateItemSequenceMap(seqArray) {
     const itemFirstOrder = {};
-
     if (Array.isArray(seqArray)) {
         seqArray.forEach((record) => {
             const pId = record.productId || record.id;
             const stepNum = record.step;
-
             if (pId && !itemFirstOrder.hasOwnProperty(pId)) {
                 itemFirstOrder[pId] = stepNum;
             }
@@ -73,59 +54,65 @@ function generateItemSequenceMap(seqArray) {
     }
 
     const resultMap = {};
-    ALL_19_ITEMS.forEach(itemId => {
+    ALL_ITEMS.forEach(itemId => {
         resultMap[`Seq_Item_${itemId}`] = itemFirstOrder.hasOwnProperty(itemId)
             ? itemFirstOrder[itemId]
             : "";
     });
-
     return resultMap;
 }
 
-// ==================== 商品資料庫 ====================
+// ==================== 更新後 30 項商品資料庫 ====================
 const products = [
-    // 1. Featured items (精選商品區) - id: 1 ~ 5
-    { id: 1, name: "Red Fuji Apple", price: 3.99, isFeatured: true },
-    { id: 2, name: "Whole Milk", price: 4.29, isFeatured: true },
-    { id: 3, name: "Whole Wheat Bread", price: 3.49, isFeatured: true },
-    { id: 4, name: "Organic Chicken Legs", price: 5.99, isFeatured: true },
-    { id: 5, name: "Fresh Avocado", price: 2.49, isFeatured: true },
+    // 1. Featured items (ID: 1 ~ 5)
+    { id: 1, name: "Red Apple", price: 1.47, isFeatured: true },
+    { id: 2, name: "Whole Milk", price: 4.99, isFeatured: true },
+    { id: 3, name: "Sourdough Bread", price: 5.49, isFeatured: true },
+    { id: 4, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
+    { id: 5, name: "Avocado", price: 2.59, isFeatured: true },
 
-    // 2. Fresh Fruits (水果類) - id: 6 ~ 8
-    { id: 6, name: "Green Apple Pack", price: 3.49, isFeatured: false },
-    { id: 7, name: "Organic Banana Bunch", price: 1.99, isFeatured: false },
-    { id: 8, name: "Fresh Lemon Bag", price: 2.99, isFeatured: false },
+    // 2. Fresh Fruits (ID: 6 ~ 10)
+    { id: 6, name: "Strawberries", price: 2.38, isFeatured: false },
+    { id: 7, name: "Blueberries", price: 2.99, isFeatured: false },
+    { id: 8, name: "Banana Bunch", price: 0.99, isFeatured: false },
+    { id: 9, name: "Oranges", price: 4.99, isFeatured: false },
+    { id: 10, name: "Lemon", price: 0.74, isFeatured: false },
 
-    // 3. Fresh Vegetables (蔬菜類) - id: 9 ~ 10
-    { id: 9, name: "Roma Tomato Box", price: 2.99, isFeatured: false },
-    { id: 10, name: "Fresh Cucumber", price: 0.99, isFeatured: false },
+    // 3. Fresh Vegetables (ID: 11 ~ 15)
+    { id: 11, name: "Tomato Cherry", price: 2.97, isFeatured: false },
+    { id: 12, name: "Sweet Potato", price: 1.95, isFeatured: false },
+    { id: 13, name: "Cucumber", price: 2.08, isFeatured: false },
+    { id: 14, name: "Bi-Color Corn", price: 0.50, isFeatured: false },
+    { id: 15, name: "Peeled Baby Carrots", price: 1.32, isFeatured: false },
 
-    // 4. Fresh Meat (肉類) - id: 11 ~ 13
-    { id: 11, name: "Fresh Beef", price: 14.99, isFeatured: false },
-    { id: 12, name: "Premium Pork Chops", price: 8.99, isFeatured: false },
-    { id: 13, name: "Ground Turkey", price: 5.49, isFeatured: false },
+    // 4. Fresh Meat (ID: 16 ~ 20)
+    { id: 16, name: "Grounded Beef", price: 6.99, isFeatured: false },
+    { id: 17, name: "Chicken Breasts Fillets", price: 2.79, isFeatured: false },
+    { id: 18, name: "Beef Sirloin Steaks", price: 15.24, isFeatured: false },
+    { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
+    { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
 
-    // 5. Seafood Market (海鮮類) - id: 14 ~ 16
-    { id: 14, name: "Salmon Fillet", price: 13.99, isFeatured: false },
-    { id: 15, name: "Frozen Shrimp Pack", price: 9.99, isFeatured: false },
-    { id: 16, name: "Cod Fish Fillets", price: 11.99, isFeatured: false },
+    // 5. Seafood Market (ID: 21 ~ 25)
+    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },
+    { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
+    { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
+    { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
+    { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
 
-    // 6. Pantry & Dairy Staples (其他食品/雜貨類) - id: 17 ~ 19
-    { id: 17, name: "Farm Eggs", price: 4.49, isFeatured: false },
-    { id: 18, name: "Long Grain Rice", price: 4.99, isFeatured: false },
-    { id: 19, name: "Greek Yogurt", price: 1.49, isFeatured: false }
+    // 6. Dairy, Cheese & Eggs (ID: 26 ~ 30)
+    { id: 26, name: "Greek Yogurt", price: 4.99, isFeatured: false },
+    { id: 27, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
+    { id: 28, name: "Large Brown Eggs", price: 7.49, isFeatured: false },
+    { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
+    { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false }
 ];
 
-// 本地數據初始化
 let clickCount = parseInt(localStorage.getItem('siteClickCount')) || 0;
-
-// 全局點擊統計
 document.addEventListener('click', function () {
     clickCount++;
     localStorage.setItem('siteClickCount', clickCount);
 });
 
-// 頁面關閉前寫入離場日誌
 const visitStart = new Date();
 window.addEventListener('beforeunload', function () {
     const end = new Date();
@@ -148,7 +135,6 @@ window.addEventListener('beforeunload', function () {
     }
 });
 
-// ==================== UI 與 分類篩選 ====================
 document.querySelectorAll('.cate-filter').forEach(item => {
     item.addEventListener('click', function () {
         const type = this.dataset.type;
@@ -162,7 +148,6 @@ document.querySelectorAll('.cate-filter').forEach(item => {
     });
 });
 
-// ==================== 購物車邏輯 ====================
 function addToCart(product) {
     const existingItem = cart.find(item => item.id === product.id);
     if (existingItem) {
@@ -178,7 +163,6 @@ function addToCart(product) {
     updateCart();
 }
 
-// 按下商品的 Add to Cart 按鈕
 document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const productId = parseInt(this.getAttribute('data-id'));
@@ -186,9 +170,9 @@ document.querySelectorAll('.add-btn').forEach(btn => {
 
         if (product) {
             addToCart(product);
-            trackAddToCart(product, 1); // 紀錄選購順序
+            trackAddToCart(product, 1);
         } else {
-            console.error(`找不到 ID 為 ${productId} 的商品，請確認 HTML 的 data-id 設定`);
+            console.error(`找不到 ID 為 ${productId} 的商品`);
         }
     });
 });
@@ -237,7 +221,6 @@ function changeQty(id, delta) {
     if (!item) return;
 
     item.quantity += delta;
-
     if (delta > 0) {
         const product = products.find(p => p.id === id);
         if (product) trackAddToCart(product, 1);
@@ -281,7 +264,6 @@ document.getElementById('clear-cart')?.addEventListener('click', function () {
     updateCart();
 });
 
-// ==================== Checkout 結帳 & Firebase 資料上傳 ====================
 document.getElementById('checkout-btn')?.addEventListener('click', async function () {
     if (cart.length === 0) {
         alert("Your cart is empty, cannot checkout");
@@ -314,7 +296,6 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         };
     });
 
-    // 生成商品的順序地圖 (Seq_Item_1 ~ Seq_Item_19)
     const itemSequenceMap = generateItemSequenceMap(selectionSequence);
 
     const checkoutFirebaseData = {
@@ -325,7 +306,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         formattedDuration: formattedDuration,
         finalCartItems: itemsArr,
         selectionSequence: selectionSequence,
-        itemSequenceMap: itemSequenceMap, // 寫入資料庫
+        itemSequenceMap: itemSequenceMap,
         featuredProductCount: featuredCnt,
         orderTotal: total
     };
@@ -333,13 +314,11 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
     try {
         if (typeof db !== 'undefined') {
             await db.ref('checkout_records').push(checkoutFirebaseData);
-            console.log("Checkout record saved to Firebase successfully!");
         }
     } catch (error) {
         console.error("Failed to save checkout to Firebase:", error);
     }
 
-    // 清空購物車與選購紀錄
     cart = [];
     selectionSequence = [];
     updateCart();
@@ -347,21 +326,16 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
     checkoutBtn.disabled = false;
     checkoutBtn.innerText = "Checkout";
 
-    // 顯示 Checkout 完成的 Dialog Modal（取代原先的 alert）
     const completionModal = document.getElementById("checkoutCompletionModal");
     if (completionModal) {
         completionModal.style.display = "flex";
     }
 });
 
-/**
- * 用戶按下 Dialog Modal 的 OK / Confirm 按鈕後觸發
- */
 function handleCheckoutModalConfirm() {
     window.location.href = NEXT_PAGE_URL;
 }
 
-// Tab 切換 UI
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -369,5 +343,4 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-// 初始化購物車 UI
 updateCart();
