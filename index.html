@@ -457,7 +457,13 @@
             });
         }
 
-        const productsList = ["Red Apple", "Whole Milk", "Sourdough Bread", "Chicken Drumsticks", "Avocado"];
+        const productsList = [
+            "Tomato Cherry",
+            "Chicken Drumsticks",
+            "Smoked Salmon",
+            "Strawberries",
+            "Greek Yogurt"
+        ];
 
         async function handleSubmit(event) {
             event.preventDefault();
@@ -520,7 +526,8 @@
                 }
             } catch (error) {
                 console.error('API Request Failed:', error);
-                aiNudgeText = 'Results generated based on your preference.';
+                // aiNudgeText = 'Results generated based on your preference.';
+                aiNudgeText = error.toString();
                 localStorage.setItem('ai_nudge_text', aiNudgeText);
             }
 

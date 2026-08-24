@@ -1,49 +1,51 @@
 const { InferenceClient } = require("@huggingface/inference");
 
 const HF_TOKEN = process.env.HF_TOKEN;
-// 選用在 Hugging Face 免費 Inference API 上極度穩定的開源指令模型
-const MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta";
+const MODEL_NAME = "Qwen/Qwen3.8-27B";
 
 const client = HF_TOKEN ? new InferenceClient(HF_TOKEN) : null;
 
 async function getAiRecommendationsFromHf(products, preferences) {
     if (!client) {
-        throw new Error("Missing HF_TOKEN environment variable in Vercel.");
+        throw new Error("Missing HF_TOKEN");
     }
 
-    const simplifiedProducts = Array.isArray(products)
-        ? products.map(p => (typeof p === 'string' ? p : p.name)).join(", ")
-        : "";
+    const simplifiedProducts = products.map(p => ({
+        name: p.name,
+    }));
 
-    const prompt = `<|system|>
-You are a helpful grocery shopping assistant. Write exactly one short, natural recommendation sentence (under 30 words) starting with "These items". Do not output markdown quotes or explanation.</s>
-<|user|>
-User survey preferences: ${JSON.stringify(preferences)}.
-Featured Products: ${simplifiedProducts}.
-Based on the preferences, promote the eco-friendly aspects of these featured products in a single sentence starting with "These items".</s>
-<|assistant|>
+    const prompt = `
+You are an AI recommender system. Based on user preferences, write a short, engaging recommendation sentence (under 30 words) for the following 5 products:
+User preferences: ${JSON.stringify(preferences)},
+Products: ${JSON.stringify(simplifiedProducts)}.
+
+The recommendation focus on 1-3 major aspects based on the user preferences, and includes promotion of the idea of eco-sustainability of the products, but without explicitly mentioning or indicating about the extraction from user preferences.
+
+Output MUST be plain text only, exactly one short sentence, starting with "These items". Do not wrap into JSON or quotes.
 `;
 
-    // 呼叫相容性最高的 textGeneration
-    const response = await client.textGeneration({
+    const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Model Request Timeout (15s)")), 15000)
+    );
+
+    const apiPromise = client.chatCompletion({
         model: MODEL_NAME,
-        inputs: prompt,
-        parameters: {
-            max_new_tokens: 60,
-            temperature: 0.3,
-            return_full_text: false
-        }
+        messages: [
+            { role: "system", content: "You are a helpful and concise shopping assistant." },
+            { role: "user", content: prompt }
+        ],
+        max_tokens: 200,
+        temperature: 0.3
     });
 
-    let content = (response.generated_text || "").trim();
+    const response = await Promise.race([apiPromise, timeoutPromise]);
 
-    // 清理可能出現的引號或多餘字元
-    content = content.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
-    content = content.replace(/^["']|["']$/g, '');
+    let content = response.choices[0].message.content.trim();
 
-    if (!content.startsWith("These items")) {
-        content = "These items " + content;
+    if (content.startsWith("```")) {
+        content = content.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
     }
+    content = content.replace(/^["']|["']$/g, '');
 
     return content;
 }
@@ -61,8 +63,7 @@ module.exports = async (req, res) => {
         return res.status(200).json({
             status: "ok",
             message: "Vercel AI Function Active",
-            has_token: Boolean(HF_TOKEN),
-            model: MODEL_NAME
+            has_token: Boolean(HF_TOKEN)
         });
     }
 
@@ -70,22 +71,22 @@ module.exports = async (req, res) => {
         try {
             const { products = [], preferences = {} } = req.body || {};
 
+            if (!products || products.length < 3) {
+                return res.status(400).json({ detail: "Products list must contain at least 3 items." });
+            }
+
             let result;
             try {
                 result = await getAiRecommendationsFromHf(products, preferences);
             } catch (aiErr) {
-                // 將具體錯誤原因回傳給前端，方便在 Network 頁籤精確抓出問題
-                console.error("[HF Inference Error]:", aiErr.message);
-                return res.status(200).json({
-                    recommendation: 'Results generated based on your preference.',
-                    debug_error: aiErr.message
-                });
+                console.log(`[AI Model Error/Timeout]: ${aiErr.message}. Switching to Fallback system.`);
+                result = 'These items are eco-friendly.';
             }
 
             return res.status(200).json({ recommendation: result });
 
         } catch (e) {
-            console.error(`[Handler Exception]:`, e);
+            console.log(`[Handler Exception]: ${e.message}`);
             return res.status(500).json({ detail: e.message });
         }
     }

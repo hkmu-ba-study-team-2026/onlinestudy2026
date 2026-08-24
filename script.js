@@ -39,7 +39,7 @@ function trackAddToCart(product, quantity = 1, sourceSection = "category") {
         productId: product.id,
         productName: product.name,
         quantity: quantity,
-        sourceSection: sourceSection, // 記錄 "featured" 或 "category"
+        sourceSection: sourceSection,
         timestamp: new Date().toISOString()
     };
     selectionSequence.push(sequenceItem);
@@ -66,34 +66,45 @@ function generateItemSequenceMap(seqArray) {
     return resultMap;
 }
 
-// ==================== 30 項商品資料庫 ====================
+// ==================== 30 項商品資料庫（Featured 項目置頂） ====================
 const products = [
-    { id: 1, name: "Red Apple", price: 1.47, isFeatured: true },
-    { id: 2, name: "Whole Milk", price: 4.99, isFeatured: true },
-    { id: 3, name: "Sourdough Bread", price: 5.49, isFeatured: true },
+    // 1. Featured items (置頂 5 項)
+    { id: 11, name: "Tomato Cherry", price: 2.97, isFeatured: true },
     { id: 4, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
-    { id: 5, name: "Avocado", price: 2.59, isFeatured: true },
-    { id: 6, name: "Strawberries", price: 2.38, isFeatured: false },
+    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: true },
+    { id: 6, name: "Strawberries", price: 2.38, isFeatured: true },
+    { id: 26, name: "Greek Yogurt", price: 4.99, isFeatured: true },
+
+    // 2. Fresh Fruits (水果類)
+    { id: 1, name: "Red Apple", price: 1.47, isFeatured: false },
     { id: 7, name: "Blueberries", price: 2.99, isFeatured: false },
     { id: 8, name: "Banana Bunch", price: 0.99, isFeatured: false },
     { id: 9, name: "Oranges", price: 4.99, isFeatured: false },
     { id: 10, name: "Lemon", price: 0.74, isFeatured: false },
-    { id: 11, name: "Tomato Cherry", price: 2.97, isFeatured: false },
+
+    // 3. Fresh Vegetables (蔬菜類)
+    { id: 5, name: "Avocado", price: 2.59, isFeatured: false },
     { id: 12, name: "Sweet Potato", price: 1.95, isFeatured: false },
     { id: 13, name: "Cucumber", price: 2.08, isFeatured: false },
     { id: 14, name: "Bi-Color Corn", price: 0.50, isFeatured: false },
     { id: 15, name: "Peeled Baby Carrots", price: 1.32, isFeatured: false },
+
+    // 4. Fresh Meat (肉類)
     { id: 16, name: "Ground Beef", price: 6.99, isFeatured: false },
     { id: 17, name: "Chicken Breasts Fillets", price: 2.79, isFeatured: false },
     { id: 18, name: "Beef Sirloin Steaks", price: 15.24, isFeatured: false },
     { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
     { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
-    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },
+
+    // 5. Seafood Market (海鮮類)
     { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
     { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
-    { id: 26, name: "Greek Yogurt", price: 4.99, isFeatured: false },
+
+    // 6. Dairy, Cheese & Bread (乳品/烘焙/雜貨類)
+    { id: 2, name: "Whole Milk", price: 4.99, isFeatured: false },
+    { id: 3, name: "Sourdough Bread", price: 5.49, isFeatured: false },
     { id: 27, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 28, name: "Large Brown Eggs", price: 7.49, isFeatured: false },
     { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
@@ -163,7 +174,6 @@ function addToCart(product, sourceSection = "category") {
     updateCart();
 }
 
-// 點擊加入購物車按鈕
 document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         const productId = parseInt(this.getAttribute('data-id'));
