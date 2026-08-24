@@ -1,12 +1,12 @@
 // ==================== Firebase & 頁面追蹤初始化 ====================
 const pageStartTime = Date.now();
 const NEXT_PAGE_URL = "https://next-page-url.com";
+const MAX_BUDGET = 50.00;
 
 let selectionSequence = [];
 let cart = [];
 let currentPID = "";
 
-// 商品清單：更新為 30 個 ID (1 ~ 30)
 const ALL_ITEMS = Array.from({ length: 30 }, (_, i) => i + 1);
 
 function getPID() {
@@ -30,12 +30,16 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 });
 
-function trackAddToCart(product, quantity = 1) {
+/**
+ * 追蹤選購次序與點擊來源
+ */
+function trackAddToCart(product, quantity = 1, sourceSection = "category") {
     const sequenceItem = {
         step: selectionSequence.length + 1,
         productId: product.id,
         productName: product.name,
         quantity: quantity,
+        sourceSection: sourceSection, // 記錄 "featured" 或 "category"
         timestamp: new Date().toISOString()
     };
     selectionSequence.push(sequenceItem);
@@ -48,7 +52,7 @@ function generateItemSequenceMap(seqArray) {
             const pId = record.productId || record.id;
             const stepNum = record.step;
             if (pId && !itemFirstOrder.hasOwnProperty(pId)) {
-                itemFirstOrder[pId] = stepNum;
+                itemFirstOrder[pId] = `${stepNum} (${record.sourceSection || 'category'})`;
             }
         });
     }
@@ -62,44 +66,33 @@ function generateItemSequenceMap(seqArray) {
     return resultMap;
 }
 
-// ==================== 更新後 30 項商品資料庫 ====================
+// ==================== 30 項商品資料庫 ====================
 const products = [
-    // 1. Featured items (ID: 1 ~ 5)
     { id: 1, name: "Red Apple", price: 1.47, isFeatured: true },
     { id: 2, name: "Whole Milk", price: 4.99, isFeatured: true },
     { id: 3, name: "Sourdough Bread", price: 5.49, isFeatured: true },
     { id: 4, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
     { id: 5, name: "Avocado", price: 2.59, isFeatured: true },
-
-    // 2. Fresh Fruits (ID: 6 ~ 10)
     { id: 6, name: "Strawberries", price: 2.38, isFeatured: false },
     { id: 7, name: "Blueberries", price: 2.99, isFeatured: false },
     { id: 8, name: "Banana Bunch", price: 0.99, isFeatured: false },
     { id: 9, name: "Oranges", price: 4.99, isFeatured: false },
     { id: 10, name: "Lemon", price: 0.74, isFeatured: false },
-
-    // 3. Fresh Vegetables (ID: 11 ~ 15)
     { id: 11, name: "Tomato Cherry", price: 2.97, isFeatured: false },
     { id: 12, name: "Sweet Potato", price: 1.95, isFeatured: false },
     { id: 13, name: "Cucumber", price: 2.08, isFeatured: false },
     { id: 14, name: "Bi-Color Corn", price: 0.50, isFeatured: false },
     { id: 15, name: "Peeled Baby Carrots", price: 1.32, isFeatured: false },
-
-    // 4. Fresh Meat (ID: 16 ~ 20)
-    { id: 16, name: "Grounded Beef", price: 6.99, isFeatured: false },
+    { id: 16, name: "Ground Beef", price: 6.99, isFeatured: false },
     { id: 17, name: "Chicken Breasts Fillets", price: 2.79, isFeatured: false },
     { id: 18, name: "Beef Sirloin Steaks", price: 15.24, isFeatured: false },
     { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
     { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
-
-    // 5. Seafood Market (ID: 21 ~ 25)
     { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },
     { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
     { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
-
-    // 6. Dairy, Cheese & Eggs (ID: 26 ~ 30)
     { id: 26, name: "Greek Yogurt", price: 4.99, isFeatured: false },
     { id: 27, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 28, name: "Large Brown Eggs", price: 7.49, isFeatured: false },
@@ -148,31 +141,50 @@ document.querySelectorAll('.cate-filter').forEach(item => {
     });
 });
 
-function addToCart(product) {
+function addToCart(product, sourceSection = "category") {
     const existingItem = cart.find(item => item.id === product.id);
     if (existingItem) {
         existingItem.quantity += 1;
+        if (sourceSection === "featured") {
+            existingItem.featuredQty = (existingItem.featuredQty || 0) + 1;
+        } else {
+            existingItem.categoryQty = (existingItem.categoryQty || 0) + 1;
+        }
     } else {
         cart.push({
             id: product.id,
             name: product.name,
             price: product.price,
-            quantity: 1
+            quantity: 1,
+            featuredQty: sourceSection === "featured" ? 1 : 0,
+            categoryQty: sourceSection === "category" ? 1 : 0
         });
     }
     updateCart();
 }
 
+// 點擊加入購物車按鈕
 document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
         const productId = parseInt(this.getAttribute('data-id'));
+        const sourceSection = this.getAttribute('data-source') || "category";
         const product = products.find(p => p.id === productId);
 
         if (product) {
-            addToCart(product);
-            trackAddToCart(product, 1);
-        } else {
-            console.error(`找不到 ID 為 ${productId} 的商品`);
+            let currentTotal = 0;
+            cart.forEach(item => currentTotal += (item.price * item.quantity));
+
+            if (currentTotal + product.price > MAX_BUDGET) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                if (typeof showBudgetModal === 'function') {
+                    showBudgetModal(product.name, product.price, MAX_BUDGET - currentTotal, MAX_BUDGET);
+                }
+                return false;
+            }
+
+            addToCart(product, sourceSection);
+            trackAddToCart(product, 1, sourceSection);
         }
     });
 });
@@ -220,11 +232,30 @@ function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
 
-    item.quantity += delta;
     if (delta > 0) {
         const product = products.find(p => p.id === id);
-        if (product) trackAddToCart(product, 1);
+        if (product) {
+            let currentTotal = 0;
+            cart.forEach(i => currentTotal += (i.price * i.quantity));
+
+            if (currentTotal + product.price > MAX_BUDGET) {
+                if (typeof showBudgetModal === 'function') {
+                    showBudgetModal(product.name, product.price, MAX_BUDGET - currentTotal, MAX_BUDGET);
+                }
+                return;
+            }
+            trackAddToCart(product, 1, "cart_increment");
+            item.categoryQty = (item.categoryQty || 0) + 1;
+        }
+    } else if (delta < 0) {
+        if (item.categoryQty > 0) {
+            item.categoryQty -= 1;
+        } else if (item.featuredQty > 0) {
+            item.featuredQty -= 1;
+        }
     }
+
+    item.quantity += delta;
 
     if (item.quantity <= 0) {
         removeItem(id);
@@ -292,6 +323,8 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
             id: item.id,
             name: item.name,
             quantity: item.quantity,
+            featuredQty: item.featuredQty || 0,
+            categoryQty: item.categoryQty || 0,
             price: item.price
         };
     });

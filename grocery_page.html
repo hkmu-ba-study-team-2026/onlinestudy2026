@@ -4,19 +4,18 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
-  // 使用相同的 Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
-    authDomain: "online-study-2026.firebaseapp.com",
-    databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "online-study-2026",
-    storageBucket: "online-study-2026.firebasestorage.app",
-    messagingSenderId: "359632481591",
-    appId: "1:359632481591:web:31d160c7f772841b16feb2"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+        authDomain: "online-study-2026.firebaseapp.com",
+        databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "online-study-2026",
+        storageBucket: "online-study-2026.firebasestorage.app",
+        messagingSenderId: "359632481591",
+        appId: "1:359632481591:web:31d160c7f772841b16feb2"
+    };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 </script>
 <head>
     <meta charset="UTF-8">
@@ -111,15 +110,7 @@
             gap: 16px;
             box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
         }
-        .rec-banner-content p {
-            font-size: 16px;
-            color: #064e3b;
-            font-weight: 700;
-            line-height: 1.5;
-            margin: 0;
-        }
 
-        /* ================= 強化版 Nudge 容器樣式 ================= */
         .rec-banner-content {
             background: #ffffff;
             border-radius: 12px;
@@ -133,7 +124,6 @@
             animation: gentlePulse 3s infinite ease-in-out;
         }
 
-        /* 呼吸燈微動態：提升注目度但不干擾操作 */
         @keyframes gentlePulse {
             0%, 100% {
                 box-shadow: 0 4px 18px rgba(22, 163, 74, 0.18);
@@ -145,23 +135,6 @@
             }
         }
 
-        /* 左側 AI / 提示專屬徽章 */
-        .nudge-badge-pill {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 800;
-            padding: 6px 12px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 2px 6px rgba(21, 128, 61, 0.3);
-        }
-
-        /* Nudge 主體文字：大字號、深色高對比 */
         .nudge-text-highlight {
             color: #064e3b;
             font-size: 1.12rem;
@@ -171,50 +144,19 @@
             letter-spacing: 0.2px;
         }
 
-        @media (max-width: 600px) {
-            .rec-banner-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                padding: 14px;
-            }
-            .nudge-text-highlight {
-                font-size: 1rem;
-            }
-        }
-
-        .recommended-card {
-            border: 3px solid #16a34a !important;
-            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.25) !important;
-            transform: translateY(-2px);
-        }
-        .rec-badge {
+        .eco-badge {
             position: absolute;
-            top: -10px;
-            right: 10px;
-            background: #16a34a;
+            top: 8px;
+            left: 8px;
+            background-color: #16a34a;
             color: #ffffff;
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 800;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
             letter-spacing: 0.5px;
             z-index: 2;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
-        .nudge-box {
-            background: #fef9c3;
-            border: 1.5px solid #fde047;
-            border-left: 5px solid #eab308;
-            padding: 10px 12px;
-            margin: 10px 0;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #713f12;
-            line-height: 1.5;
-            text-align: left;
-            box-shadow: 0 2px 5px rgba(234, 179, 8, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .no-results-msg {
@@ -253,7 +195,7 @@
     <div style="background: #ffffff; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
         <h3 style="color: #16a34a; margin-bottom: 12px; font-size: 20px;">Welcome to FreshMart</h3>
         <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
-            Please simulate an online grocery shopping task to select ingredients required for preparing three days' worth of meals.
+            Please simulate an online grocery shopping task to select ingredients required for <strong>preparing three days' worth of meals for yourself (one person)</strong>.
         </p>
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; margin-bottom: 24px;">
             Shopping Budget Limit: $50.00 USD
@@ -293,6 +235,7 @@
     </div>
 </section>
 
+<!-- 1. 精選置頂區 -->
 <section id="products" class="products-section">
     <div class="container">
 
@@ -304,9 +247,7 @@
         </div>
 
         <div class="rec-banner" id="featuredBanner">
-
             <div class="products-grid" id="productWrap">
-                <!-- 1. Red Apple -->
                 <div class="product-card" data-id="1" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/apple.png" alt="Apple"></div>
@@ -314,11 +255,10 @@
                         <h3>Red Apple</h3>
                         <h3>1 Count</h3>
                         <p>$1.47</p>
-                        <button class="add-btn" data-id="1">Add to Cart</button>
+                        <button class="add-btn" data-id="1" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 2. Whole Milk -->
                 <div class="product-card" data-id="2" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
@@ -326,11 +266,10 @@
                         <h3>Whole Milk</h3>
                         <h3>64 Ounce</h3>
                         <p>$4.99</p>
-                        <button class="add-btn" data-id="2">Add to Cart</button>
+                        <button class="add-btn" data-id="2" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 3. Sourdough Bread -->
                 <div class="product-card" data-id="3" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
@@ -338,11 +277,10 @@
                         <h3>Sourdough Bread</h3>
                         <h3>24 Ounce</h3>
                         <p>$5.49</p>
-                        <button class="add-btn" data-id="3">Add to Cart</button>
+                        <button class="add-btn" data-id="3" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 4. Chicken Drumsticks -->
                 <div class="product-card" data-id="4" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
@@ -350,11 +288,10 @@
                         <h3>Chicken Drumsticks</h3>
                         <h3>1 Lb</h3>
                         <p>$1.77</p>
-                        <button class="add-btn" data-id="4">Add to Cart</button>
+                        <button class="add-btn" data-id="4" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 5. Avocado -->
                 <div class="product-card" data-id="5" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
@@ -362,7 +299,7 @@
                         <h3>Avocado</h3>
                         <h3>1 Count</h3>
                         <p>$2.59</p>
-                        <button class="add-btn" data-id="5">Add to Cart</button>
+                        <button class="add-btn" data-id="5" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -371,19 +308,29 @@
     </div>
 </section>
 
+<!-- 2. Fruits (包含複製的 Red Apple) -->
 <section id="fruits" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Fruits</h2>
         </div>
         <div class="products-grid">
+            <div class="product-card" data-id="1" data-type="fruits">
+                <div class="product-image"><img src="assets/apple.png" alt="Apple"></div>
+                <div class="product-info">
+                    <h3>Red Apple</h3>
+                    <h3>1 Count</h3>
+                    <p>$1.47</p>
+                    <button class="add-btn" data-id="1" data-source="category">Add to Cart</button>
+                </div>
+            </div>
             <div class="product-card" data-id="6" data-type="fruits">
                 <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
                 <div class="product-info">
                     <h3>Strawberries</h3>
                     <h3>1 Lb</h3>
                     <p>$2.38</p>
-                    <button class="add-btn" data-id="6">Add to Cart</button>
+                    <button class="add-btn" data-id="6" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="7" data-type="fruits">
@@ -392,7 +339,7 @@
                     <h3>Blueberries</h3>
                     <h3>1 Pint</h3>
                     <p>$2.99</p>
-                    <button class="add-btn" data-id="7">Add to Cart</button>
+                    <button class="add-btn" data-id="7" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="8" data-type="fruits">
@@ -401,7 +348,7 @@
                     <h3>Banana Bunch</h3>
                     <h3>4-5 count</h3>
                     <p>$0.99</p>
-                    <button class="add-btn" data-id="8">Add to Cart</button>
+                    <button class="add-btn" data-id="8" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="9" data-type="fruits">
@@ -410,7 +357,7 @@
                     <h3>Oranges</h3>
                     <h3>3 Lb</h3>
                     <p>$4.99</p>
-                    <button class="add-btn" data-id="9">Add to Cart</button>
+                    <button class="add-btn" data-id="9" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="10" data-type="fruits">
@@ -419,35 +366,45 @@
                     <h3>Lemon</h3>
                     <h3>1 Each</h3>
                     <p>$0.74</p>
-                    <button class="add-btn" data-id="10">Add to Cart</button>
+                    <button class="add-btn" data-id="10" data-source="category">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- 3. Vegetables (包含複製的 Avocado) -->
 <section id="vegetables" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Vegetables</h2>
         </div>
         <div class="products-grid">
+            <div class="product-card" data-id="5" data-type="vegetables">
+                <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
+                <div class="product-info">
+                    <h3>Avocado</h3>
+                    <h3>1 Count</h3>
+                    <p>$2.59</p>
+                    <button class="add-btn" data-id="5" data-source="category">Add to Cart</button>
+                </div>
+            </div>
             <div class="product-card" data-id="11" data-type="vegetables">
-                <div class="product-image"><img src="assets\tomato.jpg" alt="Tomato"></div>
+                <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
                 <div class="product-info">
                     <h3>Tomato Cherry</h3>
                     <h3>10 Ounce</h3>
                     <p>$2.97</p>
-                    <button class="add-btn" data-id="11">Add to Cart</button>
+                    <button class="add-btn" data-id="11" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="12" data-type="vegetables">
-                <div class="product-image"><img src="assets\sweet-potato.jpg" alt="SweetPotato"></div>
+                <div class="product-image"><img src="assets/sweet-potato.jpg" alt="SweetPotato"></div>
                 <div class="product-info">
                     <h3>Sweet Potato</h3>
                     <h3>1 Each</h3>
                     <p>$1.95</p>
-                    <button class="add-btn" data-id="12">Add to Cart</button>
+                    <button class="add-btn" data-id="12" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="13" data-type="vegetables">
@@ -456,7 +413,7 @@
                     <h3>Cucumber</h3>
                     <h3>16 Oz</h3>
                     <p>$2.08</p>
-                    <button class="add-btn" data-id="13">Add to Cart</button>
+                    <button class="add-btn" data-id="13" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="14" data-type="vegetables">
@@ -465,35 +422,45 @@
                     <h3>Bi-Color Corn</h3>
                     <h3>1 Each</h3>
                     <p>$0.50</p>
-                    <button class="add-btn" data-id="14">Add to Cart</button>
+                    <button class="add-btn" data-id="14" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="15" data-type="vegetables">
-                <div class="product-image"><img src="assets/baby-carrots.jpg" alt="Baby Carrot"></div>
+                <div class="product-image"><img src="assets/baby-carrots.png" alt="Baby Carrot"></div>
                 <div class="product-info">
                     <h3>Peeled Baby Carrots</h3>
                     <h3>16 Oz</h3>
                     <p>$1.32</p>
-                    <button class="add-btn" data-id="15">Add to Cart</button>
+                    <button class="add-btn" data-id="15" data-source="category">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- 4. Meat (包含複製的 Chicken Drumsticks) -->
 <section id="meat" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Meat</h2>
         </div>
         <div class="products-grid">
+            <div class="product-card" data-id="4" data-type="meat">
+                <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
+                <div class="product-info">
+                    <h3>Chicken Drumsticks</h3>
+                    <h3>1 Lb</h3>
+                    <p>$1.77</p>
+                    <button class="add-btn" data-id="4" data-source="category">Add to Cart</button>
+                </div>
+            </div>
             <div class="product-card" data-id="16" data-type="meat">
                 <div class="product-image"><img src="assets/ground-beef.jpg" alt="Beef"></div>
                 <div class="product-info">
-                    <h3>Grounded Beef</h3>
+                    <h3>Ground Beef</h3>
                     <h3>1 Lb</h3>
                     <p>$6.99</p>
-                    <button class="add-btn" data-id="16">Add to Cart</button>
+                    <button class="add-btn" data-id="16" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="17" data-type="meat">
@@ -502,7 +469,7 @@
                     <h3>Chicken Breasts Fillets</h3>
                     <h3>1 Lb</h3>
                     <p>$2.79</p>
-                    <button class="add-btn" data-id="17">Add to Cart</button>
+                    <button class="add-btn" data-id="17" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="18" data-type="meat">
@@ -511,7 +478,7 @@
                     <h3>Beef Sirloin Steaks</h3>
                     <h3>1 Lb</h3>
                     <p>$15.24</p>
-                    <button class="add-btn" data-id="18">Add to Cart</button>
+                    <button class="add-btn" data-id="18" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="19" data-type="meat">
@@ -520,7 +487,7 @@
                     <h3>Pork Loin Chops</h3>
                     <h3>1 Lb</h3>
                     <p>$7.38</p>
-                    <button class="add-btn" data-id="19">Add to Cart</button>
+                    <button class="add-btn" data-id="19" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="20" data-type="meat">
@@ -529,13 +496,14 @@
                     <h3>Ground Turkey Meat</h3>
                     <h3>1 Lb</h3>
                     <p>$5.46</p>
-                    <button class="add-btn" data-id="20">Add to Cart</button>
+                    <button class="add-btn" data-id="20" data-source="category">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- 5. Seafood Market -->
 <section id="seafood" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -548,7 +516,7 @@
                     <h3>Smoked Salmon</h3>
                     <h3>10 Ounce</h3>
                     <p>$8.98</p>
-                    <button class="add-btn" data-id="21">Add to Cart</button>
+                    <button class="add-btn" data-id="21" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="22" data-type="seafood">
@@ -557,7 +525,7 @@
                     <h3>Raw Shrimp Pack</h3>
                     <h3>12 Ounce</h3>
                     <p>$7.64</p>
-                    <button class="add-btn" data-id="22">Add to Cart</button>
+                    <button class="add-btn" data-id="22" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="23" data-type="seafood">
@@ -566,7 +534,7 @@
                     <h3>Cod Fillets</h3>
                     <h3>16 Ounce</h3>
                     <p>$13.78</p>
-                    <button class="add-btn" data-id="23">Add to Cart</button>
+                    <button class="add-btn" data-id="23" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="24" data-type="seafood">
@@ -575,7 +543,7 @@
                     <h3>Breaded Fish Fillets</h3>
                     <h3>19 Ounce</h3>
                     <p>$7.99</p>
-                    <button class="add-btn" data-id="24">Add to Cart</button>
+                    <button class="add-btn" data-id="24" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="25" data-type="seafood">
@@ -584,26 +552,45 @@
                     <h3>Tilapia Fillets</h3>
                     <h3>12 Ounce</h3>
                     <p>$5.99</p>
-                    <button class="add-btn" data-id="25">Add to Cart</button>
+                    <button class="add-btn" data-id="25" data-source="category">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- 6. Pantry & Dairy (包含複製的 Whole Milk & Sourdough Bread) -->
 <section id="pantry-dairy" class="products-section">
     <div class="container">
         <div class="cate-head">
-            <h2>Dairy, Cheese & Eggs</h2>
+            <h2>Dairy, Cheese & Bread</h2>
         </div>
         <div class="products-grid">
+            <div class="product-card" data-id="2" data-type="dairy">
+                <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
+                <div class="product-info">
+                    <h3>Whole Milk</h3>
+                    <h3>64 Ounce</h3>
+                    <p>$4.99</p>
+                    <button class="add-btn" data-id="2" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="3" data-type="dairy">
+                <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
+                <div class="product-info">
+                    <h3>Sourdough Bread</h3>
+                    <h3>24 Ounce</h3>
+                    <p>$5.49</p>
+                    <button class="add-btn" data-id="3" data-source="category">Add to Cart</button>
+                </div>
+            </div>
             <div class="product-card" data-id="26" data-type="dairy">
                 <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek-Yogurt"></div>
                 <div class="product-info">
                     <h3>Greek Yogurt</h3>
                     <h3>32 Ounce</h3>
                     <p>$4.99</p>
-                    <button class="add-btn" data-id="26">Add to Cart</button>
+                    <button class="add-btn" data-id="26" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="27" data-type="dairy">
@@ -612,7 +599,7 @@
                     <h3>Cheddar Cheese</h3>
                     <h3>8 Ounce, 10 Slices</h3>
                     <p>$1.65</p>
-                    <button class="add-btn" data-id="27">Add to Cart</button>
+                    <button class="add-btn" data-id="27" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="28" data-type="dairy">
@@ -621,16 +608,16 @@
                     <h3>Large Brown Eggs</h3>
                     <h3>12 Count</h3>
                     <p>$7.49</p>
-                    <button class="add-btn" data-id="28">Add to Cart</button>
+                    <button class="add-btn" data-id="28" data-source="category">Add to Cart</button>
                 </div>
             </div>
-           <div class="product-card" data-id="29" data-type="dairy">
+            <div class="product-card" data-id="29" data-type="dairy">
                 <div class="product-image"><img src="assets/butter.jpg" alt="Butter"></div>
                 <div class="product-info">
                     <h3>Unsalted Butter</h3>
                     <h3>16 Ounce</h3>
                     <p>$2.99</p>
-                    <button class="add-btn" data-id="29">Add to Cart</button>
+                    <button class="add-btn" data-id="29" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="30" data-type="dairy">
@@ -639,7 +626,7 @@
                     <h3>Four Cheese Blend</h3>
                     <h3>8 Ounce</h3>
                     <p>$1.90</p>
-                    <button class="add-btn" data-id="30">Add to Cart</button>
+                    <button class="add-btn" data-id="30" data-source="category">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -691,167 +678,150 @@
     </div>
 </div>
 
+<div id="budgetExceededModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3 class="modal-title" style="color: #dc2626;">⚠️ Budget Limit Exceeded</h3>
+        <p id="budgetExceededMessage" class="modal-message"></p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn confirm-btn" style="background-color: #dc2626;" onclick="closeBudgetModal()">
+                OK / Got it
+            </button>
+        </div>
+    </div>
+</div>
+
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="script.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    const MAX_BUDGET = 50.00;
+    document.addEventListener('DOMContentLoaded', function(){
+        const MAX_BUDGET = 50.00;
 
-    function updateRemainingBudgetDisplay() {
-        let currentTotal = 0;
-        if (typeof cart !== 'undefined' && Array.isArray(cart)) {
-            cart.forEach(item => {
-                currentTotal += (item.price * item.quantity);
+        function updateRemainingBudgetDisplay() {
+            let currentTotal = 0;
+            if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                cart.forEach(item => {
+                    currentTotal += (item.price * item.quantity);
+                });
+            }
+
+            const remaining = MAX_BUDGET - currentTotal;
+            const remainingEl = document.getElementById('remainingBudget');
+            const budgetDisplay = document.getElementById('budgetDisplay');
+
+            if (remainingEl) {
+                remainingEl.innerText = Math.max(0, remaining).toFixed(2);
+            }
+
+            if (budgetDisplay) {
+                if (remaining <= 20) {
+                    budgetDisplay.classList.add('low-budget');
+                } else {
+                    budgetDisplay.classList.remove('low-budget');
+                }
+            }
+        }
+
+        const originalUpdateCart = window.updateCart;
+        if (typeof originalUpdateCart === 'function') {
+            window.updateCart = function() {
+                originalUpdateCart();
+                updateRemainingBudgetDisplay();
+            };
+        }
+
+        updateRemainingBudgetDisplay();
+
+        const rawRecData = localStorage.getItem('recommendations');
+        if (rawRecData) {
+            try {
+                const data = JSON.parse(rawRecData);
+                let textSentence = null;
+                if (typeof data === 'string') {
+                    textSentence = data;
+                } else if (data && data.recommendation) {
+                    textSentence = data.recommendation;
+                }
+
+                if (textSentence) {
+                    const bannerTextContainer = document.getElementById('bannerTextContainer');
+                    if (bannerTextContainer) {
+                        bannerTextContainer.innerHTML = `
+                        <h2 class="nudge-text-highlight">${textSentence}</h2>
+                    `;
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to parse recommendations", e);
+            }
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const allCards = document.querySelectorAll('.product-card');
+
+        function performSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+
+            allCards.forEach(card => {
+                const titleEl = card.querySelector('.product-info h3');
+                const titleText = titleEl ? titleEl.innerText.toLowerCase() : '';
+
+                if (titleText.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.querySelectorAll('.products-section').forEach(section => {
+                const grid = section.querySelector('.products-grid');
+                if (!grid) return;
+
+                const visibleCards = grid.querySelectorAll('.product-card[style*="display: flex"]');
+                let noResultMsg = grid.querySelector('.no-results-msg');
+
+                if (visibleCards.length === 0 && query !== '') {
+                    if (!noResultMsg) {
+                        noResultMsg = document.createElement('div');
+                        noResultMsg.className = 'no-results-msg';
+                        noResultMsg.innerText = 'No products found matching your search.';
+                        grid.appendChild(noResultMsg);
+                    }
+                } else if (noResultMsg) {
+                    noResultMsg.remove();
+                }
             });
         }
 
-        const remaining = MAX_BUDGET - currentTotal;
-        const remainingEl = document.getElementById('remainingBudget');
-        const budgetDisplay = document.getElementById('budgetDisplay');
-
-        if (remainingEl) {
-            remainingEl.innerText = Math.max(0, remaining).toFixed(2);
+        if (searchInput) {
+            searchInput.addEventListener('input', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
         }
-
-        if (budgetDisplay) {
-            if (remaining <= 20) {
-                budgetDisplay.classList.add('low-budget');
-            } else {
-                budgetDisplay.classList.remove('low-budget');
-            }
+        if (searchBtn) {
+            searchBtn.addEventListener('click', performSearch);
         }
-    }
-
-    document.querySelectorAll('.add-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const productId = parseInt(this.getAttribute('data-id'));
-            const product = (typeof products !== 'undefined') ? products.find(p => p.id === productId) : null;
-
-            if (product) {
-                let currentTotal = 0;
-                if (typeof cart !== 'undefined' && Array.isArray(cart)) {
-                    cart.forEach(item => currentTotal += (item.price * item.quantity));
-                }
-
-                if (currentTotal + product.price > MAX_BUDGET) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    alert(`Cannot add "${product.name}" ($${product.price.toFixed(2)})!\nYour remaining budget is $${(MAX_BUDGET - currentTotal).toFixed(2)}, which exceeds the $100.00 budget limit.`);
-                    return false;
-                }
-            }
-
-            setTimeout(updateRemainingBudgetDisplay, 50);
-        }, true);
     });
 
-    const originalUpdateCart = window.updateCart;
-    if (typeof originalUpdateCart === 'function') {
-        window.updateCart = function() {
-            originalUpdateCart();
-            updateRemainingBudgetDisplay();
-        };
-    }
-
-    updateRemainingBudgetDisplay();
-
-    const rawRecData = localStorage.getItem('recommendations');
-
-    if (rawRecData) {
-        try {
-            const data = JSON.parse(rawRecData);
-
-            let textSentence = null;
-            if (typeof data === 'string') {
-                textSentence = data;
-            } else if (data && data.recommendation) {
-                textSentence = data.recommendation;
-            }
-
-            // 在 grocery_page.html 的 rawRecData 處理段落中替換：
-            if (textSentence) {
-                const bannerTextContainer = document.getElementById('bannerTextContainer');
-                if (bannerTextContainer) {
-                    bannerTextContainer.innerHTML = `
-                        <h2 class="nudge-text-highlight">${textSentence}</p>
-                    `;
-                }
-            }
-
-            if (Array.isArray(data)) {
-                data.forEach(rec => {
-                    const card = document.querySelector(`.product-card[data-id="${rec.item_id}"]`);
-                    if (card) {
-                        card.classList.add('recommended-card');
-
-                        const recBadge = document.createElement('span');
-                        recBadge.className = 'rec-badge';
-                        recBadge.innerText = `★ Recommended #${rec.rank}`;
-                        card.appendChild(recBadge);
-
-                        const productInfo = card.querySelector('.product-info');
-                        const nudgeBox = document.createElement('div');
-                        nudgeBox.className = 'nudge-box';
-                        nudgeBox.innerHTML = `<strong>Tip:</strong> ${rec.reason}`;
-
-                        const addBtn = productInfo.querySelector('.add-btn');
-                        productInfo.insertBefore(nudgeBox, addBtn);
-                    }
-                });
-            }
-        } catch (e) {
-            console.error("Failed to parse recommendations", e);
+    function showBudgetModal(productName, productPrice, remainingBudget, maxBudget) {
+        const modal = document.getElementById('budgetExceededModal');
+        const msg = document.getElementById('budgetExceededMessage');
+        if (modal && msg) {
+            msg.innerHTML = `
+            Cannot add <strong>"${productName}"</strong> ($${productPrice.toFixed(2)})!<br><br>
+            Your remaining budget is <strong>$${Math.max(0, remainingBudget).toFixed(2)}</strong>, adding this item exceeds the $${maxBudget.toFixed(2)} limit.
+        `;
+            modal.style.display = 'flex';
         }
     }
 
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const allCards = document.querySelectorAll('.product-card');
-
-    function performSearch() {
-        const query = searchInput.value.toLowerCase().trim();
-
-        allCards.forEach(card => {
-            const titleEl = card.querySelector('.product-info h3');
-            const titleText = titleEl ? titleEl.innerText.toLowerCase() : '';
-
-            if (titleText.includes(query)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        document.querySelectorAll('.products-section').forEach(section => {
-            const grid = section.querySelector('.products-grid');
-            if (!grid) return;
-
-            const visibleCards = grid.querySelectorAll('.product-card[style*="display: flex"]');
-            let noResultMsg = grid.querySelector('.no-results-msg');
-
-            if (visibleCards.length === 0 && query !== '') {
-                if (!noResultMsg) {
-                    noResultMsg = document.createElement('div');
-                    noResultMsg.className = 'no-results-msg';
-                    noResultMsg.innerText = 'No products found matching your search.';
-                    grid.appendChild(noResultMsg);
-                }
-            } else if (noResultMsg) {
-                noResultMsg.remove();
-            }
-        });
+    function closeBudgetModal() {
+        const modal = document.getElementById('budgetExceededModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
-
-    if (searchInput) {
-        searchInput.addEventListener('input', performSearch);
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performSearch();
-        });
-    }
-    if (searchBtn) {
-        searchBtn.addEventListener('click', performSearch);
-    }
-});
 </script>
 </body>
 </html>
