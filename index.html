@@ -459,15 +459,6 @@
 
         const productsList = ["Red Apple", "Whole Milk", "Sourdough Bread", "Chicken Drumsticks", "Avocado"];
 
-        function generateRandomParticipantID() {
-            let result = '';
-            result += Math.floor(Math.random() * 9) + 1;
-            for (let i = 0; i < 15; i++) {
-                result += Math.floor(Math.random() * 10);
-            }
-            return result;
-        }
-
         async function handleSubmit(event) {
             event.preventDefault();
 
