@@ -1,6 +1,5 @@
 // ==================== Firebase & 頁面追蹤初始化 ====================
 const pageStartTime = Date.now();
-const NEXT_PAGE_URL = "https://next-page-url.com";
 const MAX_BUDGET = 50.00;
 
 let selectionSequence = [];
@@ -66,47 +65,47 @@ function generateItemSequenceMap(seqArray) {
     return resultMap;
 }
 
-// ==================== 30 項商品資料庫（Featured 項目置頂） ====================
+// ==================== 30 項商品資料庫（ID 1~5 為 Featured） ====================
 const products = [
-    // 1. Featured items (置頂 5 項)
-    { id: 11, name: "Tomato Cherry", price: 2.97, isFeatured: true },
-    { id: 4, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
-    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: true },
-    { id: 6, name: "Strawberries", price: 2.38, isFeatured: true },
-    { id: 26, name: "Greek Yogurt", price: 4.99, isFeatured: true },
+    // 1. Featured items (置頂 5 項，ID: 1 ~ 5)
+    { id: 1, name: "Tomato Cherry", price: 2.97, isFeatured: true },
+    { id: 2, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
+    { id: 3, name: "Large Brown Eggs", price: 7.49, isFeatured: true },      // ★ 置頂 Eggs
+    { id: 4, name: "Strawberries", price: 2.38, isFeatured: true },
+    { id: 5, name: "Greek Yogurt", price: 4.99, isFeatured: true },
 
-    // 2. Fresh Fruits (水果類)
-    { id: 1, name: "Red Apple", price: 1.47, isFeatured: false },
+    // 2. Fresh Fruits (水果類，ID: 6 ~ 10)
+    { id: 6, name: "Red Apple", price: 1.47, isFeatured: false },
     { id: 7, name: "Blueberries", price: 2.99, isFeatured: false },
     { id: 8, name: "Banana Bunch", price: 0.99, isFeatured: false },
     { id: 9, name: "Oranges", price: 4.99, isFeatured: false },
     { id: 10, name: "Lemon", price: 0.74, isFeatured: false },
 
-    // 3. Fresh Vegetables (蔬菜類)
-    { id: 5, name: "Avocado", price: 2.59, isFeatured: false },
+    // 3. Fresh Vegetables (蔬菜類，ID: 11 ~ 15)
+    { id: 11, name: "Avocado", price: 2.59, isFeatured: false },
     { id: 12, name: "Sweet Potato", price: 1.95, isFeatured: false },
     { id: 13, name: "Cucumber", price: 2.08, isFeatured: false },
     { id: 14, name: "Bi-Color Corn", price: 0.50, isFeatured: false },
     { id: 15, name: "Peeled Baby Carrots", price: 1.32, isFeatured: false },
 
-    // 4. Fresh Meat (肉類)
+    // 4. Fresh Meat (肉類，ID: 16 ~ 20)
     { id: 16, name: "Ground Beef", price: 6.99, isFeatured: false },
     { id: 17, name: "Chicken Breasts Fillets", price: 2.79, isFeatured: false },
     { id: 18, name: "Beef Sirloin Steaks", price: 15.24, isFeatured: false },
     { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
     { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
 
-    // 5. Seafood Market (海鮮類)
+    // 5. Seafood Market (海鮮類，ID: 21 ~ 25)
+    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },       // ★ 一般海鮮 Salmon
     { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
     { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
 
-    // 6. Dairy, Cheese & Bread (乳品/烘焙/雜貨類)
-    { id: 2, name: "Whole Milk", price: 4.99, isFeatured: false },
-    { id: 3, name: "Sourdough Bread", price: 5.49, isFeatured: false },
-    { id: 27, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
-    { id: 28, name: "Large Brown Eggs", price: 7.49, isFeatured: false },
+    // 6. Dairy, Cheese & Bread (乳品/雜貨類，ID: 26 ~ 30)
+    { id: 26, name: "Whole Milk", price: 4.99, isFeatured: false },
+    { id: 27, name: "Sourdough Bread", price: 5.49, isFeatured: false },
+    { id: 28, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
     { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false }
 ];
@@ -324,10 +323,21 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
     let total = 0;
     let featuredCnt = 0;
 
+    const sourceBreakdownMap = {};
+    ALL_ITEMS.forEach(id => {
+        sourceBreakdownMap[`Item_${id}_From_Featured_Qty`] = 0;
+        sourceBreakdownMap[`Item_${id}_From_Category_Qty`] = 0;
+    });
+
     const itemsArr = cart.map(item => {
         total += item.price * item.quantity;
         const prod = products.find(p => p.id === item.id);
         if (prod && prod.isFeatured) featuredCnt += item.quantity;
+
+        if (sourceBreakdownMap.hasOwnProperty(`Item_${item.id}_From_Featured_Qty`)) {
+            sourceBreakdownMap[`Item_${item.id}_From_Featured_Qty`] += (item.featuredQty || 0);
+            sourceBreakdownMap[`Item_${item.id}_From_Category_Qty`] += (item.categoryQty || 0);
+        }
 
         return {
             id: item.id,
@@ -343,13 +353,16 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
 
     const checkoutFirebaseData = {
         participantID: currentPID || getPID(),
-        checkoutTime: new Date().toLocaleString(),
+        enterTime: new Date(pageStartTime).toLocaleString(),   // ★ 精準記錄進站時間
+        leaveTime: new Date(pageEndTime).toLocaleString(),     // ★ 精準記錄離站時間
+        checkoutTime: new Date(pageEndTime).toLocaleString(),
         aiNudgeText: localStorage.getItem('ai_nudge_text') || "",
         durationSeconds: durationInSeconds,
         formattedDuration: formattedDuration,
         finalCartItems: itemsArr,
         selectionSequence: selectionSequence,
         itemSequenceMap: itemSequenceMap,
+        sourceBreakdown: sourceBreakdownMap,                   // ★ 記錄 1~30 各來源數量
         featuredProductCount: featuredCnt,
         orderTotal: total
     };

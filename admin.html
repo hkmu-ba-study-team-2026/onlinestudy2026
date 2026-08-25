@@ -180,7 +180,7 @@
     </div>
 
     <div id="adminPanel" class="admin-content">
-        <a href="index.html" class="back-btn">← Back to Shop</a>
+        <a href="index.html" class="back-btn">← Back to Cover Page</a>
         <button class="refresh-btn" onclick="fetchFirebaseData()">🔄 Refresh Data</button>
         <button class="export-btn" onclick="exportFirebaseToExcel()">📊 Export All to Excel</button>
         <button class="clear-btn" onclick="clearFirebaseData()">⚠️ Clear All Firebase Records</button>
@@ -461,9 +461,11 @@
     }
 
     async function exportFirebaseToExcel() {
-        const exportBtn = document.querySelector(".export-btn");
-        exportBtn.disabled = true;
-        exportBtn.innerText = "⏳ Exporting...";
+        const exportBtn = document.querySelector(".export-btn") || document.getElementById("exportBtn");
+        if (exportBtn) {
+            exportBtn.disabled = true;
+            exportBtn.innerText = "⏳ Exporting...";
+        }
 
         try {
             const [ordersSnap, surveySnap, abandonSnap, visitSnap, postSurveySnap] = await Promise.all([
@@ -471,7 +473,7 @@
                 db.ref('survey_responses').once('value'),
                 db.ref('abandon_carts').once('value'),
                 db.ref('visit_logs').once('value'),
-                db.ref('post_survey_records').once('value') // ★ 新增
+                db.ref('post_survey_records').once('value')
             ]);
 
             const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
@@ -508,22 +510,26 @@
                     "Visit Duration (s)": 0,
                     "Has Checkout": "No",
                     "Checkout Time": "",
-                    "Checkout Duration (s)": 0,
                     "Order Total ($)": 0,
-                    "Featured Items Total Qty": 0
+                    "Featured Items Total Qty": 0,
+                    "Open_Survey_Purpose_Thoughts": "",
+                    "Open_Study_Feedback": ""
                 });
 
-                // 1~30 號商品購買量
+                // 1~30 商品總數、來源數量、加入順序
                 for (let i = 1; i <= 30; i++) {
-                    masterDataMap[pid][`Item_${i}_Qty`] = 0;
+                    masterDataMap[pid][`Item_${i}_Total_Qty`] = 0;
+                    masterDataMap[pid][`Item_${i}_From_Featured_Qty`] = 0;
+                    masterDataMap[pid][`Item_${i}_From_Category_Qty`] = 0;
+                    masterDataMap[pid][`Seq_Item_${i}`] = "";
                 }
 
                 // Post-survey Likert
                 const postKeys = [
                     "q_scenario_realistic", "q_scenario_project", "q_scenario_imagine",
                     "q_mc_onesize", "q_mc_identical",
-                    "q_wtp_tomato", "q_wtp_chicken", "q_wtp_salmon", "q_wtp_strawberries",
-                    "q_sus_tomato", "q_sus_chicken", "q_sus_salmon", "q_sus_strawberries",
+                    "q_wtp_tomato", "q_wtp_chicken", "q_wtp_eggs", "q_wtp_strawberries", "q_wtp_yogurt",
+                    "q_sus_tomato", "q_sus_chicken", "q_sus_eggs", "q_sus_strawberries", "q_sus_yogurt",
                     "q_pers_tailored", "q_pers_understood", "q_pers_account",
                     "q_ai_familiar", "q_ai_like"
                 ];
@@ -556,21 +562,58 @@
                 }
             });
 
-            // 填入行為與訂單數據
+            // 填入 Visit Logs (備用補全)
+            visits.forEach(v => {
+                const pid = v.participantID;
+                if (masterDataMap[pid]) {
+                    if (!masterDataMap[pid]["Enter Time"]) masterDataMap[pid]["Enter Time"] = v.enter || "";
+                    if (!masterDataMap[pid]["Leave Time"]) masterDataMap[pid]["Leave Time"] = v.leave || "";
+                    if (masterDataMap[pid]["Visit Duration (s)"] === 0) masterDataMap[pid]["Visit Duration (s)"] = v.totalSecond || 0;
+                }
+            });
+
+            // 填入行為與訂單數據（包含來源統計與時間）
             orders.forEach(o => {
                 const pid = o.participantID;
                 if (masterDataMap[pid]) {
                     masterDataMap[pid]["Has Checkout"] = "Yes";
                     masterDataMap[pid]["Checkout Time"] = o.checkoutTime || "";
-                    masterDataMap[pid]["Checkout Duration (s)"] = o.durationSeconds || 0;
+                    masterDataMap[pid]["Enter Time"] = o.enterTime || masterDataMap[pid]["Enter Time"] || "";
+                    masterDataMap[pid]["Leave Time"] = o.checkoutTime || masterDataMap[pid]["Leave Time"] || "";
+                    masterDataMap[pid]["Visit Duration (s)"] = o.durationSeconds || masterDataMap[pid]["Visit Duration (s)"] || 0;
                     masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
                     masterDataMap[pid]["Featured Items Total Qty"] = o.featuredProductCount || 0;
+
+                    // 統計總量與來源
                     if (Array.isArray(o.finalCartItems)) {
                         o.finalCartItems.forEach(item => {
                             if (item.id && item.id >= 1 && item.id <= 30) {
-                                masterDataMap[pid][`Item_${item.id}_Qty`] += (item.quantity || 0);
+                                masterDataMap[pid][`Item_${item.id}_Total_Qty`] += (item.quantity || 0);
+                                masterDataMap[pid][`Item_${item.id}_From_Featured_Qty`] += (item.featuredQty || 0);
+                                masterDataMap[pid][`Item_${item.id}_From_Category_Qty`] += (item.categoryQty || 0);
                             }
                         });
+                    }
+
+                    // 若有 sourceBreakdown 字典則二次比對確認
+                    if (o.sourceBreakdown) {
+                        for (let i = 1; i <= 30; i++) {
+                            if (o.sourceBreakdown[`Item_${i}_From_Featured_Qty`] !== undefined) {
+                                masterDataMap[pid][`Item_${i}_From_Featured_Qty`] = o.sourceBreakdown[`Item_${i}_From_Featured_Qty`];
+                            }
+                            if (o.sourceBreakdown[`Item_${i}_From_Category_Qty`] !== undefined) {
+                                masterDataMap[pid][`Item_${i}_From_Category_Qty`] = o.sourceBreakdown[`Item_${i}_From_Category_Qty`];
+                            }
+                        }
+                    }
+
+                    // 填入加入次序
+                    if (o.itemSequenceMap) {
+                        for (let i = 1; i <= 30; i++) {
+                            if (o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
+                                masterDataMap[pid][`Seq_Item_${i}`] = o.itemSequenceMap[`Seq_Item_${i}`];
+                            }
+                        }
                     }
                 }
             });
@@ -594,13 +637,40 @@
                         masterDataMap[pid]["Demo_Education"] = p.demographics.education || "";
                         masterDataMap[pid]["Demo_Occupation"] = p.demographics.occupation || "";
                     }
+                    if (p.openResponses) {
+                        masterDataMap[pid]["Open_Survey_Purpose_Thoughts"] = p.openResponses.surveyPurposeThoughts || "";
+                        masterDataMap[pid]["Open_Study_Feedback"] = p.openResponses.generalFeedback || "";
+                    }
                 }
             });
 
             const wb = XLSX.utils.book_new();
+
+            // 1. Master Sheet
             const masterRows = Object.values(masterDataMap);
             const wsMaster = XLSX.utils.json_to_sheet(masterRows);
             XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
+
+            // 2. Selection Sequence Sheet
+            const sequenceRows = [];
+            orders.forEach(o => {
+                const pid = o.participantID;
+                if (Array.isArray(o.selectionSequence)) {
+                    o.selectionSequence.forEach(seq => {
+                        sequenceRows.push({
+                            "Participant ID": pid,
+                            "Step": seq.step,
+                            "Product ID": seq.productId || "",
+                            "Product Name": seq.productName || "",
+                            "Quantity": seq.quantity || 1,
+                            "Added From Section": seq.sourceSection || "category",
+                            "Timestamp": seq.timestamp || ""
+                        });
+                    });
+                }
+            });
+            const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
+            XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
 
             const dateStr = new Date().toISOString().split('T')[0];
             XLSX.writeFile(wb, `FreshMart_Research_FullData_${dateStr}.xlsx`);
@@ -610,8 +680,10 @@
             console.error("Export error:", err);
             alert("Export failed, check console.");
         } finally {
-            exportBtn.disabled = false;
-            exportBtn.innerText = "📊 Export All to Excel";
+            if (exportBtn) {
+                exportBtn.disabled = false;
+                exportBtn.innerText = "📊 Export All to Excel";
+            }
         }
     }
 </script>

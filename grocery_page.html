@@ -177,13 +177,6 @@
             border-radius: 30px;
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
-            letter-spacing: 0.5px;
-        }
-        .budget-badge.low-budget {
-            color: #991b1b;
-            background-color: #fef2f2;
-            border-color: #fca5a5;
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
             animation: pulse 2s infinite;
         }
@@ -235,7 +228,7 @@
     </div>
 </section>
 
-<!-- 1. 精選置頂區 -->
+<!-- 1. 精選置頂區 (ID: 1 ~ 5) -->
 <section id="products" class="products-section">
     <div class="container">
 
@@ -248,63 +241,63 @@
 
         <div class="rec-banner" id="featuredBanner">
             <div class="products-grid" id="productWrap">
-                <!-- 1. Tomato Cherry (ID: 11) -->
-                <div class="product-card" data-id="11" data-type="featured">
+                <!-- 1. Tomato Cherry (ID: 1) -->
+                <div class="product-card" data-id="1" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
                     <div class="product-info">
                         <h3>Tomato Cherry</h3>
                         <h3>10 Ounce</h3>
                         <p>$2.97</p>
-                        <button class="add-btn" data-id="11" data-source="featured">Add to Cart</button>
+                        <button class="add-btn" data-id="1" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 2. Chicken Drumsticks (ID: 4) -->
-                <div class="product-card" data-id="4" data-type="featured">
+                <!-- 2. Chicken Drumsticks (ID: 2) -->
+                <div class="product-card" data-id="2" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
                     <div class="product-info">
                         <h3>Chicken Drumsticks</h3>
                         <h3>1 Lb</h3>
                         <p>$1.77</p>
-                        <button class="add-btn" data-id="4" data-source="featured">Add to Cart</button>
+                        <button class="add-btn" data-id="2" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 3. Smoked Salmon (ID: 21) -->
-                <div class="product-card" data-id="21" data-type="featured">
+                <!-- 3. Large Brown Eggs (ID: 3) -->
+                <div class="product-card" data-id="3" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/salmon.jpg" alt="Salmon"></div>
+                    <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
                     <div class="product-info">
-                        <h3>Smoked Salmon</h3>
-                        <h3>10 Ounce</h3>
-                        <p>$8.98</p>
-                        <button class="add-btn" data-id="21" data-source="featured">Add to Cart</button>
+                        <h3>Large Brown Eggs</h3>
+                        <h3>12 Count</h3>
+                        <p>$7.49</p>
+                        <button class="add-btn" data-id="3" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 4. Strawberries (ID: 6) -->
-                <div class="product-card" data-id="6" data-type="featured">
+                <!-- 4. Strawberries (ID: 4) -->
+                <div class="product-card" data-id="4" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
                     <div class="product-info">
                         <h3>Strawberries</h3>
                         <h3>1 Lb</h3>
                         <p>$2.38</p>
-                        <button class="add-btn" data-id="6" data-source="featured">Add to Cart</button>
+                        <button class="add-btn" data-id="4" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
 
-                <!-- 5. Greek Yogurt (ID: 26) -->
-                <div class="product-card" data-id="26" data-type="featured">
+                <!-- 5. Greek Yogurt (ID: 5) -->
+                <div class="product-card" data-id="5" data-type="featured">
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek Yogurt"></div>
                     <div class="product-info">
                         <h3>Greek Yogurt</h3>
                         <h3>32 Ounce</h3>
                         <p>$4.99</p>
-                        <button class="add-btn" data-id="26" data-source="featured">Add to Cart</button>
+                        <button class="add-btn" data-id="5" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -313,29 +306,29 @@
     </div>
 </section>
 
-<!-- 2. Fruits (包含複製的 Red Apple) -->
+<!-- 2. Fruits (包含複製的 Strawberries ID: 4) -->
 <section id="fruits" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Fruits</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="1" data-type="fruits">
+            <div class="product-card" data-id="6" data-type="fruits">
                 <div class="product-image"><img src="assets/apple.png" alt="Apple"></div>
                 <div class="product-info">
                     <h3>Red Apple</h3>
                     <h3>1 Count</h3>
                     <p>$1.47</p>
-                    <button class="add-btn" data-id="1" data-source="category">Add to Cart</button>
+                    <button class="add-btn" data-id="6" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="6" data-type="fruits">
+            <div class="product-card" data-id="4" data-type="fruits">
                 <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
                 <div class="product-info">
                     <h3>Strawberries</h3>
                     <h3>1 Lb</h3>
                     <p>$2.38</p>
-                    <button class="add-btn" data-id="6" data-source="category">Add to Cart</button>
+                    <button class="add-btn" data-id="4" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="7" data-type="fruits">
@@ -378,28 +371,28 @@
     </div>
 </section>
 
-<!-- 3. Vegetables (包含複製的 Avocado) -->
+<!-- 3. Vegetables (包含複製的 Tomato Cherry ID: 1) -->
 <section id="vegetables" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Vegetables</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="5" data-type="vegetables">
-                <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
-                <div class="product-info">
-                    <h3>Avocado</h3>
-                    <h3>1 Count</h3>
-                    <p>$2.59</p>
-                    <button class="add-btn" data-id="5" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="11" data-type="vegetables">
+            <div class="product-card" data-id="1" data-type="vegetables">
                 <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
                 <div class="product-info">
                     <h3>Tomato Cherry</h3>
                     <h3>10 Ounce</h3>
                     <p>$2.97</p>
+                    <button class="add-btn" data-id="1" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="11" data-type="vegetables">
+                <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
+                <div class="product-info">
+                    <h3>Avocado</h3>
+                    <h3>1 Count</h3>
+                    <p>$2.59</p>
                     <button class="add-btn" data-id="11" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -443,20 +436,20 @@
     </div>
 </section>
 
-<!-- 4. Meat (包含複製的 Chicken Drumsticks) -->
+<!-- 4. Meat (包含複製的 Chicken Drumsticks ID: 2) -->
 <section id="meat" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Meat</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="4" data-type="meat">
+            <div class="product-card" data-id="2" data-type="meat">
                 <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
                 <div class="product-info">
                     <h3>Chicken Drumsticks</h3>
                     <h3>1 Lb</h3>
                     <p>$1.77</p>
-                    <button class="add-btn" data-id="4" data-source="category">Add to Cart</button>
+                    <button class="add-btn" data-id="2" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="16" data-type="meat">
@@ -508,7 +501,7 @@
     </div>
 </section>
 
-<!-- 5. Seafood Market -->
+<!-- 5. Seafood Market (Smoked Salmon ID: 21) -->
 <section id="seafood" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -564,55 +557,55 @@
     </div>
 </section>
 
-<!-- 6. Pantry & Dairy (包含複製的 Whole Milk & Sourdough Bread) -->
+<!-- 6. Pantry & Dairy (包含複製的 Eggs ID: 3 與 Greek Yogurt ID: 5) -->
 <section id="pantry-dairy" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Dairy, Cheese & Bread</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="2" data-type="dairy">
-                <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
-                <div class="product-info">
-                    <h3>Whole Milk</h3>
-                    <h3>64 Ounce</h3>
-                    <p>$4.99</p>
-                    <button class="add-btn" data-id="2" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="3" data-type="dairy">
-                <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
-                <div class="product-info">
-                    <h3>Sourdough Bread</h3>
-                    <h3>24 Ounce</h3>
-                    <p>$5.49</p>
-                    <button class="add-btn" data-id="3" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="26" data-type="dairy">
+            <div class="product-card" data-id="5" data-type="dairy">
                 <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek-Yogurt"></div>
                 <div class="product-info">
                     <h3>Greek Yogurt</h3>
                     <h3>32 Ounce</h3>
                     <p>$4.99</p>
-                    <button class="add-btn" data-id="26" data-source="category">Add to Cart</button>
+                    <button class="add-btn" data-id="5" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="27" data-type="dairy">
-                <div class="product-image"><img src="assets/cheddar-cheese.jpg" alt="Cheddar Cheese"></div>
-                <div class="product-info">
-                    <h3>Cheddar Cheese</h3>
-                    <h3>8 Ounce, 10 Slices</h3>
-                    <p>$1.65</p>
-                    <button class="add-btn" data-id="27" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="28" data-type="dairy">
+            <div class="product-card" data-id="3" data-type="dairy">
                 <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
                 <div class="product-info">
                     <h3>Large Brown Eggs</h3>
                     <h3>12 Count</h3>
                     <p>$7.49</p>
+                    <button class="add-btn" data-id="3" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="26" data-type="dairy">
+                <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
+                <div class="product-info">
+                    <h3>Whole Milk</h3>
+                    <h3>64 Ounce</h3>
+                    <p>$4.99</p>
+                    <button class="add-btn" data-id="26" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="27" data-type="dairy">
+                <div class="product-image"><img src="assets/bread.jpg" alt="Bread"></div>
+                <div class="product-info">
+                    <h3>Sourdough Bread</h3>
+                    <h3>24 Ounce</h3>
+                    <p>$5.49</p>
+                    <button class="add-btn" data-id="27" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="28" data-type="dairy">
+                <div class="product-image"><img src="assets/cheddar-cheese.jpg" alt="Cheddar Cheese"></div>
+                <div class="product-info">
+                    <h3>Cheddar Cheese</h3>
+                    <h3>8 Ounce, 10 Slices</h3>
+                    <p>$1.65</p>
                     <button class="add-btn" data-id="28" data-source="category">Add to Cart</button>
                 </div>
             </div>

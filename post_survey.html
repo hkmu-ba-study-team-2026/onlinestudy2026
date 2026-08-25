@@ -109,21 +109,17 @@
         .scale-info ul {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px 12px;
+            gap: 8px 16px;
             list-style: none;
             color: var(--text-secondary);
             padding: 0;
             margin: 0;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
             .scale-info ul {
                 grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        .scale-info ul {
-            grid-template-columns: repeat(2, 1fr);
         }
 
         #postSurveyForm {
@@ -282,22 +278,22 @@
 
 <div class="container">
     <div class="fixed-top-section">
-        <span class="academic-badge">Final Questionnaire</span>
-        <h1>Post-Shopping Survey</h1>
+        <span class="academic-badge">Academic Research Study</span>
+        <h1>Post-survey Questionnaire</h1>
         <p style="font-size: 0.88rem; color: var(--text-secondary);">
-            Please recall the shopping experience and answer the following questions.
+            Please recall the survey experience and answer the following questions.
         </p>
 
         <div class="scale-info">
             <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
             <ul>
-                <li><strong>1</strong> = Not at all important</li>
-                <li><strong>2</strong> = Not important</li>
-                <li><strong>3</strong> = Slightly unimportant</li>
+                <li><strong>1</strong> = Strongly disagree</li>
+                <li><strong>2</strong> = Disagree</li>
+                <li><strong>3</strong> = Slightly disagree</li>
                 <li><strong>4</strong> = Neutral</li>
-                <li><strong>5</strong> = Slightly important</li>
-                <li><strong>6</strong> = Important</li>
-                <li><strong>7</strong> = Extremely important</li>
+                <li><strong>5</strong> = Slightly agree</li>
+                <li><strong>6</strong> = Agree</li>
+                <li><strong>7</strong> = Strongly agree</li>
             </ul>
         </div>
         <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
@@ -492,6 +488,16 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label class="question-title">27. Please share your thoughts on the purpose of this survey.</label>
+            <textarea name="open_survey_purpose" class="form-input" rows="3" placeholder="Enter your thoughts here..." style="resize: vertical; font-family: inherit;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">28. Please feel free to leave any comments/feedback for this study. Thank you!</label>
+            <textarea name="open_study_feedback" class="form-input" rows="3" placeholder="Enter any comments or feedback here..." style="resize: vertical; font-family: inherit;"></textarea>
+        </div>
+
         <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
     </form>
 </div>
@@ -578,11 +584,18 @@
             occupation: formData.get("demo_occupation")
         };
 
+        // 收集開放式問題回答
+        const openEndedResponses = {
+            surveyPurposeThoughts: (formData.get("open_survey_purpose") || "").trim(),
+            generalFeedback: (formData.get("open_study_feedback") || "").trim()
+        };
+
         const finalRecord = {
             participantID: pid,
             submittedAt: new Date().toLocaleString(),
             postSurveyLikert: postSurveyResponses,
-            demographics: demographicData
+            demographics: demographicData,
+            openResponses: openEndedResponses
         };
 
         try {
@@ -593,7 +606,7 @@
             console.error("Error saving post survey data:", err);
         }
 
-        alert("Thank you! You have successfully completed the whole study.");
+        alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!  ");
         window.location.href = "https://next-page-url.com"; // 或 Prolific / MTurk 回傳網址
     }
 </script>
