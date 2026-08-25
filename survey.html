@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping Study</title>
+<style>
+    :root {
+    --bg-color: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #606f7b;
+    --accent-color: #34495e;
+    --hover-color: #2c3e50;
+    --border-color: #e2e8f0;
+    --focus-ring: #cbd5e1;
+}
+
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+    body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+    .container {
+    background-color: var(--card-bg);
+    max-width: 800px;
+    width: 100%;
+    height: calc(100vh - 40px);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+    .fixed-top-section {
+    flex-shrink: 0;
+    border-bottom: 2px solid var(--bg-color);
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+    header {
+    margin-bottom: 12px;
+}
+
+    .academic-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: #718096;
+    background-color: #edf2f7;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+
+    h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+    p.intro {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+    .scale-info {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 0.85rem;
+}
+
+    .scale-info h3 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+    .scale-info ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 4px 10px;
+    list-style: none;
+    color: var(--text-secondary);
+}
+
+    .dev-autofill-btn {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 6px 14px;
+        background-color: #e2e8f0;
+        color: #4a5568;
+        border: 1px dashed #cbd5e1;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .dev-autofill-btn:hover {
+        background-color: #cbd5e1;
+        color: #2d3748;
+    }
+
+    #surveyForm {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-top: 10px;
+}
+
+    #surveyForm::-webkit-scrollbar {
+    width: 6px;
+}
+    #surveyForm::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+}
+    #surveyForm::-webkit-scrollbar-track {
+    background-color: #f1f5f9;
+}
+
+    .form-group {
+    margin-bottom: 20px;
+}
+
+    label.question-title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+    .question-title .required {
+    color: #e53e3e;
+    margin-left: 4px;
+}
+
+    /* 7-Point Scale Grid Layout */
+    .scale-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+    .scale-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .scale-card input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .scale-card label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 40px;
+        background-color: #fafafa;
+        border: 1.5px solid var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+
+    .scale-card label:hover {
+        border-color: #cbd5e1;
+        background-color: #f8fafc;
+    }
+
+    .scale-card input[type="radio"]:checked + label {
+        border-color: var(--accent-color);
+        background-color: #eff6ff;
+        color: var(--accent-color);
+        box-shadow: 0 0 0 1px var(--accent-color);
+    }
+
+    .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin: 30px 0 10px 0;
+}
+
+    .submit-btn:hover {
+    background-color: var(--hover-color);
+}
+
+    .submit-btn:disabled {
+        background-color: #a0aec0;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 16px;
+        height: calc(100vh - 20px);
+    }
+    .scale-grid {
+        gap: 4px;
+    }
+
+    .scale-card label {
+        padding: 6px 2px;
+        font-size: 0.75rem;
+    }
+    .scale-info ul {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .scale-hint {
+        font-size: 0.68rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-top: 5px;
+        text-align: center;
+        line-height: 1.2;
+        width: 100%;
+        display: block;
+    }
+}
+</style>
+</head>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+    authDomain: "online-study-2026.firebaseapp.com",
+    databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "online-study-2026",
+    storageBucket: "online-study-2026.firebasestorage.app",
+    messagingSenderId: "359632481591",
+    appId: "1:359632481591:web:31d160c7f772841b16feb2"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+</script>
+
+<body>
+
+<div class="container">
+
+    <div class="fixed-top-section">
+        <header>
+            <a href="admin.html" class="academic-badge">Academic Survey</a>
+            <h1>Consumer Food Choice Investigation</h1>
+            <p class="intro">Welcome! This is an academic survey. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
+        </header>
+
+        <div class="scale-info">
+            <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
+            <ul>
+                <li><strong>1</strong> = Not at all important</li>
+                <li><strong>2</strong> = Not important</li>
+                <li><strong>3</strong> = Slightly unimportant</li>
+                <li><strong>4</strong> = Neutral</li>
+                <li><strong>5</strong> = Slightly important</li>
+                <li><strong>6</strong> = Important</li>
+                <li><strong>7</strong> = Extremely important</li>
+            </ul>
+        </div>
+
+        <!-- 臨時隨機填寫按鈕 -->
+        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
+    </div>
+
+    <form id="surveyForm" onsubmit="handleSubmit(event)">
+
+        <div class="form-group" style="background: #eef2f7; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            <label class="question-title" style="font-size: 1rem; color: #1e293b;">
+                Participant ID <span class="required">*</span>
+            </label>
+            <input type="text" id="inputParticipantID" name="inputParticipantID" required
+                   placeholder="Please enter your Participant ID"
+                   style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.95rem; margin-top: 6px;">
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">1. The product provides an enjoyable sensory experience. <span class="required">*</span></label>
+            <div class="scale-grid" id="q01_sensory_experience"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">2. The product is fresh. <span class="required">*</span></label>
+            <div class="scale-grid" id="q02_fresh"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">3. The product is familiar. <span class="required">*</span></label>
+            <div class="scale-grid" id="q03_familiar"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">4. The product is of high quality. <span class="required">*</span></label>
+            <div class="scale-grid" id="q04_high_quality"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">5. The product is healthy. <span class="required">*</span></label>
+            <div class="scale-grid" id="q05_healthy"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">6. The product is safe to consume. <span class="required">*</span></label>
+            <div class="scale-grid" id="q06_safe_to_consume"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">7. The product’s price is within my budget. <span class="required">*</span></label>
+            <div class="scale-grid" id="q07_price_within_budget"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">8. The benefits I receive from the product justify its price. <span class="required">*</span></label>
+            <div class="scale-grid" id="q08_price_justified"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">9. The serving size is appropriate for me. <span class="required">*</span></label>
+            <div class="scale-grid" id="q09_serving_size"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">10. The product is convenient to use or consume. <span class="required">*</span></label>
+            <div class="scale-grid" id="q10_convenient"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">11. The product can be used in different meals or recipes. <span class="required">*</span></label>
+            <div class="scale-grid" id="q11_versatile_use"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">12. The packaging protects the product effectively. <span class="required">*</span></label>
+            <div class="scale-grid" id="q12_packaging_protects"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">13. The product’s claims are trustworthy. <span class="required">*</span></label>
+            <div class="scale-grid" id="q13_trustworthy_claims"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">14. The product is available when I want to purchase it. <span class="required">*</span></label>
+            <div class="scale-grid" id="q14_available"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">15. The product is produced without exploitation. <span class="required">*</span></label>
+            <div class="scale-grid" id="q15_no_exploitation"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">16. The product is produced in an environmentally friendly way. <span class="required">*</span></label>
+            <div class="scale-grid" id="q16_eco_friendly"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">17. The product is a local/regional product. <span class="required">*</span></label>
+            <div class="scale-grid" id="q17_local_product"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">18. I always stay friendly and courteous with other people. <span class="required">*</span></label>
+            <div class="scale-grid" id="q18_friendly_courteous"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">19. I am always polite and considerate of others. <span class="required">*</span></label>
+            <div class="scale-grid" id="q19_polite_considerate"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">20. It is difficult to admit my mistakes openly to others. <span class="required">*</span></label>
+            <div class="scale-grid" id="q20_admit_mistakes"></div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">
+            Submit
+        </button>
+    </form>
+</div>
+
+<script>
+    const API_URL = "/api/recommend";
+
+    const questionIds = [
+    "q01_sensory_experience",
+    "q02_fresh",
+    "q03_familiar",
+    "q04_high_quality",
+    "q05_healthy",
+    "q06_safe_to_consume",
+    "q07_price_within_budget",
+    "q08_price_justified",
+    "q09_serving_size",
+    "q10_convenient",
+    "q11_versatile_use",
+    "q12_packaging_protects",
+    "q13_trustworthy_claims",
+    "q14_available",
+    "q15_no_exploitation",
+    "q16_eco_friendly",
+    "q17_local_product",
+    "q18_friendly_courteous",
+    "q19_polite_considerate",
+    "q20_admit_mistakes"
+    ];
+
+    questionIds.forEach(qId => {
+    const container = document.getElementById(qId);
+    if (!container) return;
+
+    for (let i = 1; i <= 7; i++) {
+    const card = document.createElement("div");
+    card.className = "scale-card";
+
+    let hintText = "";
+    if (i === 1) hintText = '<span class="scale-hint">Not at all important</span>';
+    if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
+    if (i === 7) hintText = '<span class="scale-hint">Extremely important</span>';
+
+    card.innerHTML = `
+                    <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
+                    <label for="${qId}_${i}">${i}</label>
+                    ${hintText}
+                `;
+    container.appendChild(card);
+}
+});
+
+    function autoFillRandom() {
+    questionIds.forEach(qId => {
+        const randomVal = Math.floor(Math.random() * 7) + 1;
+        const radio = document.getElementById(`${qId}_${randomVal}`);
+        if (radio) {
+            radio.checked = true;
+        }
+    });
+}
+
+    const productsList = [
+    "Tomato Cherry",
+    "Chicken Drumsticks",
+    "Smoked Salmon",
+    "Strawberries",
+    "Greek Yogurt"
+    ];
+
+    async function handleSubmit(event) {
+    event.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving responses...';
+
+    const inputPid = document.getElementById('inputParticipantID').value.trim();
+    if (!inputPid) {
+    alert("Please enter a valid Participant ID.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit and Proceed to Store';
+    return;
+}
+    const participantNum = inputPid;
+    localStorage.setItem("participantID", participantNum);
+
+    const formData = new FormData(event.target);
+    const surveyResponses = {};
+    questionIds.forEach(qId => {
+    surveyResponses[qId] = parseInt(formData.get(qId), 10);
+});
+
+    const userPreferences = {
+    surveyResponses: surveyResponses,
+};
+
+    const payload = {
+    products: productsList,
+    preferences: userPreferences
+};
+
+    let aiNudgeText = "";
+
+    try {
+    const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+});
+
+    if (response.ok) {
+    const recommendations = await response.json();
+    console.log('Recommendations Result:', recommendations);
+
+    if (typeof recommendations === 'string') {
+    aiNudgeText = recommendations;
+} else if (recommendations && recommendations.recommendation) {
+    aiNudgeText = recommendations.recommendation;
+}
+
+    localStorage.setItem('recommendations', JSON.stringify(recommendations));
+    localStorage.setItem('ai_nudge_text', aiNudgeText);
+    localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+} else {
+    throw new Error(`API response error: ${response.status}`);
+}
+} catch (error) {
+    console.error('API Request Failed:', error);
+    // aiNudgeText = 'Results generated based on your preference.';
+    aiNudgeText = error.toString();
+    localStorage.setItem('ai_nudge_text', aiNudgeText);
+}
+
+    const firebaseData = {
+    participantID: participantNum,
+    submittedAt: new Date().toLocaleString(),
+    aiNudgeText: aiNudgeText,
+    responses: surveyResponses
+};
+
+    try {
+    await db.ref('survey_responses').push(firebaseData);
+    console.log('Survey responses saved to Firebase successfully!');
+} catch (dbError) {
+    console.error('Failed to save to Firebase:', dbError);
+}
+
+    window.location.href = 'grocery_page.html';
+}
+</script>
+</body>
+</html>

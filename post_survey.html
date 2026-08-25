@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Shopping Survey</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+            authDomain: "online-study-2026.firebaseapp.com",
+            databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "online-study-2026",
+            storageBucket: "online-study-2026.firebasestorage.app",
+            messagingSenderId: "359632481591",
+            appId: "1:359632481591:web:31d160c7f772841b16feb2"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-color: #2563eb;
+            --hover-color: #1d4ed8;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            max-width: 850px;
+            width: 100%;
+            height: calc(100vh - 40px);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fixed-top-section {
+            flex-shrink: 0;
+            border-bottom: 2px solid var(--bg-color);
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+        }
+
+        .academic-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #475569;
+            background-color: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .scale-info {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .scale-info h3 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .scale-info ul {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px 12px;
+            list-style: none;
+            color: var(--text-secondary);
+            padding: 0;
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .scale-info ul {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .scale-info ul {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #postSurveyForm {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 12px;
+            margin-top: 10px;
+        }
+
+        #postSurveyForm::-webkit-scrollbar {
+            width: 6px;
+        }
+        #postSurveyForm::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .question-title {
+            display: block;
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .scale-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            align-items: start;
+        }
+
+        .scale-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scale-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .scale-card label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 40px;
+            background-color: #fafafa;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .scale-card label:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .scale-card input[type="radio"]:checked + label {
+            border-color: var(--accent-color);
+            background-color: #eff6ff;
+            color: var(--accent-color);
+            box-shadow: 0 0 0 1px var(--accent-color);
+        }
+
+        .scale-hint {
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            text-align: center;
+            line-height: 1.2;
+            width: 100%;
+            display: block;
+        }
+
+        /* Demographic Fields */
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            background-color: #ffffff;
+            margin-top: 4px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .dev-autofill-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            border: 1px dashed #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dev-autofill-btn:hover {
+            background-color: #cbd5e1;
+            color: #2d3748;
+        }
+
+        .demographic-divider {
+            margin: 30px 0 20px 0;
+            padding-top: 15px;
+            border-top: 2px dashed var(--border-color);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #16a34a;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin: 25px 0 15px 0;
+        }
+
+        .submit-btn:hover {
+            background-color: #15803d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="fixed-top-section">
+        <span class="academic-badge">Final Questionnaire</span>
+        <h1>Post-Shopping Survey</h1>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">
+            Please recall the shopping experience and answer the following questions.
+        </p>
+
+        <div class="scale-info">
+            <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
+            <ul>
+                <li><strong>1</strong> = Not at all important</li>
+                <li><strong>2</strong> = Not important</li>
+                <li><strong>3</strong> = Slightly unimportant</li>
+                <li><strong>4</strong> = Neutral</li>
+                <li><strong>5</strong> = Slightly important</li>
+                <li><strong>6</strong> = Important</li>
+                <li><strong>7</strong> = Extremely important</li>
+            </ul>
+        </div>
+        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
+    </div>
+
+    <form id="postSurveyForm" onsubmit="handlePostSurveySubmit(event)">
+
+        <!-- 1-7 Likert Questions -->
+        <div class="form-group">
+            <label class="question-title">1. The shopping scenario was realistic. *</label>
+            <div class="scale-grid" id="q_scenario_realistic"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">2. It was easy to project myself in the shopping scenario. *</label>
+            <div class="scale-grid" id="q_scenario_project"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">3. It was easy to imagine the shopping scenario that happened in real life. *</label>
+            <div class="scale-grid" id="q_scenario_imagine"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">4. The recommendations in the scenario are likely one-size-fit-all recommendations. *</label>
+            <div class="scale-grid" id="q_mc_onesize"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">5. The recommendations in the scenario are likely to be posted identically to any consumers. *</label>
+            <div class="scale-grid" id="q_mc_identical"></div>
+        </div>
+
+        <!-- Willingness to purchase -->
+        <div class="form-group">
+            <label class="question-title">6. I am willing to purchase the Tomato Cherry. *</label>
+            <div class="scale-grid" id="q_wtp_tomato"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">7. I am willing to purchase the Chicken Drumsticks. *</label>
+            <div class="scale-grid" id="q_wtp_chicken"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">8. I am willing to purchase the Smoked Salmon. *</label>
+            <div class="scale-grid" id="q_wtp_salmon"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">9. I am willing to purchase the Strawberries. *</label>
+            <div class="scale-grid" id="q_wtp_strawberries"></div>
+        </div>
+
+        <!-- Perceived sustainability -->
+        <div class="form-group">
+            <label class="question-title">10. Tomato Cherry is sustainable. *</label>
+            <div class="scale-grid" id="q_sus_tomato"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">11. Chicken Drumsticks is sustainable. *</label>
+            <div class="scale-grid" id="q_sus_chicken"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">12. Smoked Salmon is sustainable. *</label>
+            <div class="scale-grid" id="q_sus_salmon"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">13. Strawberries is sustainable. *</label>
+            <div class="scale-grid" id="q_sus_strawberries"></div>
+        </div>
+
+        <!-- Personalization -->
+        <div class="form-group">
+            <label class="question-title">14. The recommendation I received were well-tailored to my interests. *</label>
+            <div class="scale-grid" id="q_pers_tailored"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">15. I feel that my needs are understood by the recommendation. *</label>
+            <div class="scale-grid" id="q_pers_understood"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">16. I feel that my preferences are taken into account when I receive recommendation. *</label>
+            <div class="scale-grid" id="q_pers_account"></div>
+        </div>
+
+        <!-- AI attitude -->
+        <div class="form-group">
+            <label class="question-title">17. I am familiar with AI. *</label>
+            <div class="scale-grid" id="q_ai_familiar"></div>
+        </div>
+        <div class="form-group">
+            <label class="question-title">18. I like AI in general. *</label>
+            <div class="scale-grid" id="q_ai_like"></div>
+        </div>
+
+        <!-- Demographic Section -->
+        <div class="demographic-divider">Demographic Information</div>
+
+        <div class="form-group">
+            <label class="question-title">19. What is your gender? *</label>
+            <select name="demo_gender" class="form-select" required>
+                <option value="" disabled selected>Select your gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-binary / Other">Non-binary / Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">20. What is your age? *</label>
+            <input type="number" name="demo_age" min="18" max="100" class="form-input" placeholder="Enter your age (e.g. 28)" required>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">21. What country do you reside in? *</label>
+            <input type="text" name="demo_country" class="form-input" placeholder="Enter your country of residence" required>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">22. What is the average of your annual household income? *</label>
+            <select name="demo_income" class="form-select" required>
+                <option value="" disabled selected>Select annual household income</option>
+                <option value="Less than $10,000">Less than $10,000</option>
+                <option value="$10,000 - $19,999">$10,000 - $19,999</option>
+                <option value="$20,000 - $29,999">$20,000 - $29,999</option>
+                <option value="$30,000 - $39,999">$30,000 - $39,999</option>
+                <option value="$40,000 - $49,999">$40,000 - $49,999</option>
+                <option value="$50,000 - $59,999">$50,000 - $59,999</option>
+                <option value="$60,000 - $69,999">$60,000 - $69,999</option>
+                <option value="$70,000 - $79,999">$70,000 - $79,999</option>
+                <option value="$80,000 - $89,999">$80,000 - $89,999</option>
+                <option value="$90,000 - $99,999">$90,000 - $99,999</option>
+                <option value="$100,000 - $109,999">$100,000 - $109,999</option>
+                <option value="$110,000 - $119,999">$110,000 - $119,999</option>
+                <option value="$120,000 - $129,999">$120,000 - $129,999</option>
+                <option value="$130,000 - $139,999">$130,000 - $139,999</option>
+                <option value="$140,000 - $149,999">$140,000 - $149,999</option>
+                <option value="More than $150,000">More than $150,000</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">23. What is your ethnicity? *</label>
+            <select name="demo_ethnicity" class="form-select" required>
+                <option value="" disabled selected>Select your ethnicity</option>
+                <option value="White / Caucasian">White / Caucasian</option>
+                <option value="Asian">Asian</option>
+                <option value="Black / African American">Black / African American</option>
+                <option value="Hispanic / Latino">Hispanic / Latino</option>
+                <option value="Native American / Pacific Islander">Native American / Pacific Islander</option>
+                <option value="Middle Eastern">Middle Eastern</option>
+                <option value="Mixed / Other">Mixed / Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">24. What is your marital status? *</label>
+            <select name="demo_marital" class="form-select" required>
+                <option value="" disabled selected>Select marital status</option>
+                <option value="Single (never married)">Single (never married)</option>
+                <option value="Married or in a domestic partnership">Married or in a domestic partnership</option>
+                <option value="Widowed">Widowed</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Separated">Separated</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">25. What is the highest degree or level of school you have completed? *</label>
+            <select name="demo_education" class="form-select" required>
+                <option value="" disabled selected>Select highest education completed</option>
+                <option value="Less than high school">Less than high school</option>
+                <option value="High school graduate (diploma or equivalent)">High school graduate (diploma or equivalent)</option>
+                <option value="Some college, no degree">Some college, no degree</option>
+                <option value="Associate degree">Associate degree</option>
+                <option value="Bachelor's degree">Bachelor's degree</option>
+                <option value="Master's degree">Master's degree</option>
+                <option value="Professional or Doctoral degree (Ph.D., MD, JD)">Professional or Doctoral degree (Ph.D., MD, JD)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">26. What is your occupation? *</label>
+            <select name="demo_occupation" class="form-select" required>
+                <option value="" disabled selected>Select your occupation</option>
+                <option value="Professional">Professional</option>
+                <option value="Office / Administrative">Office / Administrative</option>
+                <option value="Managerial / Business Owner">Managerial / Business Owner</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+    </form>
+</div>
+
+<script>
+    const scaleQuestionIds = [
+        "q_scenario_realistic",
+        "q_scenario_project",
+        "q_scenario_imagine",
+        "q_mc_onesize",
+        "q_mc_identical",
+        "q_wtp_tomato",
+        "q_wtp_chicken",
+        "q_wtp_salmon",
+        "q_wtp_strawberries",
+        "q_sus_tomato",
+        "q_sus_chicken",
+        "q_sus_salmon",
+        "q_sus_strawberries",
+        "q_pers_tailored",
+        "q_pers_understood",
+        "q_pers_account",
+        "q_ai_familiar",
+        "q_ai_like"
+    ];
+
+    // 動態建立 1-7 分選項
+    scaleQuestionIds.forEach(qId => {
+        const container = document.getElementById(qId);
+        if (!container) return;
+
+        for (let i = 1; i <= 7; i++) {
+            const card = document.createElement("div");
+            card.className = "scale-card";
+
+            let hintText = "";
+            if (i === 1) hintText = '<span class="scale-hint">Strongly disagree</span>';
+            if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
+            if (i === 7) hintText = '<span class="scale-hint">Strongly agree</span>';
+
+            card.innerHTML = `
+                <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
+                <label for="${qId}_${i}">${i}</label>
+                ${hintText}
+            `;
+            container.appendChild(card);
+        }
+    });
+
+    function autoFillRandom() {
+        scaleQuestionIds.forEach(qId => {
+            const randomVal = Math.floor(Math.random() * 7) + 1;
+            const radio = document.getElementById(`${qId}_${randomVal}`);
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    }
+
+    async function handlePostSurveySubmit(event) {
+        event.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting Final Study Data...";
+
+        const pid = localStorage.getItem("participantID") || "Anonymous";
+        const formData = new FormData(event.target);
+
+        const postSurveyResponses = {};
+        scaleQuestionIds.forEach(qId => {
+            postSurveyResponses[qId] = parseInt(formData.get(qId), 10);
+        });
+
+        // 收集人口學特徵
+        const demographicData = {
+            gender: formData.get("demo_gender"),
+            age: parseInt(formData.get("demo_age"), 10),
+            country: formData.get("demo_country"),
+            income: formData.get("demo_income"),
+            ethnicity: formData.get("demo_ethnicity"),
+            maritalStatus: formData.get("demo_marital"),
+            education: formData.get("demo_education"),
+            occupation: formData.get("demo_occupation")
+        };
+
+        const finalRecord = {
+            participantID: pid,
+            submittedAt: new Date().toLocaleString(),
+            postSurveyLikert: postSurveyResponses,
+            demographics: demographicData
+        };
+
+        try {
+            if (typeof db !== 'undefined') {
+                await db.ref('post_survey_records').push(finalRecord);
+            }
+        } catch (err) {
+            console.error("Error saving post survey data:", err);
+        }
+
+        alert("Thank you! You have successfully completed the whole study.");
+        window.location.href = "https://next-page-url.com"; // 或 Prolific / MTurk 回傳網址
+    }
+</script>
+
+</body>
+</html>

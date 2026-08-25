@@ -376,7 +376,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
 });
 
 function handleCheckoutModalConfirm() {
-    window.location.href = NEXT_PAGE_URL;
+    window.location.href = 'post_survey.html';
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn => {

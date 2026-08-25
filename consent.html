@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informed Consent Form</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-color: #2563eb;
+            --hover-color: #1d4ed8;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .consent-card {
+            background-color: var(--card-bg);
+            max-width: 680px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            padding: 36px 32px;
+        }
+
+        .academic-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #475569;
+            background-color: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .intro-lead {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .decision-section {
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .question-block {
+            margin-bottom: 20px;
+        }
+
+        .question-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 24px;
+        }
+
+        .radio-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .radio-label input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            background-color: #f1f5f9;
+            color: #475569;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .continue-btn {
+            flex: 1;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .continue-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* 彈窗遮罩 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            padding: 28px;
+            border-radius: 12px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 12px;
+        }
+
+        .modal-message {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            background: #475569;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .content-scroll {
+            max-height: 460px;
+            overflow-y: auto;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+
+        .content-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .content-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .content-scroll h3 {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+
+        .content-scroll h3:first-child {
+            margin-top: 0;
+        }
+
+        .content-scroll ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .content-scroll li {
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .content-scroll p {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="consent-card">
+    <div class="academic-badge">Step 2 of 2: Consent</div>
+    <h1>Informed Consent & Eligibility Confirmation</h1>
+    <p class="intro-lead">Please review and confirm the following statements to proceed to the survey questionnaire.</p>
+
+    <div class="content-scroll">
+        <h3>What are the criteria to be qualified for this study?</h3>
+        <p>You need to:</p>
+        <ul>
+            <li>Be adults (18 or older).</li>
+        </ul>
+
+        <h3>How long will I be in this research?</h3>
+        <p>We expect that your taking part in this research will last approximately 15 minutes.</p>
+
+        <h3>What happens to me if I agree to take part in this research?</h3>
+        <p>If you decide to take part in this research, the general procedures include the completion of some material review and a survey; it should take you around 15 minutes to complete the study.</p>
+
+        <h3>What are my responsibilities if I take part in this research?</h3>
+        <p>If you take part in this research, you will be responsible for completing the questionnaire of online survey.</p>
+
+        <h3>Could being in this research hurt me?</h3>
+        <p>This research does not involve any foreseeable risks, discomforts, hazards, or inconveniences to the subjects. Your participation in this study is voluntary; you may decline to participate at any time without penalty.</p>
+
+        <h3>What happens to the information collected for this research?</h3>
+        <p>All study data will be stored in a confidential data repository. Under applicable laws, we limit the viewing of any personal information to people who must review it. The Research Ethics Committee (REC) at Hong Kong Metropolitan University can inspect the information. Study results presented at conferences and published in journals will only be reported in an aggregate form without identifying individual participants.</p>
+
+        <h3>Who can answer my questions about this research?</h3>
+        <p>If you have questions, concerns, or complaints, or think this research has hurt you or made you sick, talk to the research team with the email address <a href="mailto:huliu@hkmu.edu.hk" style="color: #2563eb;">huliu@hkmu.edu.hk</a>.<br>This research is being overseen by the Research Ethics Committee (REC) at Hong Kong Metropolitan University.</p>
+
+        <h3>Can I be removed from this research without my approval?</h3>
+        <p>The person in charge of this research can remove you from this research without your approval. Possible reasons for removal include:</p>
+        <ul>
+            <li>When you do not complete the whole experiment and (or) survey.</li>
+            <li>When your duration of taking the questionnaire is considerably short (less than 4 minutes).</li>
+            <li>When research investigators find you have answered the questionnaire insincerely.</li>
+            <li>When you fail to answer attention check questions.</li>
+            <li>When you do not meet the criteria to be qualified for this study.</li>
+        </ul>
+
+        <h3>What happens if I agree to be in this research, but I change my mind later?</h3>
+        <p>You may decline to participate at any time without penalty.</p>
+
+        <h3>Will I be paid for taking part in this research?</h3>
+        <p>For taking part in this research, you may be paid a total of US$xx for each survey for your time and effort. If the participant is withdrawn from the study, they will not receive compensation. If participants do not meet the recruitment criteria of the study, or decline to participate fully, or do not pass attention check questions, participants will be withdrawn from the study. Participants will be paid after investigators review their answered questionnaire, and the review process should take 7 days on average and will not take more than 21 days.</p>
+    </div>
+
+    <form id="consentForm" onsubmit="handleConsentSubmit(event)">
+        <div class="decision-section">
+            <div class="question-block">
+                <span class="question-title">1. I have read and understand the information provided about the study. I agree to participate in this study. <span style="color: #dc2626;">*</span></span>
+                <div class="radio-options">
+                    <label class="radio-label">
+                        <input type="radio" name="agreeConsent" value="yes" required> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="agreeConsent" value="no" required> No
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-block">
+                <span class="question-title">2. Are you 18 years of age or older? <span style="color: #dc2626;">*</span></span>
+                <div class="radio-options">
+                    <label class="radio-label">
+                        <input type="radio" name="isAdult" value="yes" required> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="isAdult" value="no" required> No
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="index.html" class="back-link">← Back to Information</a>
+            <button type="submit" class="continue-btn">I Agree & Start Survey</button>
+        </div>
+    </form>
+</div>
+
+<!-- 不符合資格 / 拒絕同意 Modal -->
+<div id="ineligibleModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3 class="modal-title">Notice</h3>
+        <p class="modal-message">
+            Unfortunately, you are not eligible to participate in this study, or you have not provided consent to participate. Thank you for your interest.
+        </p>
+        <button type="button" class="modal-btn" onclick="closeIneligibleModal()">OK</button>
+    </div>
+</div>
+
+<script>
+    function handleConsentSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const agreeConsent = formData.get('agreeConsent');
+        const isAdult = formData.get('isAdult');
+
+        if (agreeConsent === 'no' || isAdult === 'no') {
+            document.getElementById('ineligibleModal').style.display = 'flex';
+            return;
+        }
+
+        if (agreeConsent === 'yes' && isAdult === 'yes') {
+            window.location.href = 'survey.html';
+        }
+    }
+
+    function closeIneligibleModal() {
+        document.getElementById('ineligibleModal').style.display = 'none';
+    }
+</script>
+</body>
+</html>
