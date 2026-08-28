@@ -490,17 +490,18 @@
     ];
 
     async function handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault(); // 阻止表單原生跳轉
+        console.log("🚀 [1/4] Submit button clicked, processing form data...");
 
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving responses...';
+        submitBtn.textContent = 'Generating AI Recommendations...';
 
         const inputPid = document.getElementById('inputParticipantID').value.trim();
         if (!inputPid) {
             alert("Please enter a valid Participant ID.");
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit and Proceed to Store';
+            submitBtn.textContent = 'Submit';
             return;
         }
         const participantNum = inputPid;
@@ -521,54 +522,63 @@
             preferences: userPreferences
         };
 
-    let aiNudgeText = "";
+        console.log("📤 [2/4] Sending Payload to /api/recommend:", payload);
 
-    try {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
+        let aiNudgeText = "";
 
-        if (response.ok) {
-        const recommendations = await response.json();
-        console.log('Recommendations Result:', recommendations);
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-        if (typeof recommendations === 'string') {
-        aiNudgeText = recommendations;
-    } else if (recommendations && recommendations.recommendation) {
-        aiNudgeText = recommendations.recommendation;
+            console.log("📥 [3/4] Response status from /api/recommend:", response.status);
+
+            if (response.ok) {
+                const recommendations = await response.json();
+                console.log("✨ [Gemini AI Raw Response]:", recommendations);
+
+                if (typeof recommendations === 'string') {
+                    aiNudgeText = recommendations;
+                } else if (recommendations && recommendations.recommendation) {
+                    aiNudgeText = recommendations.recommendation;
+                }
+
+                localStorage.setItem('recommendations', JSON.stringify(recommendations));
+                localStorage.setItem('ai_nudge_text', aiNudgeText);
+                localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+            } else {
+                const errJson = await response.json().catch(() => ({}));
+                console.error("❌ API Error Detail:", errJson);
+                throw new Error(`API error ${response.status}: ${JSON.stringify(errJson)}`);
+            }
+        } catch (error) {
+            console.error('❌ [API Request Failed]:', error);
+            aiNudgeText = 'These items are eco-friendly.';
+            localStorage.setItem('ai_nudge_text', aiNudgeText);
+        }
+
+        const firebaseData = {
+            participantID: participantNum,
+            submittedAt: new Date().toLocaleString(),
+            aiNudgeText: aiNudgeText,
+            responses: surveyResponses
+        };
+
+        try {
+            await db.ref('survey_responses').push(firebaseData);
+            console.log("✅ [4/4] Saved to Firebase with text:", aiNudgeText);
+        } catch (dbError) {
+            console.error('❌ Failed to save to Firebase:', dbError);
+        }
+
+        console.log("🏁 Redirecting to grocery_page.html in 1 second...");
+        // 延遲 800ms 跳轉，確保網路連線與 log 完整寫入
+        setTimeout(() => {
+            window.location.href = 'grocery_page.html';
+        }, 800);
     }
-
-        localStorage.setItem('recommendations', JSON.stringify(recommendations));
-        localStorage.setItem('ai_nudge_text', aiNudgeText);
-        localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
-    } else {
-        throw new Error(`API response error: ${response.status}`);
-    }
-    } catch (error) {
-    console.error('API Request Failed:', error);
-    // aiNudgeText = 'Results generated based on your preference.';
-    aiNudgeText = error.toString();
-    localStorage.setItem('ai_nudge_text', aiNudgeText);
-}
-
-    const firebaseData = {
-    participantID: participantNum,
-    submittedAt: new Date().toLocaleString(),
-    aiNudgeText: aiNudgeText,
-    responses: surveyResponses
-};
-
-    try {
-    await db.ref('survey_responses').push(firebaseData);
-    console.log('Survey responses saved to Firebase successfully!');
-} catch (dbError) {
-    console.error('Failed to save to Firebase:', dbError);
-}
-
-    window.location.href = 'grocery_page.html';
-}
 </script>
 </body>
 </html>
