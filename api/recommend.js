@@ -24,7 +24,7 @@ Rules:
 `;
 
     // 同時在 URL 與 Header 中提供 Key
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
 
     const requestBody = {
         contents: [
