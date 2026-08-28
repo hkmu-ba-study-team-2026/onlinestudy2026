@@ -1,5 +1,5 @@
 const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || "").trim();
-const MODEL_NAME = "gemini-2.0-flash";
+const MODEL_NAME = "gemini-flash-latest";
 
 async function getAiRecommendationsFromGemini(products, preferences) {
     if (!GEMINI_API_KEY) {
@@ -23,29 +23,27 @@ Rules:
 4. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
-    // 同時在 URL 與 Header 中提供 Key
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
+    // 官方標準端點：URL 不帶 key
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 
     const requestBody = {
         contents: [
             {
-                role: "user",
-                parts: [{ text: promptText }]
+                parts: [
+                    { text: promptText }
+                ]
             }
-        ],
-        generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 80
-        }
+        ]
     };
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-goog-api-key": GEMINI_API_KEY
         },
         body: JSON.stringify(requestBody),
         signal: controller.signal
@@ -72,6 +70,7 @@ Rules:
         throw new Error(`Empty text returned from Gemini API: ${rawResponseText}`);
     }
 
+    // 清理 markdown 語法與多餘引號
     content = content.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
     content = content.replace(/^["']|["']$/g, '');
 
@@ -84,7 +83,7 @@ Rules:
 
 module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, X-goog-api-key");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
     if (req.method === "OPTIONS") {
@@ -96,7 +95,8 @@ module.exports = async (req, res) => {
             status: "ok",
             message: "Gemini Handler Ready",
             has_key: Boolean(GEMINI_API_KEY),
-            key_preview: GEMINI_API_KEY ? `${GEMINI_API_KEY.substring(0, 6)}...` : "None",
+            key_preview: GEMINI_API_KEY ? `${GEMINI_API_KEY.substring(0, 6)}...${GEMINI_API_KEY.slice(-4)}` : "None",
+            key_length: GEMINI_API_KEY.length,
             model: MODEL_NAME
         });
     }
