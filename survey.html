@@ -467,19 +467,19 @@
                     <label for="${qId}_${i}">${i}</label>
                     ${hintText}
                 `;
-    container.appendChild(card);
-}
-});
-
-    function autoFillRandom() {
-    questionIds.forEach(qId => {
-        const randomVal = Math.floor(Math.random() * 7) + 1;
-        const radio = document.getElementById(`${qId}_${randomVal}`);
-        if (radio) {
-            radio.checked = true;
+            container.appendChild(card);
         }
     });
-}
+
+    function autoFillRandom() {
+        questionIds.forEach(qId => {
+            const randomVal = Math.floor(Math.random() * 7) + 1;
+            const radio = document.getElementById(`${qId}_${randomVal}`);
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    }
 
     const productsList = [
     "Tomato Cherry",
@@ -490,7 +490,7 @@
     ];
 
     async function handleSubmit(event) {
-        event.preventDefault(); // 阻止表單原生跳轉
+        event.preventDefault();
         console.log("🚀 [1/4] Submit button clicked, processing form data...");
 
         const submitBtn = document.getElementById('submitBtn');
