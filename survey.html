@@ -490,63 +490,63 @@
     ];
 
     async function handleSubmit(event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving responses...';
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving responses...';
 
-    const inputPid = document.getElementById('inputParticipantID').value.trim();
-    if (!inputPid) {
-    alert("Please enter a valid Participant ID.");
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit and Proceed to Store';
-    return;
-}
-    const participantNum = inputPid;
-    localStorage.setItem("participantID", participantNum);
+        const inputPid = document.getElementById('inputParticipantID').value.trim();
+        if (!inputPid) {
+            alert("Please enter a valid Participant ID.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit and Proceed to Store';
+            return;
+        }
+        const participantNum = inputPid;
+        localStorage.setItem("participantID", participantNum);
 
-    const formData = new FormData(event.target);
-    const surveyResponses = {};
-    questionIds.forEach(qId => {
-    surveyResponses[qId] = parseInt(formData.get(qId), 10);
-});
+        const formData = new FormData(event.target);
+        const surveyResponses = {};
+        questionIds.forEach(qId => {
+            surveyResponses[qId] = parseInt(formData.get(qId), 10);
+        });
 
-    const userPreferences = {
-    surveyResponses: surveyResponses,
-};
+        const userPreferences = {
+            surveyResponses: surveyResponses,
+        };
 
-    const payload = {
-    products: productsList,
-    preferences: userPreferences
-};
+        const payload = {
+            products: productsList,
+            preferences: userPreferences
+        };
 
     let aiNudgeText = "";
 
     try {
     const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-});
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
 
-    if (response.ok) {
-    const recommendations = await response.json();
-    console.log('Recommendations Result:', recommendations);
+        if (response.ok) {
+        const recommendations = await response.json();
+        console.log('Recommendations Result:', recommendations);
 
-    if (typeof recommendations === 'string') {
-    aiNudgeText = recommendations;
-} else if (recommendations && recommendations.recommendation) {
-    aiNudgeText = recommendations.recommendation;
-}
+        if (typeof recommendations === 'string') {
+        aiNudgeText = recommendations;
+    } else if (recommendations && recommendations.recommendation) {
+        aiNudgeText = recommendations.recommendation;
+    }
 
-    localStorage.setItem('recommendations', JSON.stringify(recommendations));
-    localStorage.setItem('ai_nudge_text', aiNudgeText);
-    localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
-} else {
-    throw new Error(`API response error: ${response.status}`);
-}
-} catch (error) {
+        localStorage.setItem('recommendations', JSON.stringify(recommendations));
+        localStorage.setItem('ai_nudge_text', aiNudgeText);
+        localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+    } else {
+        throw new Error(`API response error: ${response.status}`);
+    }
+    } catch (error) {
     console.error('API Request Failed:', error);
     // aiNudgeText = 'Results generated based on your preference.';
     aiNudgeText = error.toString();
