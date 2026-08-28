@@ -524,7 +524,7 @@
 
         console.log("📤 [2/4] Sending Payload to /api/recommend:", payload);
 
-        let aiNudgeText = "";
+        let nudgeText = "";
 
         try {
             const response = await fetch(API_URL, {
@@ -540,13 +540,13 @@
                 console.log("✨ [Gemini AI Raw Response]:", recommendations);
 
                 if (typeof recommendations === 'string') {
-                    aiNudgeText = recommendations;
+                    nudgeText = recommendations;
                 } else if (recommendations && recommendations.recommendation) {
-                    aiNudgeText = recommendations.recommendation;
+                    nudgeText = recommendations.recommendation;
                 }
 
                 localStorage.setItem('recommendations', JSON.stringify(recommendations));
-                localStorage.setItem('ai_nudge_text', aiNudgeText);
+                localStorage.setItem('nudge_text', nudgeText);
                 localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
             } else {
                 const errJson = await response.json().catch(() => ({}));
@@ -555,20 +555,20 @@
             }
         } catch (error) {
             console.error('❌ [API Request Failed]:', error);
-            aiNudgeText = 'These items are eco-friendly.';
-            localStorage.setItem('ai_nudge_text', aiNudgeText);
+            nudgeText = 'These items are eco-friendly.';
+            localStorage.setItem('nudge_text', nudgeText);
         }
 
         const firebaseData = {
             participantID: participantNum,
             submittedAt: new Date().toLocaleString(),
-            aiNudgeText: aiNudgeText,
+            nudgeText: nudgeText,
             responses: surveyResponses
         };
 
         try {
             await db.ref('survey_responses').push(firebaseData);
-            console.log("✅ [4/4] Saved to Firebase with text:", aiNudgeText);
+            console.log("✅ [4/4] Saved to Firebase with text:", nudgeText);
         } catch (dbError) {
             console.error('❌ Failed to save to Firebase:', dbError);
         }

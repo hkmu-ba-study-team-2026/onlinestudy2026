@@ -729,29 +729,12 @@
 
         updateRemainingBudgetDisplay();
 
-        const rawRecData = localStorage.getItem('recommendations');
-        if (rawRecData) {
-            try {
-                const data = JSON.parse(rawRecData);
-                let textSentence = null;
-                if (typeof data === 'string') {
-                    textSentence = data;
-                } else if (data && data.recommendation) {
-                    textSentence = data.recommendation;
-                }
-
-                console.log(textSentence);
-                if (textSentence) {
-                    const bannerTextContainer = document.getElementById('bannerTextContainer');
-                    if (bannerTextContainer) {
-                        bannerTextContainer.innerHTML = `
-                        <h2 class="nudge-text-highlight">${textSentence}</h2>
-                    `;
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to parse recommendations", e);
-            }
+        const textSentence = localStorage.getItem('nudge_text');
+        const bannerTextContainer = document.getElementById('bannerTextContainer');
+        if (bannerTextContainer) {
+            bannerTextContainer.innerHTML = `
+            <h2 class="nudge-text-highlight">${textSentence}</h2>
+        `;
         }
 
         const searchInput = document.getElementById('searchInput');
