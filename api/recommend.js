@@ -1,10 +1,9 @@
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.trim() : "";
-// 建議使用 gemini-1.5-flash 或 gemini-2.0-flash
-const MODEL_NAME = "gemini-3.7-flash";
+const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || "").trim();
+const MODEL_NAME = "gemini-2.0-flash";
 
 async function getAiRecommendationsFromGemini(products, preferences) {
     if (!GEMINI_API_KEY) {
-        throw new Error("Missing GEMINI_API_KEY in Vercel environment variables.");
+        throw new Error("Missing GEMINI_API_KEY in environment variables.");
     }
 
     const simplifiedProducts = Array.isArray(products)
@@ -24,7 +23,8 @@ Rules:
 4. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${GEMINI_API_KEY}`;
+    // 同時在 URL 與 Header 中提供 Key
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
 
     const requestBody = {
         contents: [
@@ -34,7 +34,7 @@ Rules:
             }
         ],
         generationConfig: {
-            temperature: 0.4,
+            temperature: 0.3,
             maxOutputTokens: 80
         }
     };
@@ -44,7 +44,10 @@ Rules:
 
     const response = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": GEMINI_API_KEY
+        },
         body: JSON.stringify(requestBody),
         signal: controller.signal
     });
@@ -70,7 +73,6 @@ Rules:
         throw new Error(`Empty text returned from Gemini API: ${rawResponseText}`);
     }
 
-    // 清理 markdown 語法
     content = content.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
     content = content.replace(/^["']|["']$/g, '');
 
@@ -95,7 +97,7 @@ module.exports = async (req, res) => {
             status: "ok",
             message: "Gemini Handler Ready",
             has_key: Boolean(GEMINI_API_KEY),
-            key_length: GEMINI_API_KEY.length,
+            key_preview: GEMINI_API_KEY ? `${GEMINI_API_KEY.substring(0, 6)}...` : "None",
             model: MODEL_NAME
         });
     }
@@ -108,7 +110,6 @@ module.exports = async (req, res) => {
                 return res.status(400).json({ error: "Products list must contain at least 3 items." });
             }
 
-            // 直接呼叫，不再吞掉錯誤
             const recommendation = await getAiRecommendationsFromGemini(products, preferences);
 
             return res.status(200).json({
@@ -118,7 +119,6 @@ module.exports = async (req, res) => {
 
         } catch (err) {
             console.error("[Backend Gemini Call Failed]:", err.message);
-            // 回傳 500 與明確錯誤原因，讓前端 Console 清楚可見
             return res.status(500).json({
                 error: err.message,
                 source: "Fallback_Due_To_Error"
