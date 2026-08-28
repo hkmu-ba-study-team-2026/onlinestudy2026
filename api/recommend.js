@@ -37,7 +37,7 @@ Rules:
     };
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
 
     const response = await fetch(endpoint, {
         method: "POST",
