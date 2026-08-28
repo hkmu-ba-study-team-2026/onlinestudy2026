@@ -144,6 +144,110 @@
             letter-spacing: 0.2px;
         }
 
+        /* More Info 按鈕樣式 */
+        .btn-more-info {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #2563eb;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-more-info:hover {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+
+        /* 彈出對話框遮罩 */
+        .info-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(2px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 彈出對話框卡片主體 */
+        .info-modal-box {
+            background-color: #ffffff;
+            max-width: 360px;
+            width: 90%;
+            padding: 22px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: left;
+            animation: modalPop 0.2s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .info-modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #94a3b8;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+        }
+
+        .info-modal-close:hover {
+            color: #475569;
+        }
+
+        .info-modal-text {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .info-modal-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 0;
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .info-modal-btn:hover {
+            background-color: #1d4ed8;
+        }
+
         .eco-badge {
             position: absolute;
             top: 8px;
@@ -249,6 +353,7 @@
                         <h3>Tomato Cherry</h3>
                         <h3>10 Ounce</h3>
                         <p>$2.97</p>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Tomato Cherry')">More info</button>
                         <button class="add-btn" data-id="1" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -261,6 +366,7 @@
                         <h3>Chicken Drumsticks</h3>
                         <h3>1 Lb</h3>
                         <p>$1.77</p>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Chicken Drumsticks')">More info</button>
                         <button class="add-btn" data-id="2" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -273,6 +379,7 @@
                         <h3>Large Brown Eggs</h3>
                         <h3>12 Count</h3>
                         <p>$7.49</p>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Large Brown Eggs')">More info</button>
                         <button class="add-btn" data-id="3" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -285,6 +392,7 @@
                         <h3>Strawberries</h3>
                         <h3>1 Lb</h3>
                         <p>$2.38</p>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Strawberries')">More info</button>
                         <button class="add-btn" data-id="4" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -297,6 +405,7 @@
                         <h3>Greek Yogurt</h3>
                         <h3>32 Ounce</h3>
                         <p>$4.99</p>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Greek Yogurt')">More info</button>
                         <button class="add-btn" data-id="5" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -688,9 +797,49 @@
     </div>
 </div>
 
+<div id="productInfoModal" class="info-modal-backdrop" onclick="closeInfoModal(event)">
+    <div class="info-modal-box" onclick="event.stopPropagation()">
+        <div class="info-modal-title">
+            <span id="modalProductTitle">Product Info</span>
+            <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
+        </div>
+        <p id="modalProductText" class="info-modal-text">
+            <!-- 預留讓你自訂的那句話 -->
+            This is where your custom sentence will be placed.
+        </p>
+        <button class="info-modal-btn" onclick="closeInfoModal()">Got it</button>
+    </div>
+</div>
+
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="script.js"></script>
 <script>
+    const featuredInfoDescriptions = {
+        "Tomato Cherry": "Fair Trade & EFI Certified ensuring fair wages and safe working conditions. Vine-Ripened & Hand-Picked.",
+        "Chicken Drumsticks": "No anti-biotics, no added hormones. Chickens are raised free to explore outdoors. Packaging made of 100% recyclable plastic.",
+        "Large Brown Eggs": "Ethical food giving the girls year-round outdoor access, supporting farmers and enabling you to trace your eggs back to the farm.",
+        "Strawberries": "Sustainability features recognized by trusted certificates. Contains at least 95% organic material.",
+        "Greek Yogurt": "Slowly crafted with organic ingredients. Made with USDA organic whole milk."
+    };
+
+    function openInfoModal(productName) {
+        const modal = document.getElementById("productInfoModal");
+        const titleEl = document.getElementById("modalProductTitle");
+        const textEl = document.getElementById("modalProductText");
+
+        titleEl.textContent = productName;
+        // 若字典有定義則使用自訂句子，否則使用預設句子
+        textEl.textContent = featuredInfoDescriptions[productName] || "Special curated item for your shopping list.";
+
+        modal.style.display = "flex";
+    }
+
+    function closeInfoModal(e) {
+        if (!e || e.target.id === "productInfoModal" || e.target.classList.contains("info-modal-close") || e.target.classList.contains("info-modal-btn")) {
+            document.getElementById("productInfoModal").style.display = "none";
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function(){
         const MAX_BUDGET = 50.00;
 
