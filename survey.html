@@ -284,7 +284,7 @@
 
     <div class="fixed-top-section">
         <header>
-            <a href="admin.html" class="academic-badge">Academic Research Survey</a>
+            <div class="academic-badge">Academic Research Survey 1</div>
             <h1>Investigation</h1>
             <p class="intro">All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
         </header>
@@ -522,42 +522,51 @@
             preferences: userPreferences
         };
 
-        console.log("📤 [2/4] Sending Payload to /api/recommend:", payload);
-
         let nudgeText = "";
+        let nudgeAI = true;
+        if (nudgeAI) {
+            try {
+                console.log("📤 [2/4] Sending Payload to /api/recommend:", payload);
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-            console.log("📥 [3/4] Response status from /api/recommend:", response.status);
+                console.log("📥 [3/4] Response status from /api/recommend:", response.status);
 
-            if (response.ok) {
-                const recommendations = await response.json();
-                console.log("✨ [Gemini AI Raw Response]:", recommendations);
+                if (response.ok) {
+                    const recommendations = await response.json();
+                    console.log("✨ [Gemini AI Raw Response]:", recommendations);
 
-                if (typeof recommendations === 'string') {
-                    nudgeText = recommendations;
-                } else if (recommendations && recommendations.recommendation) {
-                    nudgeText = recommendations.recommendation;
+                    if (typeof recommendations === 'string') {
+                        nudgeText = recommendations;
+                    } else if (recommendations && recommendations.recommendation) {
+                        nudgeText = recommendations.recommendation;
+                    }
+
+                    localStorage.setItem('recommendations', JSON.stringify(recommendations));
+                    localStorage.setItem('nudge_text', nudgeText);
+                    localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+                } else {
+                    const errJson = await response.json().catch(() => ({}));
+                    console.error("❌ API Error Detail:", errJson);
+                    throw new Error(`API error ${response.status}: ${JSON.stringify(errJson)}`);
                 }
-
-                localStorage.setItem('recommendations', JSON.stringify(recommendations));
+            } catch (error) {
+                console.error('❌ [API Request Failed]:', error);
+                nudgeText = 'Choose groceries that do good: ethically raised, sustainably grown, and crafted with pure, traceable ingredients you can feel great about.';
                 localStorage.setItem('nudge_text', nudgeText);
-                localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
-            } else {
-                const errJson = await response.json().catch(() => ({}));
-                console.error("❌ API Error Detail:", errJson);
-                throw new Error(`API error ${response.status}: ${JSON.stringify(errJson)}`);
             }
-        } catch (error) {
-            console.error('❌ [API Request Failed]:', error);
-            nudgeText = 'These items are eco-friendly.';
+        } else {
+            console.log("📥 [2/4] Traditional nudge");
+            localStorage.setItem('user_preferences', JSON.stringify(userPreferences));
+            nudgeText = 'Choose groceries that do good: ethically raised, sustainably grown, and crafted with pure, traceable ingredients you can feel great about.';
             localStorage.setItem('nudge_text', nudgeText);
+            console.log("📥 [3/4] Traditional nudge: data saved.");
         }
+
 
         const firebaseData = {
             participantID: participantNum,
