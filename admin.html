@@ -449,7 +449,8 @@
                     db.ref('checkout_records').remove(),
                     db.ref('survey_responses').remove(),
                     db.ref('abandon_carts').remove(),
-                    db.ref('visit_logs').remove()
+                    db.ref('visit_logs').remove(),
+                    db.ref('post_survey_records').remove()
                 ]);
                 alert("All Firebase records cleared successfully.");
                 fetchFirebaseData();
