@@ -101,13 +101,21 @@ const products = [
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
     { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
+    { id: 26, name: "Tuna Pack", price: 1.25, isFeatured: false },
 
-    // 6. Dairy, Cheese & Bread (乳品/雜貨類，ID: 26 ~ 30)
-    { id: 26, name: "Whole Milk", price: 4.99, isFeatured: false },
-    { id: 27, name: "Sourdough Bread", price: 5.49, isFeatured: false },
+    // 6. Dairy & Cheese (乳品/雜貨類，ID: 26 ~ 30)
+    { id: 27, name: "Whole Milk", price: 4.99, isFeatured: false },
     { id: 28, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
-    { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false }
+    { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false },
+
+    // 7. Bread
+    { id: 31, name: "Sourdough Bread", price: 5.49, isFeatured: false },
+    { id: 32, name: "Butter Bread", price: 3.42, isFeatured: false },
+    { id: 33, name: "Whole Wheat Bread", price: 3.99, isFeatured: false },
+    { id: 34, name: "Honey Wheat Bread", price: 2.49, isFeatured: false },
+    { id: 35, name: "White Bread", price: 2.49, isFeatured: false },
+    { id: 36, name: "Grain & Seed Bread", price: 4.97, isFeatured: false }
 ];
 
 let clickCount = parseInt(localStorage.getItem('siteClickCount')) || 0;

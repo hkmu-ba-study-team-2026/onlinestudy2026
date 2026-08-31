@@ -1,5 +1,5 @@
 const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || "").trim();
-const MODEL_NAME = "gemini-flash-latest";
+const MODEL_NAME = "gemini-3.5-flash";
 
 async function getAiRecommendationsFromGemini(products, preferences) {
     if (!GEMINI_API_KEY) {
