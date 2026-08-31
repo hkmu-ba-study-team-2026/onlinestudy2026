@@ -364,7 +364,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         enterTime: new Date(pageStartTime).toLocaleString(),   // ★ 精準記錄進站時間
         leaveTime: new Date(pageEndTime).toLocaleString(),     // ★ 精準記錄離站時間
         checkoutTime: new Date(pageEndTime).toLocaleString(),
-        aiNudgeText: localStorage.getItem('ai_nudge_text') || "",
+        nudgeContent: localStorage.getItem('nudge_text') || "",
         durationSeconds: durationInSeconds,
         formattedDuration: formattedDuration,
         finalCartItems: itemsArr,

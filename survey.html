@@ -523,7 +523,7 @@
         };
 
         let nudgeText = "";
-        let nudgeAI = true;
+        let nudgeAI = false;
         if (nudgeAI) {
             try {
                 console.log("📤 [2/4] Sending Payload to /api/recommend:", payload);
@@ -571,7 +571,7 @@
         const firebaseData = {
             participantID: participantNum,
             submittedAt: new Date().toLocaleString(),
-            nudgeText: nudgeText,
+            nudgeContent: nudgeText,
             responses: surveyResponses
         };
 
