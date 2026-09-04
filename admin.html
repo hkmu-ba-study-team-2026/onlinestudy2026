@@ -596,6 +596,10 @@
                 row["Demo_Education"] = "";
                 row["Demo_Occupation"] = "";
 
+                // ★ 新增：注意力檢查狀態欄位 ★
+                row["Passed_Attention_Check"] = "";
+                row["Study_Status"] = "";
+
                 // 9. 質性開放題 (Q38 為必填想法，Q39 為自由回饋)
                 row["Open_Survey_Purpose_Thoughts"] = "";
                 row["Open_Study_Feedback"] = "";
@@ -740,6 +744,8 @@
                         masterDataMap[pid]["Demo_Education"] = p.demographics.education || "";
                         masterDataMap[pid]["Demo_Occupation"] = p.demographics.occupation || "";
                     }
+                    masterDataMap[pid]["Passed_Attention_Check"] = p.passedAttentionCheck !== undefined ? (p.passedAttentionCheck ? "Yes" : "No") : "";
+                    masterDataMap[pid]["Study_Status"] = p.status || "";
                     // 填入質性開放題
                     if (p.openResponses) {
                         masterDataMap[pid]["Open_Survey_Purpose_Thoughts"] = p.openResponses.surveyPurposeThoughts || "";

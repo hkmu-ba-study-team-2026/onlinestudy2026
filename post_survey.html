@@ -26,12 +26,18 @@
         :root {
             /* 預設邊框顏色變數 */
             --group-border-color: #cbd5e1; /* 預設灰 */
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-color: #2563eb;
+            --hover-color: #1d4ed8;
+            --border-color: #e2e8f0;
         }
 
         /* 核心群組卡片 */
         .question-group-card {
             background-color: #ffffff;
-            /* 粗細與樣式固定為 1px solid，顏色動態綁定變數 */
             border: 1px solid var(--group-border-color);
             border-radius: 10px;
             padding: 20px 22px;
@@ -43,22 +49,12 @@
             margin-bottom: 0;
         }
 
-        /* 🎨 各種色彩主題（覆寫該卡片內部的 --group-border-color 變數） */
-        .card-blue   { --group-border-color: #93c5fd; } /* 淡藍色邊框 */
-        .card-green  { --group-border-color: #86efac; } /* 淡綠色邊框 */
-        .card-amber  { --group-border-color: #fcd34d; } /* 暖橘/琥珀色邊框 */
-        .card-purple { --group-border-color: #d8b4fe; } /* 淡紫色邊框 */
-        .card-slate  { --group-border-color: #cbd5e1; } /* 經典淺灰邊框 */
-
-        :root {
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --accent-color: #2563eb;
-            --hover-color: #1d4ed8;
-            --border-color: #e2e8f0;
-        }
+        /* 🎨 各種色彩主題 */
+        .card-blue   { --group-border-color: #93c5fd; }
+        .card-green  { --group-border-color: #86efac; }
+        .card-amber  { --group-border-color: #fcd34d; }
+        .card-purple { --group-border-color: #d8b4fe; }
+        .card-slate  { --group-border-color: #cbd5e1; }
 
         * {
             box-sizing: border-box;
@@ -292,23 +288,6 @@
         .submit-btn:hover {
             background-color: #15803d;
         }
-
-        /* 群組內最後一題不需要過大的底部邊距 */
-        .question-group-card .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        /* (可選) 群組頂部的小標題/提示字 */
-        .group-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #64748b;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed #e2e8f0;
-        }
     </style>
 </head>
 <body>
@@ -358,6 +337,12 @@
                 <label class="question-title">5. I felt that the recommendations took my preferences into account. *</label>
                 <div class="scale-grid" id="q_pers_account"></div>
             </div>
+        </div>
+
+        <!-- Attention Check 1 -->
+        <div class="form-group" style="background: #f8fafc; padding: 14px 18px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <label class="question-title">The sun rises in the east and sets in the west; please select ‘strongly disagree.’ *</label>
+            <div class="scale-grid" id="attn_check_sun"></div>
         </div>
 
         <div class="question-group-card card-green">
@@ -410,6 +395,12 @@
                 <label class="question-title">16. I was pleased with the recommendations I received. *</label>
                 <div class="scale-grid" id="q_sat_rec_pleased"></div>
             </div>
+        </div>
+
+        <!-- Attention Check 2 -->
+        <div class="form-group" style="background: #f8fafc; padding: 14px 18px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <label class="question-title">To show that you are paying attention, please select “6” for this statement. * </label>
+            <div class="scale-grid" id="attn_check_number"></div>
         </div>
 
         <div class="question-group-card card-purple">
@@ -588,7 +579,11 @@
 </div>
 
 <script>
-    // 嚴格依序排列所有 7 點量表題 ID
+    // 轉址設定：請填入 Prolific 正常完成與失敗排除的 URL
+    const COMPLETION_REDIRECT_URL = "https://app.prolific.com";
+    const ATTENTION_FAILED_REDIRECT_URL = "https://app.prolific.com/submissions/complete?cc=FAILED_ATTENTION";
+
+    // 29 題主要量表題目
     const scaleQuestionIds = [
         "q_mc_onesize",
         "q_mc_identical",
@@ -621,7 +616,10 @@
         "q_ai_generated_likelihood"
     ];
 
-    // 動態建立 1-7 分選項，最後一題自動帶入 Likelihood 標籤
+    // Attention Check 題目 ID
+    const attentionCheckIds = ["attn_check_sun", "attn_check_number"];
+
+    // 1. 動態建立主要量表題目 (1~7)
     scaleQuestionIds.forEach(qId => {
         const container = document.getElementById(qId);
         if (!container) return;
@@ -652,6 +650,30 @@
         }
     });
 
+    // 2. 動態建立 Attention Check 題目 (1~7)
+    attentionCheckIds.forEach(qId => {
+        const container = document.getElementById(qId);
+        if (!container) return;
+
+        for (let i = 1; i <= 7; i++) {
+            const card = document.createElement("div");
+            card.className = "scale-card";
+
+            let hintText = "";
+            if (i === 1) hintText = '<span class="scale-hint">Strongly disagree</span>';
+            if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
+            if (i === 7) hintText = '<span class="scale-hint">Strongly agree</span>';
+
+            card.innerHTML = `
+                <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
+                <label for="${qId}_${i}">${i}</label>
+                ${hintText}
+            `;
+            container.appendChild(card);
+        }
+    });
+
+    // 測試快速隨機填寫
     function autoFillRandom() {
         const postalInput = document.querySelector('input[name="demo_postal"]');
         if (postalInput) postalInput.value = "90210";
@@ -662,12 +684,16 @@
         scaleQuestionIds.forEach(qId => {
             const randomVal = Math.floor(Math.random() * 7) + 1;
             const radio = document.getElementById(`${qId}_${randomVal}`);
-            if (radio) {
-                radio.checked = true;
-            }
+            if (radio) radio.checked = true;
         });
 
-        // 自動隨機挑選人口學欄位
+        // 預設填入正確的 Attention Check
+        const acSun = document.getElementById('attn_check_sun_1');
+        if (acSun) acSun.checked = true; // 正確答案：1
+
+        const acNum = document.getElementById('attn_check_number_6');
+        if (acNum) acNum.checked = true; // 正確答案：6
+
         const selects = document.querySelectorAll("#postSurveyForm select");
         selects.forEach(sel => {
             const options = Array.from(sel.options).filter(o => o.value !== "");
@@ -679,9 +705,6 @@
 
         const ageInput = document.querySelector('input[name="demo_age"]');
         if (ageInput) ageInput.value = Math.floor(Math.random() * 40) + 20;
-
-        const countryInput = document.querySelector('input[name="demo_country"]');
-        if (countryInput) countryInput.value = "United States";
     }
 
     async function handlePostSurveySubmit(event) {
@@ -694,6 +717,14 @@
         const pid = localStorage.getItem("participantID") || "Anonymous";
         const formData = new FormData(event.target);
 
+        // ★ Attention Check 判定
+        // 題目 1 要求選 Strongly Disagree (1)
+        // 題目 2 要求選 6
+        const ansSun = parseInt(formData.get("attn_check_sun"), 10);
+        const ansNumber = parseInt(formData.get("attn_check_number"), 10);
+        const passedAttentionCheck = (ansSun === 1 && ansNumber === 6);
+
+        // 收集量表回應（不包含 attention check 答案）
         const postSurveyResponses = {};
         scaleQuestionIds.forEach(qId => {
             postSurveyResponses[qId] = parseInt(formData.get(qId), 10);
@@ -702,7 +733,8 @@
         const demographicData = {
             gender: formData.get("demo_gender"),
             age: parseInt(formData.get("demo_age"), 10),
-            country: formData.get("demo_country"),
+            postalCode: (formData.get("demo_postal") || "").trim(),
+            country: (formData.get("demo_postal") || "").trim(),
             income: formData.get("demo_income"),
             ethnicity: formData.get("demo_ethnicity"),
             maritalStatus: formData.get("demo_marital"),
@@ -715,9 +747,12 @@
             generalFeedback: (formData.get("open_study_feedback") || "").trim()
         };
 
+        // Firebase 記錄物件：在最上層標記 passedAttentionCheck 狀態
         const finalRecord = {
             participantID: pid,
             submittedAt: new Date().toLocaleString(),
+            passedAttentionCheck: passedAttentionCheck,
+            status: passedAttentionCheck ? "Completed" : "Failed Attention Check",
             postSurveyLikert: postSurveyResponses,
             demographics: demographicData,
             openResponses: openEndedResponses
@@ -731,8 +766,14 @@
             console.error("Error saving post survey data:", err);
         }
 
-        alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!");
-        window.location.href = "https://app.prolific.com"; // 替換為你的 Prolific Completion 轉址
+        // 根據注意力量表檢核結果分流處理
+        if (!passedAttentionCheck) {
+            alert("Notice: You did not follow the instructions provided for some of the attention-check questions. According to the study guidelines, your submission cannot be accepted.");
+            window.location.href = ATTENTION_FAILED_REDIRECT_URL;
+        } else {
+            alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!");
+            window.location.href = COMPLETION_REDIRECT_URL;
+        }
     }
 </script>
 
