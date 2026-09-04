@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Research Study 3</title>
+    <title>Academic Research Study - Section 3</title>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -23,6 +23,33 @@
     </script>
 
     <style>
+        :root {
+            /* 預設邊框顏色變數 */
+            --group-border-color: #cbd5e1; /* 預設灰 */
+        }
+
+        /* 核心群組卡片 */
+        .question-group-card {
+            background-color: #ffffff;
+            /* 粗細與樣式固定為 1px solid，顏色動態綁定變數 */
+            border: 1px solid var(--group-border-color);
+            border-radius: 10px;
+            padding: 20px 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .question-group-card .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 🎨 各種色彩主題（覆寫該卡片內部的 --group-border-color 變數） */
+        .card-blue   { --group-border-color: #93c5fd; } /* 淡藍色邊框 */
+        .card-green  { --group-border-color: #86efac; } /* 淡綠色邊框 */
+        .card-amber  { --group-border-color: #fcd34d; } /* 暖橘/琥珀色邊框 */
+        .card-purple { --group-border-color: #d8b4fe; } /* 淡紫色邊框 */
+        .card-slate  { --group-border-color: #cbd5e1; } /* 經典淺灰邊框 */
+
         :root {
             --bg-color: #f4f6f8;
             --card-bg: #ffffff;
@@ -98,12 +125,6 @@
             padding: 10px 16px;
             margin-top: 10px;
             font-size: 0.85rem;
-        }
-
-        .scale-info h3 {
-            font-size: 0.9rem;
-            margin-bottom: 6px;
-            color: var(--text-primary);
         }
 
         .scale-info ul {
@@ -209,7 +230,6 @@
             display: block;
         }
 
-        /* Demographic Fields */
         .form-input, .form-select {
             width: 100%;
             padding: 10px 12px;
@@ -272,20 +292,36 @@
         .submit-btn:hover {
             background-color: #15803d;
         }
+
+        /* 群組內最後一題不需要過大的底部邊距 */
+        .question-group-card .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* (可選) 群組頂部的小標題/提示字 */
+        .group-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="fixed-top-section">
-        <span class="academic-badge">Academic Research Study 3</span>
-        <h1>Investigation</h1>
+        <span class="academic-badge">Academic Research Study - Section 3</span>
+        <h1>Welcome to Section 3</h1>
         <p style="font-size: 0.88rem; color: var(--text-secondary);">
-            Please recall the survey experience and answer the following questions.
+            Please recall the simulated online grocery shopping experience on FreshMart and answer the following questions.
         </p>
 
         <div class="scale-info">
-            <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
             <ul>
                 <li><strong>1</strong> = Strongly disagree</li>
                 <li><strong>2</strong> = Disagree</li>
@@ -301,97 +337,146 @@
 
     <form id="postSurveyForm" onsubmit="handlePostSurveySubmit(event)">
 
-        <!-- 1-7 Likert Questions -->
-        <div class="form-group">
-            <label class="question-title">1. The shopping scenario was realistic. *</label>
-            <div class="scale-grid" id="q_scenario_realistic"></div>
+        <div class="question-group-card card-blue">
+            <div class="form-group">
+                <label class="question-title">1. The recommendations in the scenario appeared to be one-size-fits-all. *</label>
+                <div class="scale-grid" id="q_mc_onesize"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">2. The recommendations in the scenario appeared to be identical for all consumers. *</label>
+                <div class="scale-grid" id="q_mc_identical"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">3. The recommendations I received were well tailored to my interests. *</label>
+                <div class="scale-grid" id="q_pers_tailored"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">4. I felt that the recommendations understood my needs. *</label>
+                <div class="scale-grid" id="q_pers_understood"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">5. I felt that the recommendations took my preferences into account. *</label>
+                <div class="scale-grid" id="q_pers_account"></div>
+            </div>
+        </div>
+
+        <div class="question-group-card card-green">
+            <div class="form-group">
+                <label class="question-title">6. I would be willing to purchase the cherry tomatoes. *</label>
+                <div class="scale-grid" id="q_wtp_tomato"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">7. I would be willing to purchase the chicken drumsticks. *</label>
+                <div class="scale-grid" id="q_wtp_chicken"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">8. I would be willing to purchase the brown eggs. *</label>
+                <div class="scale-grid" id="q_wtp_eggs"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">9. I would be willing to purchase the strawberries. *</label>
+                <div class="scale-grid" id="q_wtp_strawberries"></div>
+            </div>
+
+            <!-- 10-13: Perceived Sustainability -->
+            <div class="form-group">
+                <label class="question-title">10. The cherry tomatoes appeared to be sustainable. *</label>
+                <div class="scale-grid" id="q_sus_tomato"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">11. The chicken drumsticks appeared to be sustainable. *</label>
+                <div class="scale-grid" id="q_sus_chicken"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">12. The brown eggs appeared to be sustainable. *</label>
+                <div class="scale-grid" id="q_sus_eggs"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">13. The strawberries appeared to be sustainable. *</label>
+                <div class="scale-grid" id="q_sus_strawberries"></div>
+            </div>
+        </div>
+
+        <div class="question-group-card card-amber">
+            <div class="form-group">
+                <label class="question-title">14. Overall, I was satisfied with the recommendations. *</label>
+                <div class="scale-grid" id="q_sat_rec_overall"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">15. The recommendations met my expectations. *</label>
+                <div class="scale-grid" id="q_sat_rec_expectations"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">16. I was pleased with the recommendations I received. *</label>
+                <div class="scale-grid" id="q_sat_rec_pleased"></div>
+            </div>
+        </div>
+
+        <div class="question-group-card card-purple">
+            <div class="form-group">
+                <label class="question-title">17. Overall, I was satisfied with the shopping experience on FreshMart. *</label>
+                <div class="scale-grid" id="q_sat_shopping_exp"></div>
+            </div>
+
+            <!-- 18-20: Scenario Realism & Immersion -->
+            <div class="form-group">
+                <label class="question-title">18. The shopping scenario was realistic. *</label>
+                <div class="scale-grid" id="q_scenario_realistic"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">19. It was easy to imagine myself in the shopping scenario. *</label>
+                <div class="scale-grid" id="q_scenario_imagine_self"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">20. It was easy to imagine the shopping scenario occurring in real life. *</label>
+                <div class="scale-grid" id="q_scenario_occur_real"></div>
+            </div>
+        </div>
+
+        <div class="question-group-card card-slate">
+            <div class="form-group">
+                <label class="question-title">21. I consider the environmental effects of the products I purchase. *</label>
+                <div class="scale-grid" id="q_env_effects"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">22. Protecting the environment influences my purchasing decisions. *</label>
+                <div class="scale-grid" id="q_env_protect_influence"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">23. I prefer products that cause less harm to the environment. *</label>
+                <div class="scale-grid" id="q_env_prefer_less_harm"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">24. I am concerned about wasting natural resources. *</label>
+                <div class="scale-grid" id="q_env_waste_resources"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">25. I consider myself an environmentally responsible consumer. *</label>
+                <div class="scale-grid" id="q_env_responsible_consumer"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">26. I am willing to accept some inconvenience to make environmentally friendly choices. *</label>
+                <div class="scale-grid" id="q_env_accept_inconvenience"></div>
+            </div>
+        </div>
+
+        <div class="question-group-card card-blue">
+            <div class="form-group">
+                <label class="question-title">27. I am familiar with AI. *</label>
+                <div class="scale-grid" id="q_ai_familiar"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">28. I generally have a positive attitude toward AI. *</label>
+                <div class="scale-grid" id="q_ai_positive_attitude"></div>
+            </div>
+            <div class="form-group">
+                <label class="question-title">29. To the best of your knowledge, how likely is it that the recommendations were generated by an AI system? *</label>
+                <div class="scale-grid" id="q_ai_generated_likelihood"></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label class="question-title">2. It was easy to project myself in the shopping scenario. *</label>
-            <div class="scale-grid" id="q_scenario_project"></div>
-        </div>
-
-        <div class="form-group">
-            <label class="question-title">3. It was easy to imagine the shopping scenario that happened in real life. *</label>
-            <div class="scale-grid" id="q_scenario_imagine"></div>
-        </div>
-
-        <div class="form-group">
-            <label class="question-title">4. The recommendations in the scenario are likely one-size-fit-all recommendations. *</label>
-            <div class="scale-grid" id="q_mc_onesize"></div>
-        </div>
-
-        <div class="form-group">
-            <label class="question-title">5. The recommendations in the scenario are likely to be posted identically to any consumers. *</label>
-            <div class="scale-grid" id="q_mc_identical"></div>
-        </div>
-
-        <!-- Willingness to purchase -->
-        <div class="form-group">
-            <label class="question-title">6. I am willing to purchase the Tomato Cherry. *</label>
-            <div class="scale-grid" id="q_wtp_tomato"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">7. I am willing to purchase the Chicken Drumsticks. *</label>
-            <div class="scale-grid" id="q_wtp_chicken"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">8. I am willing to purchase the Smoked Salmon. *</label>
-            <div class="scale-grid" id="q_wtp_salmon"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">9. I am willing to purchase the Strawberries. *</label>
-            <div class="scale-grid" id="q_wtp_strawberries"></div>
-        </div>
-
-        <!-- Perceived sustainability -->
-        <div class="form-group">
-            <label class="question-title">10. Tomato Cherry is sustainable. *</label>
-            <div class="scale-grid" id="q_sus_tomato"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">11. Chicken Drumsticks is sustainable. *</label>
-            <div class="scale-grid" id="q_sus_chicken"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">12. Smoked Salmon is sustainable. *</label>
-            <div class="scale-grid" id="q_sus_salmon"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">13. Strawberries is sustainable. *</label>
-            <div class="scale-grid" id="q_sus_strawberries"></div>
-        </div>
-
-        <!-- Personalization -->
-        <div class="form-group">
-            <label class="question-title">14. The recommendation I received were well-tailored to my interests. *</label>
-            <div class="scale-grid" id="q_pers_tailored"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">15. I feel that my needs are understood by the recommendation. *</label>
-            <div class="scale-grid" id="q_pers_understood"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">16. I feel that my preferences are taken into account when I receive recommendation. *</label>
-            <div class="scale-grid" id="q_pers_account"></div>
-        </div>
-
-        <!-- AI attitude -->
-        <div class="form-group">
-            <label class="question-title">17. I am familiar with AI. *</label>
-            <div class="scale-grid" id="q_ai_familiar"></div>
-        </div>
-        <div class="form-group">
-            <label class="question-title">18. I like AI in general. *</label>
-            <div class="scale-grid" id="q_ai_like"></div>
-        </div>
-
-        <!-- Demographic Section -->
-        <div class="demographic-divider">Demographic Information</div>
-
-        <div class="form-group">
-            <label class="question-title">19. What is your gender? *</label>
+            <label class="question-title">30. What is your gender? *</label>
             <select name="demo_gender" class="form-select" required>
                 <option value="" disabled selected>Select your gender</option>
                 <option value="Male">Male</option>
@@ -402,17 +487,17 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">20. What is your age? *</label>
+            <label class="question-title">31. What is your age? *</label>
             <input type="number" name="demo_age" min="18" max="100" class="form-input" placeholder="Enter your age (e.g. 28)" required>
         </div>
 
         <div class="form-group">
-            <label class="question-title">21. What country do you reside in? *</label>
-            <input type="text" name="demo_country" class="form-input" placeholder="Enter your country of residence" required>
+            <label class="question-title">32. What is your postal code? *</label>
+            <input type="text" name="demo_postal" class="form-input" placeholder="Enter your postal / ZIP code" required>
         </div>
 
         <div class="form-group">
-            <label class="question-title">22. What is the average of your annual household income? *</label>
+            <label class="question-title">33. What is the average of your annual household income? *</label>
             <select name="demo_income" class="form-select" required>
                 <option value="" disabled selected>Select annual household income</option>
                 <option value="Less than $10,000">Less than $10,000</option>
@@ -435,7 +520,7 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">23. What is your ethnicity? *</label>
+            <label class="question-title">34. What is your ethnicity? *</label>
             <select name="demo_ethnicity" class="form-select" required>
                 <option value="" disabled selected>Select your ethnicity</option>
                 <option value="White / Caucasian">White / Caucasian</option>
@@ -450,7 +535,7 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">24. What is your marital status? *</label>
+            <label class="question-title">35. What is your marital status? *</label>
             <select name="demo_marital" class="form-select" required>
                 <option value="" disabled selected>Select marital status</option>
                 <option value="Single (never married)">Single (never married)</option>
@@ -463,7 +548,7 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">25. What is the highest degree or level of school you have completed? *</label>
+            <label class="question-title">36. What is the highest degree or level of school you have completed? *</label>
             <select name="demo_education" class="form-select" required>
                 <option value="" disabled selected>Select highest education completed</option>
                 <option value="Less than high school">Less than high school</option>
@@ -477,7 +562,7 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">26. What is your occupation? *</label>
+            <label class="question-title">37. What is your occupation? *</label>
             <select name="demo_occupation" class="form-select" required>
                 <option value="" disabled selected>Select your occupation</option>
                 <option value="Professional">Professional</option>
@@ -489,12 +574,12 @@
         </div>
 
         <div class="form-group">
-            <label class="question-title">27. Please share your thoughts on the purpose of this survey.</label>
-            <textarea name="open_survey_purpose" class="form-input" rows="3" placeholder="Enter your thoughts here..." style="resize: vertical; font-family: inherit;"></textarea>
+            <label class="question-title">38. Please share your thoughts on the purpose of this survey. *</label>
+            <textarea name="open_survey_purpose" class="form-input" rows="3" placeholder="Enter your thoughts here..." style="resize: vertical; font-family: inherit;" required></textarea>
         </div>
 
         <div class="form-group">
-            <label class="question-title">28. Please feel free to leave any comments/feedback for this study. Thank you!</label>
+            <label class="question-title">39. Please feel free to leave any comments/feedback for this study. Thank you!</label>
             <textarea name="open_study_feedback" class="form-input" rows="3" placeholder="Enter any comments or feedback here..." style="resize: vertical; font-family: inherit;"></textarea>
         </div>
 
@@ -503,40 +588,60 @@
 </div>
 
 <script>
+    // 嚴格依序排列所有 7 點量表題 ID
     const scaleQuestionIds = [
-        "q_scenario_realistic",
-        "q_scenario_project",
-        "q_scenario_imagine",
         "q_mc_onesize",
         "q_mc_identical",
-        "q_wtp_tomato",
-        "q_wtp_chicken",
-        "q_wtp_salmon",
-        "q_wtp_strawberries",
-        "q_sus_tomato",
-        "q_sus_chicken",
-        "q_sus_salmon",
-        "q_sus_strawberries",
         "q_pers_tailored",
         "q_pers_understood",
         "q_pers_account",
+        "q_wtp_tomato",
+        "q_wtp_chicken",
+        "q_wtp_eggs",
+        "q_wtp_strawberries",
+        "q_sus_tomato",
+        "q_sus_chicken",
+        "q_sus_eggs",
+        "q_sus_strawberries",
+        "q_sat_rec_overall",
+        "q_sat_rec_expectations",
+        "q_sat_rec_pleased",
+        "q_sat_shopping_exp",
+        "q_scenario_realistic",
+        "q_scenario_imagine_self",
+        "q_scenario_occur_real",
+        "q_env_effects",
+        "q_env_protect_influence",
+        "q_env_prefer_less_harm",
+        "q_env_waste_resources",
+        "q_env_responsible_consumer",
+        "q_env_accept_inconvenience",
         "q_ai_familiar",
-        "q_ai_like"
+        "q_ai_positive_attitude",
+        "q_ai_generated_likelihood"
     ];
 
-    // 動態建立 1-7 分選項
+    // 動態建立 1-7 分選項，最後一題自動帶入 Likelihood 標籤
     scaleQuestionIds.forEach(qId => {
         const container = document.getElementById(qId);
         if (!container) return;
+
+        const isLikelihoodQuestion = (qId === "q_ai_generated_likelihood");
 
         for (let i = 1; i <= 7; i++) {
             const card = document.createElement("div");
             card.className = "scale-card";
 
             let hintText = "";
-            if (i === 1) hintText = '<span class="scale-hint">Strongly disagree</span>';
-            if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
-            if (i === 7) hintText = '<span class="scale-hint">Strongly agree</span>';
+            if (isLikelihoodQuestion) {
+                if (i === 1) hintText = '<span class="scale-hint">Extremely unlikely</span>';
+                if (i === 4) hintText = '<span class="scale-hint">Neither unlikely nor likely</span>';
+                if (i === 7) hintText = '<span class="scale-hint">Extremely likely</span>';
+            } else {
+                if (i === 1) hintText = '<span class="scale-hint">Strongly disagree</span>';
+                if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
+                if (i === 7) hintText = '<span class="scale-hint">Strongly agree</span>';
+            }
 
             card.innerHTML = `
                 <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
@@ -548,6 +653,12 @@
     });
 
     function autoFillRandom() {
+        const postalInput = document.querySelector('input[name="demo_postal"]');
+        if (postalInput) postalInput.value = "90210";
+
+        const openPurposeInput = document.querySelector('textarea[name="open_survey_purpose"]');
+        if (openPurposeInput) openPurposeInput.value = "Testing simulated online grocery shopping choices and consumer behavior.";
+
         scaleQuestionIds.forEach(qId => {
             const randomVal = Math.floor(Math.random() * 7) + 1;
             const radio = document.getElementById(`${qId}_${randomVal}`);
@@ -555,6 +666,22 @@
                 radio.checked = true;
             }
         });
+
+        // 自動隨機挑選人口學欄位
+        const selects = document.querySelectorAll("#postSurveyForm select");
+        selects.forEach(sel => {
+            const options = Array.from(sel.options).filter(o => o.value !== "");
+            if (options.length > 0) {
+                const randomOpt = options[Math.floor(Math.random() * options.length)];
+                sel.value = randomOpt.value;
+            }
+        });
+
+        const ageInput = document.querySelector('input[name="demo_age"]');
+        if (ageInput) ageInput.value = Math.floor(Math.random() * 40) + 20;
+
+        const countryInput = document.querySelector('input[name="demo_country"]');
+        if (countryInput) countryInput.value = "United States";
     }
 
     async function handlePostSurveySubmit(event) {
@@ -572,7 +699,6 @@
             postSurveyResponses[qId] = parseInt(formData.get(qId), 10);
         });
 
-        // 收集人口學特徵
         const demographicData = {
             gender: formData.get("demo_gender"),
             age: parseInt(formData.get("demo_age"), 10),
@@ -584,7 +710,6 @@
             occupation: formData.get("demo_occupation")
         };
 
-        // 收集開放式問題回答
         const openEndedResponses = {
             surveyPurposeThoughts: (formData.get("open_survey_purpose") || "").trim(),
             generalFeedback: (formData.get("open_study_feedback") || "").trim()
@@ -606,8 +731,8 @@
             console.error("Error saving post survey data:", err);
         }
 
-        alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!  ");
-        window.location.href = "https://next-page-url.com"; // 或 Prolific / MTurk 回傳網址
+        alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!");
+        window.location.href = "https://app.prolific.com"; // 替換為你的 Prolific Completion 轉址
     }
 </script>
 

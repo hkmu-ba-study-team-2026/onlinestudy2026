@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Shopping Study - Section 1A</title>
+    <title>Online Shopping Study - Section 1B</title>
     <style>
         :root {
             --bg-color: #f4f6f8;
@@ -269,7 +269,7 @@
 <div class="container">
     <div class="fixed-top-section">
         <header>
-            <div class="academic-badge">Academic Research Survey - Section 1A</div>
+            <div class="academic-badge">Academic Research Survey - Section 1B</div>
             <h1>Welcome to Section 1</h1>
             <p class="intro">We would like to understand your preferences when shopping for groceries online. Please read each product feature below and indicate how important it is to you. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
         </header>
@@ -277,13 +277,13 @@
         <div class="scale-info">
             <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
             <ul>
-                <li><strong>1</strong> = Not at all important</li>
-                <li><strong>2</strong> = Not important</li>
-                <li><strong>3</strong> = Slightly unimportant</li>
+                <li><strong>1</strong> = Strongly disagree</li>
+                <li><strong>2</strong> = Disagree</li>
+                <li><strong>3</strong> = Somewhat disagree</li>
                 <li><strong>4</strong> = Neutral</li>
-                <li><strong>5</strong> = Slightly important</li>
-                <li><strong>6</strong> = Important</li>
-                <li><strong>7</strong> = Extremely important</li>
+                <li><strong>5</strong> = Somewhat agree</li>
+                <li><strong>6</strong> = Agree</li>
+                <li><strong>7</strong> = Strongly agree</li>
             </ul>
         </div>
 
@@ -296,26 +296,27 @@
             <strong id="displayPid" style="font-size: 1rem; color: #1e293b; margin-left: 6px;"></strong>
         </div>
 
-        <!-- 保留的 11 道題目 -->
-        <div class="form-group"><label class="question-title">1. The product provides an enjoyable sensory experience. <span class="required">*</span></label><div class="scale-grid" id="q01_sensory_experience"></div></div>
-        <div class="form-group"><label class="question-title">2. The product is of high quality. <span class="required">*</span></label><div class="scale-grid" id="q04_high_quality"></div></div>
-        <div class="form-group"><label class="question-title">3. The product is healthy. <span class="required">*</span></label><div class="scale-grid" id="q05_healthy"></div></div>
-        <div class="form-group"><label class="question-title">4. The product is safe to consume. <span class="required">*</span></label><div class="scale-grid" id="q06_safe_to_consume"></div></div>
-        <div class="form-group"><label class="question-title">5. The benefits I receive from the product justify its price. <span class="required">*</span></label><div class="scale-grid" id="q08_price_justified"></div></div>
-        <div class="form-group"><label class="question-title">6. The serving size is appropriate for me. <span class="required">*</span></label><div class="scale-grid" id="q09_serving_size"></div></div>
-        <div class="form-group"><label class="question-title">7. The product is convenient to use or consume. <span class="required">*</span></label><div class="scale-grid" id="q10_convenient"></div></div>
-        <div class="form-group"><label class="question-title">8. The product can be used in different meals or recipes. <span class="required">*</span></label><div class="scale-grid" id="q11_versatile_use"></div></div>
-        <div class="form-group"><label class="question-title">9. The product is produced without exploitation. <span class="required">*</span></label><div class="scale-grid" id="q15_no_exploitation"></div></div>
-        <div class="form-group"><label class="question-title">10. The product is produced in an environmentally friendly way. <span class="required">*</span></label><div class="scale-grid" id="q16_eco_friendly"></div></div>
-        <div class="form-group"><label class="question-title">11. The product is a local/regional product. <span class="required">*</span></label><div class="scale-grid" id="q17_local_product"></div></div>
+        <!-- 獨立出來的 18 ~ 20 題 -->
+        <div class="form-group">
+            <label class="question-title">18. I always stay friendly and courteous with other people. <span class="required">*</span></label>
+            <div class="scale-grid" id="q18_friendly_courteous"></div>
+        </div>
 
-        <button type="submit" id="submitBtn" class="submit-btn">Next →</button>
+        <div class="form-group">
+            <label class="question-title">19. I am always polite and considerate of others. <span class="required">*</span></label>
+            <div class="scale-grid" id="q19_polite_considerate"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="question-title">20. It is difficult to admit my mistakes openly to others. <span class="required">*</span></label>
+            <div class="scale-grid" id="q20_admit_mistakes"></div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">Proceed to Section 2 →</button>
     </form>
 </div>
 
 <script>
-    const API_URL = "/api/recommend";
-
     const participantNum = localStorage.getItem("participantID");
     if (!participantNum) {
         alert("Participant ID not found. Please start from the consent page.");
@@ -325,19 +326,11 @@
         if (displayPidEl) displayPidEl.textContent = participantNum;
     }
 
-    // 精確對應現有的 11 題 ID 清單
+    // Section 2 題目
     const questionIds = [
-        "q01_sensory_experience",
-        "q04_high_quality",
-        "q05_healthy",
-        "q06_safe_to_consume",
-        "q08_price_justified",
-        "q09_serving_size",
-        "q10_convenient",
-        "q11_versatile_use",
-        "q15_no_exploitation",
-        "q16_eco_friendly",
-        "q17_local_product"
+        "q18_friendly_courteous",
+        "q19_polite_considerate",
+        "q20_admit_mistakes"
     ];
 
     questionIds.forEach(qId => {
@@ -349,9 +342,9 @@
             card.className = "scale-card";
 
             let hintText = "";
-            if (i === 1) hintText = '<span class="scale-hint">Not at all important</span>';
+            if (i === 1) hintText = '<span class="scale-hint">Strongly disagree</span>';
             if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
-            if (i === 7) hintText = '<span class="scale-hint">Extremely important</span>';
+            if (i === 7) hintText = '<span class="scale-hint">Strongly agree</span>';
 
             card.innerHTML = `
                 <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
@@ -370,88 +363,43 @@
         });
     }
 
-    const productsList = [
-        "Cherry Tomato: Fair Trade & EFI Certified ensuring fair wages and safe working conditions. Vine-Ripened & Hand-Picked.",
-        "Chicken Drumsticks: No anti-biotics, no added hormones. Chickens are raised free to explore outdoors. Packaging made of 100% recyclable plastic.",
-        "Large Brown Eggs: Ethical food giving the girls year-round outdoor access, supporting farmers and enabling you to trace your eggs back to the farm.",
-        "Strawberries: Sustainability features recognized by trusted certificates. Contains at least 95% organic material.",
-        "Greek Yogurt: Slowly crafted with organic ingredients. Made with USDA organic whole milk."
-    ];
-
     async function handleSubmit(event) {
         event.preventDefault();
-        console.log("🚀 [1/4] Submitting Section 1A...");
+        console.log("🚀 [1/2] Submitting Section 1B...");
 
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving & Loading Section 1B...';
+        submitBtn.textContent = 'Saving & Loading Section 2...';
 
         const formData = new FormData(event.target);
-        const survey1Responses = {};
+        const survey2Responses = {};
         questionIds.forEach(qId => {
-            survey1Responses[qId] = parseInt(formData.get(qId), 10);
+            survey2Responses[qId] = parseInt(formData.get(qId), 10);
         });
 
-        // 存入 localStorage 供後續或備份
-        localStorage.setItem('survey1_responses', JSON.stringify(survey1Responses));
+        localStorage.setItem('survey2_responses', JSON.stringify(survey2Responses));
 
-        const userPreferences = { surveyResponses: survey1Responses };
-        const payload = { products: productsList, preferences: userPreferences };
-
-        let nudgeText = "";
-        let nudgeAI = true;
-
-        if (nudgeAI) {
-            try {
-                console.log("📤 [2/4] Requesting AI Nudge...");
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    const recommendations = await response.json();
-                    if (typeof recommendations === 'string') {
-                        nudgeText = recommendations;
-                    } else if (recommendations && recommendations.recommendation) {
-                        nudgeText = recommendations.recommendation;
-                    }
-                    localStorage.setItem('recommendations', JSON.stringify(recommendations));
-                    localStorage.setItem('nudge_text', nudgeText);
-                } else {
-                    throw new Error(`API status ${response.status}`);
-                }
-            } catch (error) {
-                console.error('❌ [API Request Failed]:', error);
-                nudgeText = 'These items are eco-friendly, freshly sourced, and sustainable for your daily meals.';
-                localStorage.setItem('nudge_text', nudgeText);
-            }
-        } else {
-            nudgeText = 'You may consider these featured eco-friendly products. They are made with responsibly sourced or organic ingredients, support fair and safe working conditions, promote better animal welfare, and use more sustainable packaging.';
-            localStorage.setItem('nudge_text', nudgeText);
-        }
-
-        // 寫入 Firebase 的 survey_section1 節點
+        // 寫入 Firebase 的 survey_section2 節點
         const firebaseData = {
             participantID: participantNum,
-            section: 1,
+            section: 2,
             submittedAt: new Date().toLocaleString(),
             submittedAtTimestamp: Date.now(),
-            nudgeContent: nudgeText,
-            responses: survey1Responses
+            responses: survey2Responses
         };
 
         try {
-            await db.ref('survey_section1').push(firebaseData);
-            console.log("✅ [3/4] Saved Section 1 to Firebase!");
+            await db.ref('survey_section2').push(firebaseData);
+            console.log("✅ [2/2] Saved Section 2 to Firebase!");
         } catch (dbError) {
-            console.error('❌ Firebase Section 1 save error:', dbError);
+            console.error('❌ Firebase Section 2 save error:', dbError);
         }
 
-        // 導向 Section 2
-        console.log("🏁 Redirecting to survey2.html...");
-        window.location.href = 'survey2.html';
+        // 導向購物頁面
+        console.log("🏁 Redirecting to grocery_page.html...");
+        setTimeout(() => {
+            window.location.href = 'grocery_page.html';
+        }, 500);
     }
 </script>
 </body>

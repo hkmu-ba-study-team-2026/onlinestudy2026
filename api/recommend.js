@@ -12,18 +12,18 @@ async function getAiRecommendationsFromGemini(products, preferences) {
 
     const promptText = `
 User Preferences from survey (1-7 scale): ${JSON.stringify(preferences)}
-Featured Products: ${JSON.stringify(simplifiedProducts)}
+Featured Products (with descriptions): ${JSON.stringify(simplifiedProducts)}
 
 Task:
 Write a single concise sentence (under 25 words) recommending these featured products.
 Rules:
 1. Promote their eco-sustainability and fresh quality based on user preferences.
-2. The sentence MUST strictly start with the words "These items".
-3. Do NOT mention words like "survey", "based on your preference", or "scale".
-4. Output plain text only. No markdown, no quotes, no explanation.
+2. The sentence MUST strictly start with the words "You may consider these...".
+3. Do NOT mention words like "survey", "based on your preference", "algin with you" or "scale".
+4. Do NOT use workings implying taking user preferences or referring to user preferences.
+5. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
-    // 官方標準端點：URL 不帶 key
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 
     const requestBody = {

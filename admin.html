@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Firebase Powered</title>
+    <title>Admin Dashboard - Single Sheet Master Export</title>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
-        authDomain: "online-study-2026.firebaseapp.com",
-        databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "online-study-2026",
-        storageBucket: "online-study-2026.firebasestorage.app",
-        messagingSenderId: "359632481591",
-        appId: "1:359632481591:web:31d160c7f772841b16feb2"
-      };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+            authDomain: "online-study-2026.firebaseapp.com",
+            databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "online-study-2026",
+            storageBucket: "online-study-2026.firebasestorage.app",
+            messagingSenderId: "359632481591",
+            appId: "1:359632481591:web:31d160c7f772841b16feb2"
+        };
 
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
     </script>
 
     <style>
@@ -35,7 +35,7 @@
             background: #f5f7fa;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -90,6 +90,7 @@
             text-align: left;
             border-bottom: 1px solid #eee;
             font-size: 14px;
+            vertical-align: top;
         }
         th {
             background: #232f3e;
@@ -103,6 +104,7 @@
             text-decoration: none;
             border-radius: 6px;
             margin-bottom: 20px;
+            font-weight: bold;
         }
         .refresh-btn {
             padding: 10px 20px;
@@ -112,6 +114,7 @@
             border-radius: 6px;
             cursor: pointer;
             margin-left: 10px;
+            font-weight: bold;
         }
         .clear-btn {
             padding: 10px 20px;
@@ -121,7 +124,19 @@
             border-radius: 6px;
             cursor: pointer;
             margin-left: 10px;
+            font-weight: bold;
         }
+        .export-btn {
+            padding: 10px 20px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .export-btn:hover { background: #1b5e20; }
         .empty {
             text-align: center;
             padding: 30px;
@@ -155,19 +170,8 @@
             border-radius: 4px;
             font-size: 12px;
         }
-        .export-btn {
-            padding: 10px 20px;
-            background: #2e7d32;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        .export-btn:hover {
-            background: #1b5e20;
-        }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
     </style>
 </head>
 <body>
@@ -182,86 +186,118 @@
     <div id="adminPanel" class="admin-content">
         <a href="index.html" class="back-btn">← Back to Cover Page</a>
         <button class="refresh-btn" onclick="fetchFirebaseData()">🔄 Refresh Data</button>
-        <button class="export-btn" onclick="exportFirebaseToExcel()">📊 Export All to Excel</button>
+        <button class="export-btn" onclick="exportFirebaseToExcel()">📊 Export Master Dataset (Single Sheet)</button>
         <button class="clear-btn" onclick="clearFirebaseData()">⚠️ Clear All Firebase Records</button>
 
         <h2>Overall Statistics (from Firebase)</h2>
         <div class="stat-wrap">
             <div class="stat-card">
-                <p><strong>Total Survey Responses:</strong> <span id="totalSurveys">0</span></p>
+                <p><strong>Consent Given:</strong> <span id="totalConsents">0</span></p>
+                <p><strong>Section 1A Finished:</strong> <span id="totalS1">0</span></p>
             </div>
             <div class="stat-card">
-                <p><strong>Total Orders:</strong> <span id="totalOrder">0</span></p>
+                <p><strong>Section 1B Finished:</strong> <span id="totalS2">0</span></p>
+                <p><strong>Exit Post-Surveys:</strong> <span id="totalPostSurveys">0</span></p>
+            </div>
+            <div class="stat-card">
+                <p><strong>Total Checkouts:</strong> <span id="totalOrder">0</span></p>
+                <p><strong>Featured Items Sold:</strong> <span id="totalFeatured">0</span></p>
             </div>
             <div class="stat-card">
                 <p><strong>Total Revenue:</strong> $<span id="totalSpent">0.00</span></p>
-            </div>
-            <div class="stat-card">
-                <p><strong>Total Featured Items Sold:</strong> <span id="totalFeatured">0</span></p>
             </div>
         </div>
 
         <h2>Purchase Orders (`checkout_records`)</h2>
         <table>
             <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Participant ID</th>
-                    <th>Checkout Time</th>
-                    <th>Duration</th>
-                    <th>Order Total</th>
-                    <th>Featured Items Qty</th>
-                    <th>Purchased Items</th>
-                    <th>Selection Sequence</th>
-                </tr>
+            <tr>
+                <th>#</th>
+                <th>Participant ID</th>
+                <th>Checkout Time</th>
+                <th>Duration</th>
+                <th>Order Total</th>
+                <th>Featured Qty</th>
+                <th>Purchased Items</th>
+            </tr>
             </thead>
             <tbody id="orderTable"></tbody>
         </table>
 
-        <h2>Survey Responses (`survey_responses`)</h2>
+        <h2>Pre-Surveys Status (`survey_section1` & `survey_section2`)</h2>
         <table>
             <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Participant ID</th>
-                    <th>Submitted Time</th>
-                    <th>Responses Summary</th>
-                </tr>
+            <tr>
+                <th>#</th>
+                <th>Participant ID</th>
+                <th>S1A Time</th>
+                <th>S1A Items</th>
+                <th>S1B Time</th>
+                <th>S1B Items</th>
+                <th>Generated Nudge</th>
+            </tr>
             </thead>
             <tbody id="surveyTable"></tbody>
-        </table>
-
-        <h2>Abandoned Cart Records (`abandon_carts`)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Participant ID</th>
-                    <th>Abandon Time</th>
-                    <th>Cart Total Amount</th>
-                    <th>Items in Abandoned Cart</th>
-                </tr>
-            </thead>
-            <tbody id="abandonCartTable"></tbody>
-        </table>
-
-        <h2>Visitor Browse Records (`visit_logs`)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Participant ID</th>
-                    <th>Visit Time</th>
-                    <th>Leave Time</th>
-                    <th>Duration</th>
-                </tr>
-            </thead>
-            <tbody id="logTable"></tbody>
         </table>
     </div>
 </div>
 
 <script>
+    // 定義 Pre-Survey Section 1A (保留的 11 題)
+    const SURVEY1_QUESTIONS = [
+        { key: "q01_sensory_experience", header: "Pre_S1_Q01_SensoryExperience" },
+        { key: "q04_high_quality",        header: "Pre_S1_Q04_HighQuality" },
+        { key: "q05_healthy",             header: "Pre_S1_Q05_Healthy" },
+        { key: "q06_safe_to_consume",     header: "Pre_S1_Q06_SafeToConsume" },
+        { key: "q08_price_justified",     header: "Pre_S1_Q08_PriceJustified" },
+        { key: "q09_serving_size",        header: "Pre_S1_Q09_ServingSize" },
+        { key: "q10_convenient",          header: "Pre_S1_Q10_Convenient" },
+        { key: "q11_versatile_use",       header: "Pre_S1_Q11_VersatileUse" },
+        { key: "q15_no_exploitation",     header: "Pre_S1_Q15_NoExploitation" },
+        { key: "q16_eco_friendly",        header: "Pre_S1_Q16_EcoFriendly" },
+        { key: "q17_local_product",       header: "Pre_S1_Q17_LocalProduct" }
+    ];
+
+    // 定義 Pre-Survey Section 1B (3 題)
+    const SURVEY2_QUESTIONS = [
+        { key: "q18_friendly_courteous",  header: "Pre_S2_Q18_FriendlyCourteous" },
+        { key: "q19_polite_considerate",  header: "Pre_S2_Q19_PoliteConsiderate" },
+        { key: "q20_admit_mistakes",      header: "Pre_S2_Q20_AdmitMistakes" }
+    ];
+
+    // ★ 最新 Post-Survey 29 題定義（完全對應 post_survey.html 中的順序與變數鍵名）
+    const POST_SURVEY_QUESTIONS = [
+        { key: "q_mc_onesize",               header: "Post_Q01_Rec_OneSizeFitsAll" },
+        { key: "q_mc_identical",             header: "Post_Q02_Rec_IdenticalForAll" },
+        { key: "q_pers_tailored",            header: "Post_Q03_Rec_TailoredInterests" },
+        { key: "q_pers_understood",          header: "Post_Q04_Rec_UnderstoodNeeds" },
+        { key: "q_pers_account",             header: "Post_Q05_Rec_TookPreferences" },
+        { key: "q_wtp_tomato",               header: "Post_Q06_WTP_CherryTomatoes" },
+        { key: "q_wtp_chicken",              header: "Post_Q07_WTP_ChickenDrumsticks" },
+        { key: "q_wtp_eggs",                 header: "Post_Q08_WTP_BrownEggs" },
+        { key: "q_wtp_strawberries",         header: "Post_Q09_WTP_Strawberries" },
+        { key: "q_sus_tomato",               header: "Post_Q10_Sus_CherryTomatoes" },
+        { key: "q_sus_chicken",              header: "Post_Q11_Sus_ChickenDrumsticks" },
+        { key: "q_sus_eggs",                 header: "Post_Q12_Sus_BrownEggs" },
+        { key: "q_sus_strawberries",         header: "Post_Q13_Sus_Strawberries" },
+        { key: "q_sat_rec_overall",          header: "Post_Q14_Sat_Rec_Overall" },
+        { key: "q_sat_rec_expectations",     header: "Post_Q15_Sat_Rec_MetExpectations" },
+        { key: "q_sat_rec_pleased",          header: "Post_Q16_Sat_Rec_Pleased" },
+        { key: "q_sat_shopping_exp",         header: "Post_Q17_Sat_PlatformExperience" },
+        { key: "q_scenario_realistic",       header: "Post_Q18_Scenario_Realistic" },
+        { key: "q_scenario_imagine_self",    header: "Post_Q19_Scenario_ImagineSelf" },
+        { key: "q_scenario_occur_real",      header: "Post_Q20_Scenario_OccurRealLife" },
+        { key: "q_env_effects",              header: "Post_Q21_Env_EffectsPurchased" },
+        { key: "q_env_protect_influence",    header: "Post_Q22_Env_ProtectInfluence" },
+        { key: "q_env_prefer_less_harm",     header: "Post_Q23_Env_PreferLessHarm" },
+        { key: "q_env_waste_resources",      header: "Post_Q24_Env_ConcernWasteResources" },
+        { key: "q_env_responsible_consumer", header: "Post_Q25_Env_ResponsibleConsumer" },
+        { key: "q_env_accept_inconvenience", header: "Post_Q26_Env_AcceptInconvenience" },
+        { key: "q_ai_familiar",              header: "Post_Q27_AI_Familiar" },
+        { key: "q_ai_positive_attitude",     header: "Post_Q28_AI_PositiveAttitude" },
+        { key: "q_ai_generated_likelihood",  header: "Post_Q29_AI_GeneratedLikelihood" }
+    ];
+
     async function login() {
         const pwdInput = document.getElementById("pwd");
         const loginBtn = document.querySelector("#loginPanel button");
@@ -307,23 +343,39 @@
 
     async function fetchFirebaseData() {
         try {
-            const ordersSnap = await db.ref('checkout_records').once('value');
-            const ordersData = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
-            renderOrders(ordersData);
+            const [
+                consentsSnap,
+                ordersSnap,
+                s1Snap,
+                s2Snap,
+                legacySurveySnap,
+                postSurveySnap
+            ] = await Promise.all([
+                db.ref('consent_records').once('value'),
+                db.ref('checkout_records').once('value'),
+                db.ref('survey_section1').once('value'),
+                db.ref('survey_section2').once('value'),
+                db.ref('survey_responses').once('value'),
+                db.ref('post_survey_records').once('value')
+            ]);
 
-            const surveySnap = await db.ref('survey_responses').once('value');
-            const surveyData = surveySnap.val() ? Object.values(surveySnap.val()) : [];
-            renderSurveys(surveyData);
+            const consents = consentsSnap.val() ? Object.values(consentsSnap.val()) : [];
+            const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
+            const s1List = s1Snap.val() ? Object.values(s1Snap.val()) : [];
+            const s2List = s2Snap.val() ? Object.values(s2Snap.val()) : [];
+            const legacySurveys = legacySurveySnap.val() ? Object.values(legacySurveySnap.val()) : [];
+            const postSurveys = postSurveySnap.val() ? Object.values(postSurveySnap.val()) : [];
 
-            const abandonSnap = await db.ref('abandon_carts').once('value');
-            const abandonData = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
-            renderAbandonCarts(abandonData);
+            renderOrders(orders);
+            renderPreSurveys(s1List, s2List, legacySurveys);
 
-            const visitSnap = await db.ref('visit_logs').once('value');
-            const visitData = visitSnap.val() ? Object.values(visitSnap.val()) : [];
-            renderVisitLogs(visitData);
-
-            calculateStats(ordersData, surveyData);
+            calculateStats({
+                consents,
+                orders,
+                s1List,
+                s2List,
+                postSurveys
+            });
 
         } catch (error) {
             console.error("Error fetching data from Firebase:", error);
@@ -331,7 +383,7 @@
         }
     }
 
-    function calculateStats(orders, surveys) {
+    function calculateStats({ consents, orders, s1List, s2List, postSurveys }) {
         let totalRevenue = 0;
         let totalFeatured = 0;
 
@@ -340,8 +392,11 @@
             totalFeatured += (o.featuredProductCount || 0);
         });
 
-        document.getElementById("totalSurveys").innerText = surveys.length;
+        document.getElementById("totalConsents").innerText = consents.length;
+        document.getElementById("totalS1").innerText = s1List.length;
+        document.getElementById("totalS2").innerText = s2List.length;
         document.getElementById("totalOrder").innerText = orders.length;
+        document.getElementById("totalPostSurveys").innerText = postSurveys.length;
         document.getElementById("totalSpent").innerText = totalRevenue.toFixed(2);
         document.getElementById("totalFeatured").innerText = totalFeatured;
     }
@@ -349,7 +404,7 @@
     function renderOrders(orders) {
         const table = document.getElementById("orderTable");
         if (orders.length === 0) {
-            table.innerHTML = `<tr><td colspan="8" class="empty">No checkout records in Firebase</td></tr>`;
+            table.innerHTML = `<tr><td colspan="7" class="empty">No checkout records in Firebase</td></tr>`;
             return;
         }
 
@@ -357,7 +412,6 @@
         orders.forEach((order, idx) => {
             const pid = order.participantID || "--";
             const itemsStr = (order.finalCartItems || []).map(i => `${i.name} ×${i.quantity}`).join("; ");
-            const seqStr = (order.selectionSequence || []).map(s => `${s.step}.${s.productName}`).join(" ➔ ");
 
             let tr = document.createElement("tr");
             tr.innerHTML = `
@@ -366,77 +420,50 @@
                 <td>${order.checkoutTime || "--"}</td>
                 <td>${order.formattedDuration || "--"}</td>
                 <td>$${(order.orderTotal || 0).toFixed(2)}</td>
-                <td>${order.featuredProductCount || 0}</td> <!-- 顯示 Featured 數量 -->
+                <td><span class="badge badge-success">${order.featuredProductCount || 0}</span></td>
                 <td>${itemsStr || "--"}</td>
-                <td><small>${seqStr || "None"}</small></td>
             `;
             table.appendChild(tr);
         });
     }
 
-    function renderSurveys(surveys) {
+    function renderPreSurveys(s1List, s2List, legacyList) {
         const table = document.getElementById("surveyTable");
-        if (surveys.length === 0) {
-            table.innerHTML = `<tr><td colspan="4" class="empty">No survey responses in Firebase</td></tr>`;
+
+        const pids = Array.from(new Set([
+            ...s1List.map(s => s.participantID),
+            ...s2List.map(s => s.participantID),
+            ...legacyList.map(s => s.participantID)
+        ].filter(Boolean)));
+
+        if (pids.length === 0) {
+            table.innerHTML = `<tr><td colspan="7" class="empty">No survey records in Firebase</td></tr>`;
             return;
         }
 
         table.innerHTML = "";
-        surveys.forEach((s, idx) => {
-            const pid = s.participantID || "--";
-            const responseCount = s.responses ? Object.keys(s.responses).length : 0;
+        pids.forEach((pid, idx) => {
+            const s1 = s1List.find(item => item.participantID === pid);
+            const s2 = s2List.find(item => item.participantID === pid);
+            const legacy = legacyList.find(item => item.participantID === pid);
+
+            const s1Time = s1?.submittedAt || legacy?.submittedAt || "--";
+            const s1Count = s1?.responses ? Object.keys(s1.responses).length : (legacy?.responses ? "Legacy" : "0");
+
+            const s2Time = s2?.submittedAt || "--";
+            const s2Count = s2?.responses ? Object.keys(s2.responses).length : "0";
+
+            const nudge = s1?.nudgeContent || legacy?.nudgeContent || "--";
 
             let tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${idx + 1}</td>
                 <td><strong>${pid}</strong></td>
-                <td>${s.submittedAt || "--"}</td>
-                <td><span class="badge">${responseCount} Questions Answered</span></td>
-            `;
-            table.appendChild(tr);
-        });
-    }
-
-    function renderAbandonCarts(abandonLogs) {
-        const table = document.getElementById("abandonCartTable");
-        if (abandonLogs.length === 0) {
-            table.innerHTML = `<tr><td colspan="5" class="empty">No abandoned cart records in Firebase</td></tr>`;
-            return;
-        }
-
-        table.innerHTML = "";
-        abandonLogs.forEach((log, idx) => {
-            const pid = log.participantID || "--";
-            const itemsStr = (log.cartItems || []).map(i => `${i.name} ×${i.quantity}`).join("; ");
-
-            let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td><strong>${pid}</strong></td>
-                <td>${log.abandonTime || "--"}</td>
-                <td>$${(log.cartTotal || 0).toFixed(2)}</td>
-                <td>${itemsStr || "--"}</td>
-            `;
-            table.appendChild(tr);
-        });
-    }
-
-    function renderVisitLogs(logs) {
-        const table = document.getElementById("logTable");
-        if (logs.length === 0) {
-            table.innerHTML = `<tr><td colspan="5" class="empty">No visit logs in Firebase</td></tr>`;
-            return;
-        }
-
-        table.innerHTML = "";
-        logs.forEach((log, idx) => {
-            let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td><strong>${log.participantID || "--"}</strong></td>
-                <td>${log.enter || "--"}</td>
-                <td>${log.leave || "--"}</td>
-                <td>${log.showTime || "--"}</td>
+                <td>${s1Time}</td>
+                <td><span class="badge ${s1 ? 'badge-success' : 'badge-warning'}">${s1Count} Qs</span></td>
+                <td>${s2Time}</td>
+                <td><span class="badge ${s2 ? 'badge-success' : 'badge-warning'}">${s2Count} Qs</span></td>
+                <td><small>${nudge}</small></td>
             `;
             table.appendChild(tr);
         });
@@ -446,8 +473,12 @@
         if (confirm("⚠️ Are you sure you want to CLEAR ALL RECORDS in Firebase Database? This cannot be undone!")) {
             try {
                 await Promise.all([
-                    db.ref('checkout_records').remove(),
+                    db.ref('consent_records').remove(),
+                    db.ref('ineligible_records').remove(),
+                    db.ref('survey_section1').remove(),
+                    db.ref('survey_section2').remove(),
                     db.ref('survey_responses').remove(),
+                    db.ref('checkout_records').remove(),
                     db.ref('abandon_carts').remove(),
                     db.ref('visit_logs').remove(),
                     db.ref('post_survey_records').remove()
@@ -461,144 +492,210 @@
         }
     }
 
+    // ★★★ 單一工作表（Single Sheet）完整匯出函式 ★★★
     async function exportFirebaseToExcel() {
-        const exportBtn = document.querySelector(".export-btn") || document.getElementById("exportBtn");
+        const exportBtn = document.querySelector(".export-btn");
         if (exportBtn) {
             exportBtn.disabled = true;
             exportBtn.innerText = "⏳ Exporting...";
         }
 
         try {
-            const [ordersSnap, surveySnap, abandonSnap, visitSnap, postSurveySnap] = await Promise.all([
-                db.ref('checkout_records').once('value'),
+            const [
+                consentsSnap,
+                s1Snap,
+                s2Snap,
+                legacySurveySnap,
+                ordersSnap,
+                visitSnap,
+                postSurveySnap
+            ] = await Promise.all([
+                db.ref('consent_records').once('value'),
+                db.ref('survey_section1').once('value'),
+                db.ref('survey_section2').once('value'),
                 db.ref('survey_responses').once('value'),
-                db.ref('abandon_carts').once('value'),
+                db.ref('checkout_records').once('value'),
                 db.ref('visit_logs').once('value'),
                 db.ref('post_survey_records').once('value')
             ]);
 
+            const consents = consentsSnap.val() ? Object.values(consentsSnap.val()) : [];
+            const s1List = s1Snap.val() ? Object.values(s1Snap.val()) : [];
+            const s2List = s2Snap.val() ? Object.values(s2Snap.val()) : [];
+            const legacySurveys = legacySurveySnap.val() ? Object.values(legacySurveySnap.val()) : [];
             const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
-            const surveys = surveySnap.val() ? Object.values(surveySnap.val()) : [];
-            const abandons = abandonSnap.val() ? Object.values(abandonSnap.val()) : [];
             const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
             const postSurveys = postSurveySnap.val() ? Object.values(postSurveySnap.val()) : [];
 
+            // 匯總所有有參與記錄的受試者 ID
             const allPIDs = new Set([
+                ...consents.map(c => c.participantID),
+                ...s1List.map(s => s.participantID),
+                ...s2List.map(s => s.participantID),
+                ...legacySurveys.map(l => l.participantID),
                 ...orders.map(o => o.participantID),
-                ...surveys.map(s => s.participantID),
-                ...abandons.map(a => a.participantID),
                 ...visits.map(v => v.participantID),
                 ...postSurveys.map(p => p.participantID)
-            ].filter(pid => pid && pid !== ""));
+            ].filter(pid => pid && pid.trim() !== ""));
 
             const masterDataMap = {};
 
+            // 嚴格依照流程時間順序初始化所有欄位鍵名
             allPIDs.forEach(pid => {
-                masterDataMap[pid] = {
-                    "Participant ID": pid,
-                    "PreSurvey Submitted Time": "",
-                    "Nudge Text": ""
-                };
+                const row = {};
 
-                // Pre-survey 1~20 題
-                for (let i = 1; i <= 20; i++) {
-                    masterDataMap[pid][`PreSurvey_Q${i}`] = "";
-                }
+                // 1. Consent 區段
+                row["Participant_ID"] = pid;
+                row["Consent_Agreed_Time"] = "";
 
-                Object.assign(masterDataMap[pid], {
-                    "Enter Time": "",
-                    "Leave Time": "",
-                    "Visit Duration (s)": 0,
-                    "Has Checkout": "No",
-                    "Checkout Time": "",
-                    "Order Total ($)": 0,
-                    "Featured Items Total Qty": 0,
-                    "Open_Survey_Purpose_Thoughts": "",
-                    "Open_Study_Feedback": ""
+                // 2. ★ AI Nudge 推薦文案（位於 Pre-Survey Section 1 之前）★
+                row["AI_Nudge_Text"] = "";
+
+                // 3. Pre-Survey Section 1A 區段 (11 題)
+                row["Pre_S1_Submitted_Time"] = "";
+                SURVEY1_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
                 });
 
-                // 1~30 商品總數、來源數量、加入順序
+                // 4. Pre-Survey Section 1B 區段 (3 題)
+                row["Pre_S2_Submitted_Time"] = "";
+                SURVEY2_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
+                });
+
+                // 5. 購物頁面瀏覽與操作總結
+                row["Store_Enter_Time"] = "";
+                row["Store_Leave_Time"] = "";
+                row["Visit_Duration_Seconds"] = 0;
+                row["Has_Checkout"] = "No";
+                row["Checkout_Time"] = "";
+                row["Order_Total_Amount"] = 0;
+                row["Featured_Items_Total_Qty"] = 0;
+                row["Total_Cart_Items_Qty"] = 0;
+
+                // 6. 商品 1 ~ 36 詳細行為（總量、來源、次序）
                 for (let i = 1; i <= 36; i++) {
-                    masterDataMap[pid][`Item_${i}_Total_Qty`] = 0;
-                    masterDataMap[pid][`Item_${i}_From_Featured_Qty`] = 0;
-                    masterDataMap[pid][`Item_${i}_From_Category_Qty`] = 0;
-                    masterDataMap[pid][`Seq_Item_${i}`] = "";
+                    row[`Item_${i}_Total_Qty`] = 0;
+                    row[`Item_${i}_From_Featured_Qty`] = 0;
+                    row[`Item_${i}_From_Category_Qty`] = 0;
+                    row[`Seq_Item_${i}`] = "";
                 }
 
-                // Post-survey Likert
-                const postKeys = [
-                    "q_scenario_realistic", "q_scenario_project", "q_scenario_imagine",
-                    "q_mc_onesize", "q_mc_identical",
-                    "q_wtp_tomato", "q_wtp_chicken", "q_wtp_eggs", "q_wtp_strawberries", "q_wtp_yogurt",
-                    "q_sus_tomato", "q_sus_chicken", "q_sus_eggs", "q_sus_strawberries", "q_sus_yogurt",
-                    "q_pers_tailored", "q_pers_understood", "q_pers_account",
-                    "q_ai_familiar", "q_ai_like"
-                ];
-                postKeys.forEach(k => masterDataMap[pid][`Post_${k}`] = "");
-
-                // Demographics
-                Object.assign(masterDataMap[pid], {
-                    "Demo_Gender": "",
-                    "Demo_Age": "",
-                    "Demo_Country": "",
-                    "Demo_Income": "",
-                    "Demo_Ethnicity": "",
-                    "Demo_MaritalStatus": "",
-                    "Demo_Education": "",
-                    "Demo_Occupation": ""
+                // 7. Post-Survey 量表題 (29 題，完全對齊 post_survey.html)
+                POST_SURVEY_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
                 });
+
+                // 8. 人口統計變項 (包含改制後的 Postal Code)
+                row["Demo_Gender"] = "";
+                row["Demo_Age"] = "";
+                row["Demo_PostalCode"] = "";
+                row["Demo_Income"] = "";
+                row["Demo_Ethnicity"] = "";
+                row["Demo_MaritalStatus"] = "";
+                row["Demo_Education"] = "";
+                row["Demo_Occupation"] = "";
+
+                // 9. 質性開放題 (Q38 為必填想法，Q39 為自由回饋)
+                row["Open_Survey_Purpose_Thoughts"] = "";
+                row["Open_Study_Feedback"] = "";
+
+                masterDataMap[pid] = row;
             });
 
-            // 填入 Pre-survey
-            surveys.forEach(s => {
+            // 填充 1: Consent
+            consents.forEach(c => {
+                const pid = c.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Consent_Agreed_Time"] = c.agreedAt || "";
+                }
+            });
+
+            // 填充 2: Pre-Survey Section 1A
+            s1List.forEach(s => {
                 const pid = s.participantID;
                 if (masterDataMap[pid]) {
-                    masterDataMap[pid]["PreSurvey Submitted Time"] = s.submittedAt || "";
-                    masterDataMap[pid]["Nudge Text"] = s.nudgeContent || s.nudgeText || "";
+                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
+                    masterDataMap[pid]["AI_Nudge_Text"] = s.nudgeContent || "";
                     if (s.responses) {
-                        Object.keys(s.responses).forEach((k, idx) => {
-                            masterDataMap[pid][`PreSurvey_Q${idx + 1}`] = s.responses[k];
+                        SURVEY1_QUESTIONS.forEach(q => {
+                            if (s.responses[q.key] !== undefined) masterDataMap[pid][q.header] = s.responses[q.key];
                         });
                     }
                 }
             });
 
-            // 填入 Visit Logs (備用補全)
+            // 填充 3: Pre-Survey Section 1B
+            s2List.forEach(s => {
+                const pid = s.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Pre_S2_Submitted_Time"] = s.submittedAt || "";
+                    if (s.responses) {
+                        SURVEY2_QUESTIONS.forEach(q => {
+                            if (s.responses[q.key] !== undefined) masterDataMap[pid][q.header] = s.responses[q.key];
+                        });
+                    }
+                }
+            });
+
+            // 舊版 survey_responses 相容回填
+            legacySurveys.forEach(l => {
+                const pid = l.participantID;
+                if (masterDataMap[pid] && !masterDataMap[pid]["Pre_S1_Submitted_Time"]) {
+                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = l.submittedAt || "";
+                    masterDataMap[pid]["AI_Nudge_Text"] = l.nudgeContent || l.nudgeText || "";
+                    if (l.responses) {
+                        SURVEY1_QUESTIONS.forEach(q => {
+                            if (l.responses[q.key] !== undefined) masterDataMap[pid][q.header] = l.responses[q.key];
+                        });
+                        SURVEY2_QUESTIONS.forEach(q => {
+                            if (l.responses[q.key] !== undefined) masterDataMap[pid][q.header] = l.responses[q.key];
+                        });
+                    }
+                }
+            });
+
+            // 填充 4: Visit Logs (備用補齊進出時間)
             visits.forEach(v => {
                 const pid = v.participantID;
                 if (masterDataMap[pid]) {
-                    if (!masterDataMap[pid]["Enter Time"]) masterDataMap[pid]["Enter Time"] = v.enter || "";
-                    if (!masterDataMap[pid]["Leave Time"]) masterDataMap[pid]["Leave Time"] = v.leave || "";
-                    if (masterDataMap[pid]["Visit Duration (s)"] === 0) masterDataMap[pid]["Visit Duration (s)"] = v.totalSecond || 0;
+                    if (!masterDataMap[pid]["Store_Enter_Time"]) masterDataMap[pid]["Store_Enter_Time"] = v.enter || "";
+                    if (!masterDataMap[pid]["Store_Leave_Time"]) masterDataMap[pid]["Store_Leave_Time"] = v.leave || "";
+                    if (masterDataMap[pid]["Visit_Duration_Seconds"] === 0) masterDataMap[pid]["Visit_Duration_Seconds"] = v.totalSecond || 0;
                 }
             });
 
-            // 填入行為與訂單數據（包含來源統計與時間）
+            // 填充 5: 結帳與商品購買明細
             orders.forEach(o => {
                 const pid = o.participantID;
                 if (masterDataMap[pid]) {
-                    masterDataMap[pid]["Has Checkout"] = "Yes";
-                    masterDataMap[pid]["Checkout Time"] = o.checkoutTime || "";
-                    masterDataMap[pid]["Enter Time"] = o.enterTime || masterDataMap[pid]["Enter Time"] || "";
-                    masterDataMap[pid]["Leave Time"] = o.checkoutTime || masterDataMap[pid]["Leave Time"] || "";
-                    masterDataMap[pid]["Visit Duration (s)"] = o.durationSeconds || masterDataMap[pid]["Visit Duration (s)"] || 0;
-                    masterDataMap[pid]["Order Total ($)"] = o.orderTotal || 0;
-                    masterDataMap[pid]["Featured Items Total Qty"] = o.featuredProductCount || 0;
+                    masterDataMap[pid]["Has_Checkout"] = "Yes";
+                    masterDataMap[pid]["Checkout_Time"] = o.checkoutTime || "";
+                    masterDataMap[pid]["Store_Enter_Time"] = o.enterTime || masterDataMap[pid]["Store_Enter_Time"] || "";
+                    masterDataMap[pid]["Store_Leave_Time"] = o.checkoutTime || masterDataMap[pid]["Store_Leave_Time"] || "";
+                    masterDataMap[pid]["Visit_Duration_Seconds"] = o.durationSeconds || masterDataMap[pid]["Visit_Duration_Seconds"] || 0;
+                    masterDataMap[pid]["Order_Total_Amount"] = o.orderTotal || 0;
+                    masterDataMap[pid]["Featured_Items_Total_Qty"] = o.featuredProductCount || 0;
 
-                    // 統計總量與來源
+                    let totalItemCount = 0;
                     if (Array.isArray(o.finalCartItems)) {
                         o.finalCartItems.forEach(item => {
-                            if (item.id && item.id >= 1 && item.id <= 30) {
-                                masterDataMap[pid][`Item_${item.id}_Total_Qty`] += (item.quantity || 0);
-                                masterDataMap[pid][`Item_${item.id}_From_Featured_Qty`] += (item.featuredQty || 0);
-                                masterDataMap[pid][`Item_${item.id}_From_Category_Qty`] += (item.categoryQty || 0);
+                            const itemId = parseInt(item.id, 10);
+                            const qty = (item.quantity || 0);
+                            totalItemCount += qty;
+
+                            if (itemId >= 1 && itemId <= 36) {
+                                masterDataMap[pid][`Item_${itemId}_Total_Qty`] += qty;
+                                masterDataMap[pid][`Item_${itemId}_From_Featured_Qty`] += (item.featuredQty || 0);
+                                masterDataMap[pid][`Item_${itemId}_From_Category_Qty`] += (item.categoryQty || 0);
                             }
                         });
                     }
+                    masterDataMap[pid]["Total_Cart_Items_Qty"] = totalItemCount;
 
-                    // 若有 sourceBreakdown 字典則二次比對確認
+                    // 若訂單存有來源分解字典
                     if (o.sourceBreakdown) {
-                        for (let i = 1; i <= 30; i++) {
+                        for (let i = 1; i <= 36; i++) {
                             if (o.sourceBreakdown[`Item_${i}_From_Featured_Qty`] !== undefined) {
                                 masterDataMap[pid][`Item_${i}_From_Featured_Qty`] = o.sourceBreakdown[`Item_${i}_From_Featured_Qty`];
                             }
@@ -608,9 +705,9 @@
                         }
                     }
 
-                    // 填入加入次序
+                    // 加車順序對應
                     if (o.itemSequenceMap) {
-                        for (let i = 1; i <= 30; i++) {
+                        for (let i = 1; i <= 36; i++) {
                             if (o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
                                 masterDataMap[pid][`Seq_Item_${i}`] = o.itemSequenceMap[`Seq_Item_${i}`];
                             }
@@ -619,25 +716,31 @@
                 }
             });
 
-            // 填入 Post-survey 與 Demographics
+            // 填充 6: Post-Survey 與人口變項
             postSurveys.forEach(p => {
                 const pid = p.participantID;
                 if (masterDataMap[pid]) {
+                    // 填入 29 題量表作答
                     if (p.postSurveyLikert) {
-                        Object.keys(p.postSurveyLikert).forEach(k => {
-                            masterDataMap[pid][`Post_${k}`] = p.postSurveyLikert[k];
+                        POST_SURVEY_QUESTIONS.forEach(q => {
+                            if (p.postSurveyLikert[q.key] !== undefined) {
+                                masterDataMap[pid][q.header] = p.postSurveyLikert[q.key];
+                            }
                         });
                     }
+                    // 填入人口學特徵
                     if (p.demographics) {
                         masterDataMap[pid]["Demo_Gender"] = p.demographics.gender || "";
                         masterDataMap[pid]["Demo_Age"] = p.demographics.age || "";
-                        masterDataMap[pid]["Demo_Country"] = p.demographics.country || "";
+                        // 同時相容 postalCode 與舊版 country 欄位
+                        masterDataMap[pid]["Demo_PostalCode"] = p.demographics.postalCode || p.demographics.country || "";
                         masterDataMap[pid]["Demo_Income"] = p.demographics.income || "";
                         masterDataMap[pid]["Demo_Ethnicity"] = p.demographics.ethnicity || "";
                         masterDataMap[pid]["Demo_MaritalStatus"] = p.demographics.maritalStatus || "";
                         masterDataMap[pid]["Demo_Education"] = p.demographics.education || "";
                         masterDataMap[pid]["Demo_Occupation"] = p.demographics.occupation || "";
                     }
+                    // 填入質性開放題
                     if (p.openResponses) {
                         masterDataMap[pid]["Open_Survey_Purpose_Thoughts"] = p.openResponses.surveyPurposeThoughts || "";
                         masterDataMap[pid]["Open_Study_Feedback"] = p.openResponses.generalFeedback || "";
@@ -645,45 +748,24 @@
                 }
             });
 
+            // 建立單一工作表 Workbook
             const wb = XLSX.utils.book_new();
-
-            // 1. Master Sheet
             const masterRows = Object.values(masterDataMap);
             const wsMaster = XLSX.utils.json_to_sheet(masterRows);
-            XLSX.utils.book_append_sheet(wb, wsMaster, "Master Merged Summary");
 
-            // 2. Selection Sequence Sheet
-            const sequenceRows = [];
-            orders.forEach(o => {
-                const pid = o.participantID;
-                if (Array.isArray(o.selectionSequence)) {
-                    o.selectionSequence.forEach(seq => {
-                        sequenceRows.push({
-                            "Participant ID": pid,
-                            "Step": seq.step,
-                            "Product ID": seq.productId || "",
-                            "Product Name": seq.productName || "",
-                            "Quantity": seq.quantity || 1,
-                            "Added From Section": seq.sourceSection || "category",
-                            "Timestamp": seq.timestamp || ""
-                        });
-                    });
-                }
-            });
-            const wsSequence = XLSX.utils.json_to_sheet(sequenceRows);
-            XLSX.utils.book_append_sheet(wb, wsSequence, "Selection Sequence");
+            XLSX.utils.book_append_sheet(wb, wsMaster, "All_Research_Data");
 
             const dateStr = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, `FreshMart_Research_FullData_${dateStr}.xlsx`);
+            XLSX.writeFile(wb, `FreshMart_Master_Data_${dateStr}.xlsx`);
 
-            alert("Full research Excel exported successfully!");
+            alert("Master dataset exported successfully as a single sheet!");
         } catch (err) {
             console.error("Export error:", err);
             alert("Export failed, check console.");
         } finally {
             if (exportBtn) {
                 exportBtn.disabled = false;
-                exportBtn.innerText = "📊 Export All to Excel";
+                exportBtn.innerText = "📊 Export Master Dataset (Single Sheet)";
             }
         }
     }

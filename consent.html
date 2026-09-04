@@ -95,6 +95,24 @@
             display: block;
         }
 
+        /* 新增 Participant ID 輸入框樣式 */
+        .pid-input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pid-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
         .radio-options {
             display: flex;
             gap: 24px;
@@ -156,6 +174,11 @@
 
         .continue-btn:hover {
             background-color: var(--hover-color);
+        }
+
+        .continue-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
         }
 
         /* 彈窗遮罩 */
@@ -253,6 +276,25 @@
         }
     </style>
 </head>
+
+<!-- Firebase SDK 引入 -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+        authDomain: "online-study-2026.firebaseapp.com",
+        databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "online-study-2026",
+        storageBucket: "online-study-2026.firebasestorage.app",
+        messagingSenderId: "359632481591",
+        appId: "1:359632481591:web:31d160c7f772841b16feb2"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+</script>
+
 <body>
 
 <div class="consent-card">
@@ -299,11 +341,17 @@
         <p>You may decline to participate at any time without penalty.</p>
 
         <h3>Will I be paid for taking part in this research?</h3>
-        <p>For taking part in this research, you may be paid a total of US$xx for each survey for your time and effort. If the participant is withdrawn from the study, they will not receive compensation. If participants do not meet the recruitment criteria of the study, or decline to participate fully, or do not pass attention check questions, participants will be withdrawn from the study. Participants will be paid after investigators review their answered questionnaire, and the review process should take 7 days on average and will not take more than 21 days.</p>
+        <p>For participating in this research, you will receive payment through Prolific for your time and effort. Please refer to Prolific for the exact payment amount for each survey.</p>
     </div>
 
     <form id="consentForm" onsubmit="handleConsentSubmit(event)">
         <div class="decision-section">
+            <!-- 新增 Participant ID 題目 -->
+            <div class="question-block">
+                <label class="question-title" for="participantID">Prolific ID <span style="color: #dc2626;">*</span></label>
+                <input type="text" id="participantID" name="participantID" class="pid-input" required>
+            </div>
+
             <div class="question-block">
                 <span class="question-title">1. I have read and understand the information provided about the study. I agree to participate in this study. <span style="color: #dc2626;">*</span></span>
                 <div class="radio-options">
@@ -331,7 +379,7 @@
 
         <div class="btn-group">
             <a href="index.html" class="back-link">← Back to Information</a>
-            <button type="submit" class="continue-btn">I Agree & Start Survey</button>
+            <button type="submit" id="submitBtn" class="continue-btn">I Agree & Start Survey</button>
         </div>
     </form>
 </div>
@@ -348,12 +396,18 @@
 </div>
 
 <script>
-    function handleConsentSubmit(event) {
+    async function handleConsentSubmit(event) {
         event.preventDefault();
 
         const formData = new FormData(event.target);
+        const participantID = formData.get('participantID').trim();
         const agreeConsent = formData.get('agreeConsent');
         const isAdult = formData.get('isAdult');
+
+        if (!participantID) {
+            alert("Please enter your Prolific ID.");
+            return;
+        }
 
         if (agreeConsent === 'no' || isAdult === 'no') {
             document.getElementById('ineligibleModal').style.display = 'flex';
@@ -361,12 +415,40 @@
         }
 
         if (agreeConsent === 'yes' && isAdult === 'yes') {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Recording & Loading...';
+
+            // 1. 存入瀏覽器 localStorage 供後續頁面讀取
+            localStorage.setItem("participantID", participantID);
+
+            // 2. 寫入 Firebase 資料庫的 consent_records 節點
+            const record = {
+                participantID: participantID,
+                agreedAt: new Date().toLocaleString(),
+                agreedAtTimestamp: Date.now(),
+                isAdult: true,
+                consentGiven: true,
+                userAgent: navigator.userAgent
+            };
+
+            try {
+                await db.ref('consent_records').push(record);
+                console.log("Consent recorded successfully in Firebase.");
+            } catch (err) {
+                console.error("Firebase write failed, continuing to survey:", err);
+            }
+
+            // 3. 跳轉至問卷頁面
             window.location.href = 'survey.html';
         }
     }
 
+    const EXIT_REDIRECT_URL = "https://to-be-added.com";
+
     function closeIneligibleModal() {
         document.getElementById('ineligibleModal').style.display = 'none';
+        window.location.href = EXIT_REDIRECT_URL;
     }
 </script>
 </body>

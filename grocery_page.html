@@ -290,16 +290,18 @@
 
 <div id="welcomeModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 9999;">
     <div style="background: #ffffff; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-        <h2 style="color: #16a34a; margin-bottom: 12px; font-size: 20px;">Academic Research Study 2</h2>
-        <h3 style="color: #16a34a; margin-bottom: 12px; font-size: 20px;">Welcome to FreshMart</h3>
-        <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
-            Please simulate an online grocery shopping task to select ingredients required for <strong>preparing three days' worth of meals for yourself (one person)</strong>.
+        <h2 style="color: #16a34a; margin-bottom: 12px; font-size: 20px;">Welcome to Section 2</h2>
+        <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 16px; text-align: left;">
+            In this section, we would like you to take part in a simulated online grocery shopping task on FreshMart. Please select groceries for your personal consumption over three days.
+        </p>
+        <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 16px; text-align: left;">
+            Your budget is USD 50, and you may spend any amount up to this limit. There are no right or wrong choices. We are simply interested in observing your shopping decisions. Please hit ‘check out’ after you finish shopping.
         </p>
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; margin-bottom: 24px;">
             Shopping Budget Limit: $50.00 USD
         </div>
-        <button id="closeModalBtn" style="background: #16a34a; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px;">
-            I Understand & Continue
+        <button id="closeModalBtn" disabled style="background: #94a3b8; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: not-allowed; font-size: 15px; transition: all 0.3s ease;">
+            Please read carefully (5s)
         </button>
     </div>
 </div>
@@ -352,10 +354,10 @@
                     <span class="eco-badge">Eco-friendly</span>
                     <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
                     <div class="product-info">
-                        <h3>Tomato Cherry</h3>
+                        <h3>Cherry Tomato</h3>
                         <h3>10 Ounce</h3>
                         <p>$2.97</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Tomato Cherry')">More info</button>
+                        <button type="button" class="btn-more-info" onclick="openInfoModal('Cherry Tomato')">More info</button>
                         <button class="add-btn" data-id="1" data-source="featured">Add to Cart</button>
                     </div>
                 </div>
@@ -492,7 +494,7 @@
             <div class="product-card" data-id="1" data-type="vegetables">
                 <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
                 <div class="product-info">
-                    <h3>Tomato Cherry</h3>
+                    <h3>Cherry Tomato</h3>
                     <h3>10 Ounce</h3>
                     <p>$2.97</p>
                     <button class="add-btn" data-id="1" data-source="category">Add to Cart</button>
@@ -881,11 +883,11 @@
 <script src="script.js"></script>
 <script>
     const featuredInfoDescriptions = {
-        "Tomato Cherry": "Fair Trade & EFI Certified ensuring fair wages and safe working conditions. Vine-Ripened & Hand-Picked.",
-        "Chicken Drumsticks": "No anti-biotics, no added hormones. Chickens are raised free to explore outdoors. Packaging made of 100% recyclable plastic.",
-        "Large Brown Eggs": "Ethical food giving the girls year-round outdoor access, supporting farmers and enabling you to trace your eggs back to the farm.",
-        "Strawberries": "Sustainability features recognized by trusted certificates. Contains at least 95% organic material.",
-        "Greek Yogurt": "Slowly crafted with organic ingredients. Made with USDA organic whole milk."
+        "Cherry Tomato": "You may consider these vine-ripened, hand-picked cherry tomatoes. Their Fair Trade and EFI certifications support fair wages and safe working conditions.",
+        "Chicken Drumsticks": "You may consider these chicken drumsticks from chickens raised with outdoor access and without antibiotics or added hormones. The packaging is also made from 100% recyclable plastic.",
+        "Large Brown Eggs": "You may consider these responsibly produced eggs. The hens have year-round outdoor access, and the product supports farmers while allowing you to trace the eggs back to the farm.",
+        "Strawberries": "You may consider these certified sustainable strawberries, made with at least 95% organic ingredients.",
+        "Greek Yogurt": "You may consider this slowly crafted Greek yogurt, made with organic ingredients and USDA-certified organic whole milk."
     };
 
     function openInfoModal(productName) {
@@ -908,6 +910,33 @@
 
     document.addEventListener('DOMContentLoaded', function(){
         const MAX_BUDGET = 50.00;
+
+        // ★ 歡迎彈窗 5 秒強制倒數邏輯 ★
+        const welcomeModal = document.getElementById('welcomeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        if (welcomeModal && closeModalBtn) {
+            let countdown = 5;
+
+            const timer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    closeModalBtn.textContent = `Please read carefully (${countdown}s)`;
+                } else {
+                    clearInterval(timer);
+                    closeModalBtn.disabled = false;
+                    closeModalBtn.textContent = 'I Understand & Continue';
+                    closeModalBtn.style.backgroundColor = '#16a34a';
+                    closeModalBtn.style.cursor = 'pointer';
+                }
+            }, 1000);
+
+            closeModalBtn.addEventListener('click', function() {
+                if (!closeModalBtn.disabled) {
+                    welcomeModal.style.display = 'none';
+                }
+            });
+        }
 
         function updateRemainingBudgetDisplay() {
             let currentTotal = 0;
