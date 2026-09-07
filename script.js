@@ -17,16 +17,20 @@ function getPID() {
     return pid.trim();
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-    const modal = document.getElementById('welcomeModal');
-    const closeBtn = document.getElementById('closeModalBtn');
-    currentPID = getPID();
+// document.addEventListener('DOMContentLoaded', function(){
+//     const modal = document.getElementById('welcomeModal');
+//     const closeBtn = document.getElementById('closeModalBtn');
+//     currentPID = getPID();
+//
+//     if (closeBtn && modal) {
+//         closeBtn.addEventListener('click', function() {
+//             modal.style.display = 'none';
+//         });
+//     }
+// });
 
-    if (closeBtn && modal) {
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-    }
+document.addEventListener('DOMContentLoaded', function(){
+    currentPID = getPID();
 });
 
 /**

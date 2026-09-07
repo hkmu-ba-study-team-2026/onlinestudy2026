@@ -339,6 +339,28 @@
     </div>
 </div>
 
+<!-- 第二個彈窗：特顯 Nudge Text -->
+<div id="nudgeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: #ffffff; padding: 32px 28px; border-radius: 14px; max-width: 520px; width: 90%; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.25); border: 2px solid #22c55e;">
+        <span style="display: inline-block; background: #dcfce7; color: #15803d; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+            🌱 Recommendation
+        </span>
+        <h2 style="color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;">A Special Note for Your Shopping</h2>
+
+        <!-- Nudge 文字高亮展示區塊 -->
+        <div style="background: #f0fdf4; border: 2px solid #86efac; border-left: 6px solid #16a34a; border-radius: 10px; padding: 18px 20px; margin-bottom: 24px; text-align: left;">
+            <p id="popupNudgeText" style="color: #064e3b; font-size: 16px; font-weight: 700; line-height: 1.55; margin: 0;">
+                Loading ...
+            </p>
+        </div>
+
+        <!-- 5 秒倒數按鈕 -->
+        <button id="closeNudgeModalBtn" disabled style="background: #94a3b8; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; cursor: not-allowed; font-size: 15px; width: 100%; transition: all 0.3s ease;">
+            Please read carefully (5s)
+        </button>
+    </div>
+</div>
+
 <header class="top-nav">
     <div class="container top-wrap">
         <div class="brand-logo">
@@ -944,20 +966,35 @@
     document.addEventListener('DOMContentLoaded', function(){
         const MAX_BUDGET = 50.00;
 
-        // ★ 歡迎彈窗 5 秒強制倒數邏輯 ★
+        // 1. 取得 DOM 元素
         const welcomeModal = document.getElementById('welcomeModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
-        const subMenu = document.querySelector('.sub-menu');
+        const nudgeModal = document.getElementById('nudgeModal');
+        const closeNudgeModalBtn = document.getElementById('closeNudgeModalBtn');
+        const popupNudgeText = document.getElementById('popupNudgeText');
+        const bannerTextContainer = document.getElementById('bannerTextContainer');
 
+        // 2. 注入 Nudge 文案
+        const textSentence = localStorage.getItem('nudge_text') || 'These items are eco-friendly, freshly sourced, and sustainable for your daily meals.';
+        if (popupNudgeText) {
+            popupNudgeText.textContent = textSentence;
+        }
+        if (bannerTextContainer) {
+            bannerTextContainer.innerHTML = `<h2 class="nudge-text-highlight">${textSentence}</h2>`;
+        }
+
+        // 3. ★ 啟動第一個彈窗 5 秒強制倒數 ★
         if (welcomeModal && closeModalBtn) {
-            let countdown = 5;
+            let countdown1 = 5;
+            closeModalBtn.disabled = true;
+            closeModalBtn.textContent = `Please read carefully (${countdown1}s)`;
 
-            const timer = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    closeModalBtn.textContent = `Please read carefully (${countdown}s)`;
+            const timer1 = setInterval(() => {
+                countdown1--;
+                if (countdown1 > 0) {
+                    closeModalBtn.textContent = `Please read carefully (${countdown1}s)`;
                 } else {
-                    clearInterval(timer);
+                    clearInterval(timer1);
                     closeModalBtn.disabled = false;
                     closeModalBtn.textContent = 'I Understand & Continue';
                     closeModalBtn.style.backgroundColor = '#16a34a';
@@ -965,63 +1002,47 @@
                 }
             }, 1000);
 
-            closeModalBtn.addEventListener('click', function() {
+            // 覆蓋 script.js 的預設行為，強制等倒數完點擊才切換到第二個彈窗
+            closeModalBtn.onclick = function(e) {
+                e.stopPropagation();
                 if (!closeModalBtn.disabled) {
                     welcomeModal.style.display = 'none';
-
-                    // 1. 確保畫面停在最頂部 Featured 區域
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-
-                    // 2. 啟動 Featured 5 秒鎖定
-                    startFeaturedLock();
-                }
-            });
-        }
-
-        function startFeaturedLock() {
-            let lockSeconds = 5;
-
-            // 鎖定頁面滾動與選單
-            document.body.classList.add('scroll-locked');
-            if (subMenu) subMenu.classList.add('locked');
-
-            // 阻止鍵盤空白鍵與上下鍵滾動
-            const preventScrollKeys = function(e) {
-                if ([32, 33, 34, 35, 38, 40].includes(e.keyCode)) {
-                    e.preventDefault();
+                    showNudgeModal();
                 }
             };
-            window.addEventListener('keydown', preventScrollKeys, false);
-
-            // 建立浮動提示橫條
-            const toast = document.createElement('div');
-            toast.className = 'featured-lock-toast';
-            toast.id = 'featuredLockToast';
-            toast.innerHTML = `⏱️ Please review the featured items before scrolling (${lockSeconds}s)...`;
-            document.body.appendChild(toast);
-
-            const lockTimer = setInterval(() => {
-                lockSeconds--;
-                if (lockSeconds > 0) {
-                    toast.innerHTML = `⏱️ Please review the featured items before scrolling (${lockSeconds}s)...`;
-                } else {
-                    clearInterval(lockTimer);
-
-                    // 解除滾動與導航限制
-                    document.body.classList.remove('scroll-locked');
-                    if (subMenu) subMenu.classList.remove('locked');
-                    window.removeEventListener('keydown', preventScrollKeys, false);
-
-                    // 提示已解鎖並淡出
-                    toast.innerHTML = `✅ You can now scroll down to browse all categories!`;
-                    toast.style.backgroundColor = '#16a34a';
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 1800);
-                }
-            }, 1000);
         }
 
+        // 4. ★ 第二個彈窗（Nudge）5 秒強制倒數 ★
+        function showNudgeModal() {
+            if (!nudgeModal || !closeNudgeModalBtn) return;
+            nudgeModal.style.display = 'flex';
+
+            let countdown2 = 5;
+            closeNudgeModalBtn.disabled = true;
+            closeNudgeModalBtn.textContent = `Please read carefully (${countdown2}s)`;
+
+            const timer2 = setInterval(() => {
+                countdown2--;
+                if (countdown2 > 0) {
+                    closeNudgeModalBtn.textContent = `Please read carefully (${countdown2}s)`;
+                } else {
+                    clearInterval(timer2);
+                    closeNudgeModalBtn.disabled = false;
+                    closeNudgeModalBtn.textContent = 'Start Shopping Now →';
+                    closeNudgeModalBtn.style.backgroundColor = '#16a34a';
+                    closeNudgeModalBtn.style.cursor = 'pointer';
+                }
+            }, 1000);
+
+            closeNudgeModalBtn.onclick = function(e) {
+                e.stopPropagation();
+                if (!closeNudgeModalBtn.disabled) {
+                    nudgeModal.style.display = 'none';
+                }
+            };
+        }
+
+        // 5. 購物車預算更新功能
         function updateRemainingBudgetDisplay() {
             let currentTotal = 0;
             if (typeof cart !== 'undefined' && Array.isArray(cart)) {
@@ -1057,14 +1078,7 @@
 
         updateRemainingBudgetDisplay();
 
-        const textSentence = localStorage.getItem('nudge_text');
-        const bannerTextContainer = document.getElementById('bannerTextContainer');
-        if (bannerTextContainer) {
-            bannerTextContainer.innerHTML = `
-            <h2 class="nudge-text-highlight">${textSentence}</h2>
-        `;
-        }
-
+        // 6. 搜尋欄位邏輯
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const allCards = document.querySelectorAll('.product-card');
