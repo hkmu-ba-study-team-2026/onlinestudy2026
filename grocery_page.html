@@ -98,6 +98,39 @@
             margin-bottom: 20px;
         }
 
+        /* 鎖定滾動時套用的樣式 */
+        body.scroll-locked {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+
+        /* 5 秒閱讀 Featured 浮動提示條 */
+        .featured-lock-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* 鎖定時導覽列不可點擊 */
+        .sub-menu.locked a {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .rec-banner {
             background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
             border: 2px solid #22c55e;
@@ -914,6 +947,7 @@
         // ★ 歡迎彈窗 5 秒強制倒數邏輯 ★
         const welcomeModal = document.getElementById('welcomeModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
+        const subMenu = document.querySelector('.sub-menu');
 
         if (welcomeModal && closeModalBtn) {
             let countdown = 5;
@@ -934,8 +968,58 @@
             closeModalBtn.addEventListener('click', function() {
                 if (!closeModalBtn.disabled) {
                     welcomeModal.style.display = 'none';
+
+                    // 1. 確保畫面停在最頂部 Featured 區域
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+
+                    // 2. 啟動 Featured 5 秒鎖定
+                    startFeaturedLock();
                 }
             });
+        }
+
+        function startFeaturedLock() {
+            let lockSeconds = 5;
+
+            // 鎖定頁面滾動與選單
+            document.body.classList.add('scroll-locked');
+            if (subMenu) subMenu.classList.add('locked');
+
+            // 阻止鍵盤空白鍵與上下鍵滾動
+            const preventScrollKeys = function(e) {
+                if ([32, 33, 34, 35, 38, 40].includes(e.keyCode)) {
+                    e.preventDefault();
+                }
+            };
+            window.addEventListener('keydown', preventScrollKeys, false);
+
+            // 建立浮動提示橫條
+            const toast = document.createElement('div');
+            toast.className = 'featured-lock-toast';
+            toast.id = 'featuredLockToast';
+            toast.innerHTML = `⏱️ Please review the featured items before scrolling (${lockSeconds}s)...`;
+            document.body.appendChild(toast);
+
+            const lockTimer = setInterval(() => {
+                lockSeconds--;
+                if (lockSeconds > 0) {
+                    toast.innerHTML = `⏱️ Please review the featured items before scrolling (${lockSeconds}s)...`;
+                } else {
+                    clearInterval(lockTimer);
+
+                    // 解除滾動與導航限制
+                    document.body.classList.remove('scroll-locked');
+                    if (subMenu) subMenu.classList.remove('locked');
+                    window.removeEventListener('keydown', preventScrollKeys, false);
+
+                    // 提示已解鎖並淡出
+                    toast.innerHTML = `✅ You can now scroll down to browse all categories!`;
+                    toast.style.backgroundColor = '#16a34a';
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 1800);
+                }
+            }, 1000);
         }
 
         function updateRemainingBudgetDisplay() {

@@ -21,7 +21,8 @@ Rules:
 2. The sentence MUST strictly start with the words "You may consider these...".
 3. Do NOT mention words like "survey", "based on your preference", "algin with you" or "scale".
 4. Do NOT use workings implying taking user preferences or referring to user preferences.
-5. Output plain text only. No markdown, no quotes, no explanation.
+5. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
+6. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
