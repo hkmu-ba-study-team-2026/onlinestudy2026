@@ -15,7 +15,7 @@ User Preferences from survey (1-7 scale): ${JSON.stringify(preferences)}
 Featured Products (with descriptions): ${JSON.stringify(simplifiedProducts)}
 
 Task:
-Write a single concise sentence (under 25 words) recommending these featured products.
+Write a single concise sentence (under 50 words) recommending these featured products.
 Rules:
 1. Promote their eco-sustainability and fresh quality based on user preferences.
 2. The sentence MUST strictly start with the words "You may consider these...".
@@ -73,10 +73,6 @@ Rules:
     // 清理 markdown 語法與多餘引號
     content = content.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "").trim();
     content = content.replace(/^["']|["']$/g, '');
-
-    if (!content.startsWith("These items")) {
-        content = "These items " + content;
-    }
 
     return content;
 }
