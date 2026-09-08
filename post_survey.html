@@ -288,6 +288,66 @@
         .submit-btn:hover {
             background-color: #15803d;
         }
+
+        /* 中央彈出視窗樣式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            padding: 32px 28px;
+            border-radius: 14px;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            animation: modalPop 0.25s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .modal-message {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-btn:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -576,8 +636,37 @@
     </form>
 </div>
 
+<!-- 1. 成功提交中央彈窗 -->
+<div id="completionModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3 class="modal-title" style="color: #16a34a;">Thank You!</h3>
+        <p class="modal-message">
+            Thank you for taking part in this study on sustainable consumption!<br><br>
+            If you have any questions or comments, please contact <strong>ainudgingppr@gmail.com</strong>.<br><br>
+            Click the button below to return to Prolific and complete your submission.
+        </p>
+        <button type="button" class="modal-btn" style="background-color: #16a34a; color: white;" onclick="redirectToCompletion()">
+            Complete Submission →
+        </button>
+    </div>
+</div>
+
+<!-- 2. Attention Check 失敗中央彈窗 -->
+<div id="failedAttentionModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3 class="modal-title" style="color: #dc2626;">Submission Notice</h3>
+        <p class="modal-message">
+            You did not follow the instructions provided for some of the attention-check questions.<br><br>
+            According to the study guidelines, your submission cannot be accepted. Click below to exit the study.
+        </p>
+        <button type="button" class="modal-btn" style="background-color: #dc2626; color: white;" onclick="redirectToFailed()">
+            Exit Study
+        </button>
+    </div>
+</div>
+
 <script>
-    // 轉址設定：請填入 Prolific 正常完成與失敗排除的 URL
+    // 轉址設定：Prolific 正常完成與失敗排除的 URL
     const COMPLETION_REDIRECT_URL = "https://app.prolific.com/submissions/complete?cc=C161P7HE";
     const ATTENTION_FAILED_REDIRECT_URL = "https://app.prolific.com/submissions/complete?cc=CIZANNCR";
 
@@ -716,13 +805,11 @@
         const formData = new FormData(event.target);
 
         // ★ Attention Check 判定
-        // 題目 1 要求選 Strongly Disagree (1)
-        // 題目 2 要求選 6
         const ansSun = parseInt(formData.get("attn_check_sun"), 10);
         const ansNumber = parseInt(formData.get("attn_check_number"), 10);
         const passedAttentionCheck = (ansSun === 1 && ansNumber === 6);
 
-        // 收集量表回應（不包含 attention check 答案）
+        // 收集量表回應
         const postSurveyResponses = {};
         scaleQuestionIds.forEach(qId => {
             postSurveyResponses[qId] = parseInt(formData.get(qId), 10);
@@ -745,7 +832,7 @@
             generalFeedback: (formData.get("open_study_feedback") || "").trim()
         };
 
-        // Firebase 記錄物件：在最上層標記 passedAttentionCheck 狀態
+        // Firebase 記錄物件
         const finalRecord = {
             participantID: pid,
             submittedAt: new Date().toLocaleString(),
@@ -764,14 +851,21 @@
             console.error("Error saving post survey data:", err);
         }
 
-        // 根據注意力量表檢核結果分流處理
+        // 根據注意力量表檢核結果彈出中央 Modal
         if (!passedAttentionCheck) {
-            alert("Notice: You did not follow the instructions provided for some of the attention-check questions. According to the study guidelines, your submission cannot be accepted.");
-            window.location.href = ATTENTION_FAILED_REDIRECT_URL;
+            document.getElementById('failedAttentionModal').style.display = 'flex';
         } else {
-            alert("Thank you for taking part in this study on sustainable consumption! If you have any questions or comments, please contact ainudgingppr@gmail.com. Thank you!");
-            window.location.href = COMPLETION_REDIRECT_URL;
+            document.getElementById('completionModal').style.display = 'flex';
         }
+    }
+
+    // Modal 按鈕跳轉函式
+    function redirectToCompletion() {
+        window.location.href = COMPLETION_REDIRECT_URL;
+    }
+
+    function redirectToFailed() {
+        window.location.href = ATTENTION_FAILED_REDIRECT_URL;
     }
 </script>
 
