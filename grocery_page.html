@@ -967,6 +967,20 @@
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="script.js"></script>
 <script>
+    (function preventBackNavigation() {
+        // 先推入一筆當前頁面的歷史狀態
+        window.history.pushState(null, "", window.location.href);
+
+        // 監聽上一頁 (popstate) 事件
+        window.addEventListener("popstate", function () {
+            // 當使用者按上一頁時，立刻再補推一層，強迫留在當前頁面
+            window.history.pushState(null, "", window.location.href);
+
+            // 可選：彈出警告通知受試者不可回退
+            alert("Notice: Returning to the previous page is not allowed during this study.");
+        });
+    })();
+
     const featuredInfoDescriptions = {
         "Cherry Tomato": "You may consider these vine-ripened, hand-picked cherry tomatoes. Their Fair Trade and EFI certifications support fair wages and safe working conditions.",
         "Chicken Drumsticks": "You may consider these chicken drumsticks from chickens raised with outdoor access and without antibiotics or added hormones. The packaging is also made from 100% recyclable plastic.",

@@ -396,6 +396,20 @@
 </div>
 
 <script>
+    (function preventBackNavigation() {
+        // 先推入一筆當前頁面的歷史狀態
+        window.history.pushState(null, "", window.location.href);
+
+        // 監聽上一頁 (popstate) 事件
+        window.addEventListener("popstate", function () {
+            // 當使用者按上一頁時，立刻再補推一層，強迫留在當前頁面
+            window.history.pushState(null, "", window.location.href);
+
+            // 可選：彈出警告通知受試者不可回退
+            alert("Notice: Returning to the previous page is not allowed during this study.");
+        });
+    })();
+
     async function handleConsentSubmit(event) {
         event.preventDefault();
 
