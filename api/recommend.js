@@ -17,12 +17,13 @@ Featured Products (with descriptions): ${JSON.stringify(simplifiedProducts)}
 Task:
 Write a single concise sentence (under 70 words) recommending these featured products.
 Rules:
-1. Promote their eco-sustainability and fresh quality based on user preferences.
-2. The sentence MUST strictly start with the words "You may consider these...".
-3. Do NOT mention words like "survey", "based on your preference", "algin with you" or "scale".
-4. Do NOT use wordings implying taking user preferences or referring to user preferences.
-5. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
-6. Output plain text only. No markdown, no quotes, no explanation.
+1. Promote their eco-sustainability based on user preferences.
+2. Promote the product features fitting the two most important factors in user preferences.
+3. The sentence MUST strictly start with the words "You may consider these...".
+4. Do NOT mention words like "survey", "based on your preference", "algin with you" or "scale".
+5. Do NOT use wordings implying taking user preferences or referring to user preferences.
+6. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
+7. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
