@@ -85,27 +85,15 @@
             color: var(--text-secondary);
         }
 
-        .scale-info {
+        .instruction-box {
             background-color: #f8fafc;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 6px;
             padding: 12px 16px;
-            margin-top: 12px;
-            font-size: 0.85rem;
-        }
-
-        .scale-info h3 {
-            font-size: 0.9rem;
-            margin-bottom: 6px;
+            margin-top: 10px;
+            font-size: 0.88rem;
             color: var(--text-primary);
-        }
-
-        .scale-info ul {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 4px 10px;
-            list-style: none;
-            color: var(--text-secondary);
         }
 
         .dev-autofill-btn {
@@ -141,66 +129,73 @@
             background-color: #cbd5e1;
             border-radius: 4px;
         }
-        #surveyForm::-webkit-scrollbar-track {
-            background-color: #f1f5f9;
-        }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label.question-title {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        .question-title .required {
-            color: #e53e3e;
-            margin-left: 4px;
-        }
-
-        .scale-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-
-        .scale-card input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .scale-card label {
+        /* 排序題項目卡片 */
+        .rank-item-card {
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 40px;
-            background-color: #fafafa;
+            justify-content: space-between;
+            background: #ffffff;
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            padding: 14px 18px;
+            margin-bottom: 12px;
             transition: all 0.2s ease;
         }
 
-        .scale-card label:hover {
+        .rank-item-card:hover {
             border-color: #cbd5e1;
-            background-color: #f8fafc;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
-        .scale-card input[type="radio"]:checked + label {
-            border-color: var(--accent-color);
-            background-color: #eff6ff;
+        .rank-item-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            padding-right: 15px;
+        }
+
+        .rank-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rank-select-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .rank-select {
+            padding: 8px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.92rem;
+            font-weight: 700;
             color: var(--accent-color);
-            box-shadow: 0 0 0 1px var(--accent-color);
+            background-color: #f8fafc;
+            cursor: pointer;
+            outline: none;
+            min-width: 140px;
+        }
+
+        .rank-select:focus {
+            border-color: var(--accent-color);
+            background-color: #ffffff;
+        }
+
+        .error-message {
+            display: none;
+            color: #e53e3e;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #fff5f5;
+            border-radius: 6px;
+            border: 1px solid #fed7d7;
         }
 
         .submit-btn {
@@ -215,7 +210,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            margin: 30px 0 10px 0;
+            margin: 25px 0 10px 0;
         }
 
         .submit-btn:hover {
@@ -230,18 +225,17 @@
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 16px; height: calc(100vh - 20px); }
-            .scale-grid { gap: 4px; }
-            .scale-card label { padding: 6px 2px; font-size: 0.75rem; }
-            .scale-info ul { grid-template-columns: repeat(2, 1fr); }
-            .scale-hint {
-                font-size: 0.68rem;
-                font-weight: 500;
-                color: var(--text-secondary);
-                margin-top: 5px;
-                text-align: center;
-                line-height: 1.2;
+            .rank-item-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .rank-select-wrapper {
                 width: 100%;
-                display: block;
+                justify-content: space-between;
+            }
+            .rank-select {
+                flex: 1;
             }
         }
     </style>
@@ -269,25 +263,16 @@
 <div class="container">
     <div class="fixed-top-section">
         <header>
-            <div class="academic-badge">Academic Research Survey - Section 1A</div>
-            <h1>Welcome to Section 1</h1>
-            <p class="intro">We would like to understand your preferences when shopping for groceries online. Please read each product feature below and indicate how important it is to you. All data collected will be kept completely anonymous and strictly used for academic research purposes.</p>
+            <div class="academic-badge">Grocery Shopping Study - Section 1A</div>
+            <h1>Product Feature Preferences</h1>
+            <p class="intro">Please evaluate what matters most to you when purchasing grocery items.</p>
         </header>
 
-        <div class="scale-info">
-            <h3>Please complete the survey with reference to the Response Scale Reference:</h3>
-            <ul>
-                <li><strong>1</strong> = Not at all important</li>
-                <li><strong>2</strong> = Not important</li>
-                <li><strong>3</strong> = Slightly unimportant</li>
-                <li><strong>4</strong> = Neutral</li>
-                <li><strong>5</strong> = Slightly important</li>
-                <li><strong>6</strong> = Important</li>
-                <li><strong>7</strong> = Extremely important</li>
-            </ul>
+        <div class="instruction-box">
+            <strong>Instruction:</strong> Please rank the following product features according to their importance to you, from <strong>Rank 1 (Most important)</strong> to <strong>Rank 6 (Least important)</strong>. Each rank must be unique.
         </div>
 
-        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
+        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random Unique) [To be removed in deployment]</button>
     </div>
 
     <form id="surveyForm" onsubmit="handleSubmit(event)">
@@ -296,18 +281,77 @@
             <strong id="displayPid" style="font-size: 1rem; color: #1e293b; margin-left: 6px;"></strong>
         </div>
 
-        <!-- 保留的 11 道題目 -->
-        <div class="form-group"><label class="question-title">1. The product provides an enjoyable sensory experience. <span class="required">*</span></label><div class="scale-grid" id="q01_sensory_experience"></div></div>
-        <div class="form-group"><label class="question-title">2. The product is of high quality. <span class="required">*</span></label><div class="scale-grid" id="q04_high_quality"></div></div>
-        <div class="form-group"><label class="question-title">3. The product is healthy. <span class="required">*</span></label><div class="scale-grid" id="q05_healthy"></div></div>
-        <div class="form-group"><label class="question-title">4. The product is safe to consume. <span class="required">*</span></label><div class="scale-grid" id="q06_safe_to_consume"></div></div>
-        <div class="form-group"><label class="question-title">5. The benefits I receive from the product justify its price. <span class="required">*</span></label><div class="scale-grid" id="q08_price_justified"></div></div>
-        <div class="form-group"><label class="question-title">6. The serving size is appropriate for me. <span class="required">*</span></label><div class="scale-grid" id="q09_serving_size"></div></div>
-        <div class="form-group"><label class="question-title">7. The product is convenient to use or consume. <span class="required">*</span></label><div class="scale-grid" id="q10_convenient"></div></div>
-        <div class="form-group"><label class="question-title">8. The product can be used in different meals or recipes. <span class="required">*</span></label><div class="scale-grid" id="q11_versatile_use"></div></div>
-        <div class="form-group"><label class="question-title">9. The product is produced without exploitation. <span class="required">*</span></label><div class="scale-grid" id="q15_no_exploitation"></div></div>
-        <div class="form-group"><label class="question-title">10. The product is produced in an environmentally friendly way. <span class="required">*</span></label><div class="scale-grid" id="q16_eco_friendly"></div></div>
-        <div class="form-group"><label class="question-title">11. The product is a local/regional product. <span class="required">*</span></label><div class="scale-grid" id="q17_local_product"></div></div>
+        <div id="rankingListContainer">
+            <!-- 1. Sensory Experience -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">1. The product provides an enjoyable sensory experience.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q01_sensory_experience" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 2. Healthy -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">2. The product is healthy.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q05_healthy" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 3. Safe to consume -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">3. The product is safe to consume.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q06_safe_to_consume" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 4. Justify price -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">4. The benefits I receive from the product justify its price.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q08_price_justified" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 5. Versatile use -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">5. The product can be used in different meals or recipes.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q11_versatile_use" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 6. No exploitation -->
+            <div class="rank-item-card">
+                <span class="rank-item-text">6. The product is produced without exploitation.</span>
+                <div class="rank-select-wrapper">
+                    <span class="rank-select-label">Rank:</span>
+                    <select class="rank-select" name="q15_no_exploitation" required>
+                        <option value="" disabled selected>Select rank...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="duplicateRankError" class="error-message">
+            ⚠️ Each rank must be unique! Please make sure you have not assigned the same rank to multiple features.
+        </div>
 
         <button type="submit" id="submitBtn" class="submit-btn">Next →</button>
     </form>
@@ -325,49 +369,43 @@
         if (displayPidEl) displayPidEl.textContent = participantNum;
     }
 
-    // 精確對應現有的 11 題 ID 清單
+    // 6 個目標題目的 Key
     const questionIds = [
         "q01_sensory_experience",
-        "q04_high_quality",
         "q05_healthy",
         "q06_safe_to_consume",
         "q08_price_justified",
-        "q09_serving_size",
-        "q10_convenient",
         "q11_versatile_use",
-        "q15_no_exploitation",
-        "q16_eco_friendly",
-        "q17_local_product"
+        "q15_no_exploitation"
     ];
 
-    questionIds.forEach(qId => {
-        const container = document.getElementById(qId);
-        if (!container) return;
+    const TOTAL_RANKS = questionIds.length; // 6
 
-        for (let i = 1; i <= 7; i++) {
-            const card = document.createElement("div");
-            card.className = "scale-card";
-
-            let hintText = "";
-            if (i === 1) hintText = '<span class="scale-hint">Not at all important</span>';
-            if (i === 4) hintText = '<span class="scale-hint">Neutral</span>';
-            if (i === 7) hintText = '<span class="scale-hint">Extremely important</span>';
-
-            card.innerHTML = `
-                <input type="radio" id="${qId}_${i}" name="${qId}" value="${i}" required>
-                <label for="${qId}_${i}">${i}</label>
-                ${hintText}
-            `;
-            container.appendChild(card);
+    // 動態填入 Rank 1 ~ Rank 6 選項
+    const selects = document.querySelectorAll('.rank-select');
+    selects.forEach(select => {
+        for (let r = 1; r <= TOTAL_RANKS; r++) {
+            const opt = document.createElement('option');
+            opt.value = r;
+            if (r === 1) opt.textContent = `${r} (Most important)`;
+            else if (r === TOTAL_RANKS) opt.textContent = `${r} (Least important)`;
+            else opt.textContent = `${r}`;
+            select.appendChild(opt);
         }
+
+        // 變更時隱藏錯誤提示
+        select.addEventListener('change', () => {
+            document.getElementById('duplicateRankError').style.display = 'none';
+        });
     });
 
+    // 快速測試填入隨機不重複排名
     function autoFillRandom() {
-        questionIds.forEach(qId => {
-            const randomVal = Math.floor(Math.random() * 7) + 1;
-            const radio = document.getElementById(`${qId}_${randomVal}`);
-            if (radio) radio.checked = true;
+        const ranks = [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
+        selects.forEach((sel, idx) => {
+            sel.value = ranks[idx];
         });
+        document.getElementById('duplicateRankError').style.display = 'none';
     }
 
     const productsList = [
@@ -380,19 +418,32 @@
 
     async function handleSubmit(event) {
         event.preventDefault();
-        console.log("🚀 [1/4] Submitting Section 1A...");
+
+        const formData = new FormData(event.target);
+        const survey1Responses = {};
+        const selectedRanks = [];
+
+        questionIds.forEach(qId => {
+            const val = parseInt(formData.get(qId), 10);
+            survey1Responses[qId] = val;
+            selectedRanks.push(val);
+        });
+
+        // 驗證是否每題都有唯一排名
+        const uniqueRanks = new Set(selectedRanks);
+        if (uniqueRanks.size !== TOTAL_RANKS) {
+            const errEl = document.getElementById('duplicateRankError');
+            errEl.style.display = 'block';
+            errEl.scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        console.log("🚀 Submitting Section 1A Rankings:", survey1Responses);
 
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Saving & Loading Section 1B...';
 
-        const formData = new FormData(event.target);
-        const survey1Responses = {};
-        questionIds.forEach(qId => {
-            survey1Responses[qId] = parseInt(formData.get(qId), 10);
-        });
-
-        // 存入 localStorage 供後續或備份
         localStorage.setItem('survey1_responses', JSON.stringify(survey1Responses));
 
         const userPreferences = { surveyResponses: survey1Responses };
@@ -400,7 +451,7 @@
 
         let nudgeText = "";
         try {
-            console.log("📤 [2/4] Requesting AI Nudge...");
+            console.log("📤 Requesting AI Nudge...");
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -425,10 +476,11 @@
             localStorage.setItem('nudge_text', nudgeText);
         }
 
-        // 寫入 Firebase 的 survey_section1 節點
+        // 寫入 Firebase
         const firebaseData = {
             participantID: participantNum,
             section: 1,
+            type: "ranking",
             submittedAt: new Date().toLocaleString(),
             submittedAtTimestamp: Date.now(),
             nudgeContent: nudgeText,
@@ -437,13 +489,11 @@
 
         try {
             await db.ref('survey_section1').push(firebaseData);
-            console.log("✅ [3/4] Saved Section 1 to Firebase!");
+            console.log("✅ Saved Section 1 to Firebase!");
         } catch (dbError) {
             console.error('❌ Firebase Section 1 save error:', dbError);
         }
 
-        // 導向 Section 2
-        console.log("🏁 Redirecting to survey2.html...");
         window.location.href = 'survey2.html';
     }
 </script>

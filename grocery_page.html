@@ -340,18 +340,43 @@
 </div>
 
 <!-- 第二個彈窗：特顯 Nudge Text -->
+<!-- 第二個彈窗：特顯 Nudge Text 與 5 大精選商品圖片 -->
 <div id="nudgeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); align-items: center; justify-content: center; z-index: 9999;">
-    <div style="background: #ffffff; padding: 32px 28px; border-radius: 14px; max-width: 520px; width: 90%; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.25); border: 2px solid #22c55e;">
-        <span style="display: inline-block; background: #dcfce7; color: #15803d; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+    <div style="background: #ffffff; padding: 28px 24px; border-radius: 14px; max-width: 580px; width: 92%; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.25); border: 2px solid #22c55e;">
+        <span style="display: inline-block; background: #dcfce7; color: #15803d; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
             🌱 Recommendation
         </span>
-        <h2 style="color: #0f172a; margin-bottom: 16px; font-size: 20px; font-weight: 800;">A Special Note for Your Shopping</h2>
+        <h2 style="color: #0f172a; margin-bottom: 12px; font-size: 19px; font-weight: 800;">A Special Note for Your Shopping</h2>
 
         <!-- Nudge 文字高亮展示區塊 -->
-        <div style="background: #f0fdf4; border: 2px solid #86efac; border-left: 6px solid #16a34a; border-radius: 10px; padding: 18px 20px; margin-bottom: 24px; text-align: left;">
-            <p id="popupNudgeText" style="color: #064e3b; font-size: 16px; font-weight: 700; line-height: 1.55; margin: 0;">
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-left: 5px solid #16a34a; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; text-align: left;">
+            <p id="popupNudgeText" style="color: #064e3b; font-size: 14px; font-weight: 700; line-height: 1.5; margin: 0;">
                 Loading ...
             </p>
+        </div>
+
+        <!-- ★ 5 張精選商品圖片展示列 ★ -->
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px;">
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
+                <img src="assets/tomato.jpg" alt="Cherry Tomato" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Cherry Tomato</span>
+            </div>
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
+                <img src="assets/chicken-drum.jpg" alt="Chicken Drumsticks" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Chicken Drum</span>
+            </div>
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
+                <img src="assets/eggs.jpg" alt="Large Brown Eggs" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Brown Eggs</span>
+            </div>
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
+                <img src="assets/strawberries.jpg" alt="Strawberries" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Strawberries</span>
+            </div>
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
+                <img src="assets/greek-yogurt.jpg" alt="Greek Yogurt" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Greek Yogurt</span>
+            </div>
         </div>
 
         <!-- 5 秒倒數按鈕 -->
