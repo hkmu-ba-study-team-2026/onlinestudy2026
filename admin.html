@@ -623,7 +623,7 @@
                 if (masterDataMap[pid]) {
                     masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
                     masterDataMap[pid]["Experiment_Condition"] = s.conditionGroup || (s.isExperimental ? "AI_Personalized" : "Traditional_Static") || "";
-                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
+                    masterDataMap[pid]["Random_Assignment_Val"] = s.randomVariable !== undefined ? s.randomVariable : "";
                     masterDataMap[pid]["AI_Nudge_Text"] = s.nudgeContent || "";
                     if (s.responses) {
                         SURVEY1_QUESTIONS.forEach(q => {
