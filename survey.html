@@ -399,36 +399,29 @@
         const payload = { products: productsList, preferences: userPreferences };
 
         let nudgeText = "";
-        let nudgeAI = true;
+        try {
+            console.log("📤 [2/4] Requesting AI Nudge...");
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-        if (nudgeAI) {
-            try {
-                console.log("📤 [2/4] Requesting AI Nudge...");
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    const recommendations = await response.json();
-                    if (typeof recommendations === 'string') {
-                        nudgeText = recommendations;
-                    } else if (recommendations && recommendations.recommendation) {
-                        nudgeText = recommendations.recommendation;
-                    }
-                    localStorage.setItem('recommendations', JSON.stringify(recommendations));
-                    localStorage.setItem('nudge_text', nudgeText);
-                } else {
-                    throw new Error(`API status ${response.status}`);
+            if (response.ok) {
+                const recommendations = await response.json();
+                if (typeof recommendations === 'string') {
+                    nudgeText = recommendations;
+                } else if (recommendations && recommendations.recommendation) {
+                    nudgeText = recommendations.recommendation;
                 }
-            } catch (error) {
-                console.error('❌ [API Request Failed]:', error);
-                nudgeText = 'These items are eco-friendly, freshly sourced, and sustainable for your daily meals.';
+                localStorage.setItem('recommendations', JSON.stringify(recommendations));
                 localStorage.setItem('nudge_text', nudgeText);
+            } else {
+                throw new Error(`API status ${response.status}`);
             }
-        } else {
-            nudgeText = 'You may consider these featured eco-friendly products. They are made with responsibly sourced or organic ingredients, support fair and safe working conditions, promote better animal welfare, and use more sustainable packaging.';
+        } catch (error) {
+            console.error('❌ [API Request Failed]:', error);
+            nudgeText = 'You may consider these eco-friendly, freshly sourced, and sustainable products for your meals.';
             localStorage.setItem('nudge_text', nudgeText);
         }
 
