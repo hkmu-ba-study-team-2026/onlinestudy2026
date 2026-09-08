@@ -549,6 +549,8 @@
                 row["Consent_Agreed_Time"] = "";
 
                 // 2. ★ AI Nudge 推薦文案（位於 Pre-Survey Section 1 之前）★
+                row["Experiment_Condition"] = "";
+                row["Random_Assignment_Val"] = "";
                 row["AI_Nudge_Text"] = "";
 
                 // 3. Pre-Survey Section 1A 區段 (11 題)
@@ -619,6 +621,8 @@
             s1List.forEach(s => {
                 const pid = s.participantID;
                 if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
+                    masterDataMap[pid]["Experiment_Condition"] = s.conditionGroup || (s.isExperimental ? "AI_Personalized" : "Traditional_Static") || "";
                     masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
                     masterDataMap[pid]["AI_Nudge_Text"] = s.nudgeContent || "";
                     if (s.responses) {

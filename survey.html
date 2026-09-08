@@ -450,46 +450,67 @@
         const payload = { products: productsList, preferences: userPreferences };
 
         let nudgeText = "";
-        try {
-            console.log("📤 Requesting AI Nudge...");
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
 
-            if (response.ok) {
-                const recommendations = await response.json();
-                if (typeof recommendations === 'string') {
-                    nudgeText = recommendations;
-                } else if (recommendations && recommendations.recommendation) {
-                    nudgeText = recommendations.recommendation;
+        // ★ 1. 產生 0.0 - 1.0 的隨機變數與實驗條件 ★
+        const randomAssignmentVal = Math.random();
+        const isExperimentalGroup = randomAssignmentVal < 0.5;
+        const conditionGroup = isExperimentalGroup ? "AI_Personalized" : "Traditional_Static";
+
+        // 存入 localStorage 供後續跨頁追蹤
+        localStorage.setItem('random_variable', randomAssignmentVal);
+        localStorage.setItem('experiment_condition', conditionGroup);
+
+        // ★ 2. 根據分組生成文案 ★
+        if (isExperimentalGroup) {
+            try {
+                console.log("📤 [Experimental Group] Requesting AI Nudge...");
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const recommendations = await response.json();
+                    if (typeof recommendations === 'string') {
+                        nudgeText = recommendations;
+                    } else if (recommendations && recommendations.recommendation) {
+                        nudgeText = recommendations.recommendation;
+                    }
+                    localStorage.setItem('recommendations', JSON.stringify(recommendations));
+                    localStorage.setItem('nudge_text', nudgeText);
+                } else {
+                    throw new Error(`API status ${response.status}`);
                 }
-                localStorage.setItem('recommendations', JSON.stringify(recommendations));
+            } catch (error) {
+                console.error('❌ [API Request Failed]:', error);
+                nudgeText = 'You may consider these eco-friendly, freshly sourced, and sustainable products for your meals.';
                 localStorage.setItem('nudge_text', nudgeText);
-            } else {
-                throw new Error(`API status ${response.status}`);
             }
-        } catch (error) {
-            console.error('❌ [API Request Failed]:', error);
-            nudgeText = 'You may consider these eco-friendly, freshly sourced, and sustainable products for your meals.';
+        } else {
+            console.log("📦 [Control Group] Using Traditional Static Nudge...");
+            // 修正：直接指派，不加 const 重複宣告
+            nudgeText = 'You may consider these featured eco-friendly products. They are made with responsibly sourced or organic ingredients, support fair and safe working conditions, promote better animal welfare, and use more sustainable packaging.';
             localStorage.setItem('nudge_text', nudgeText);
         }
 
-        // 寫入 Firebase
+        // ★ 3. 寫入 Firebase (包含隨機變數與分組結果) ★
         const firebaseData = {
             participantID: participantNum,
             section: 1,
             type: "ranking",
             submittedAt: new Date().toLocaleString(),
             submittedAtTimestamp: Date.now(),
+            randomVariable: randomAssignmentVal,      // 記錄精確浮點數 (0.0 ~ 1.0)
+            conditionGroup: conditionGroup,          // 記錄 "AI_Personalized" 或 "Traditional_Static"
+            isExperimental: isExperimentalGroup,     // 記錄布林值 true/false
             nudgeContent: nudgeText,
             responses: survey1Responses
         };
 
         try {
             await db.ref('survey_section1').push(firebaseData);
-            console.log("✅ Saved Section 1 to Firebase!");
+            console.log("✅ Saved Section 1 with condition to Firebase:", conditionGroup, randomAssignmentVal);
         } catch (dbError) {
             console.error('❌ Firebase Section 1 save error:', dbError);
         }
