@@ -243,19 +243,14 @@
 </div>
 
 <script>
-    // 定義 Pre-Survey Section 1A (保留的 11 題)
+    // 定義 Pre-Survey Section 1A (6 題)
     const SURVEY1_QUESTIONS = [
-        { key: "q01_sensory_experience", header: "Pre_S1_Q01_SensoryExperience" },
-        { key: "q04_high_quality",        header: "Pre_S1_Q04_HighQuality" },
-        { key: "q05_healthy",             header: "Pre_S1_Q05_Healthy" },
-        { key: "q06_safe_to_consume",     header: "Pre_S1_Q06_SafeToConsume" },
-        { key: "q08_price_justified",     header: "Pre_S1_Q08_PriceJustified" },
-        { key: "q09_serving_size",        header: "Pre_S1_Q09_ServingSize" },
-        { key: "q10_convenient",          header: "Pre_S1_Q10_Convenient" },
-        { key: "q11_versatile_use",       header: "Pre_S1_Q11_VersatileUse" },
-        { key: "q15_no_exploitation",     header: "Pre_S1_Q15_NoExploitation" },
-        { key: "q16_eco_friendly",        header: "Pre_S1_Q16_EcoFriendly" },
-        { key: "q17_local_product",       header: "Pre_S1_Q17_LocalProduct" }
+        { key: "q01_sensory_experience", header: "Pre_S1_Rank_SensoryExperience" },
+        { key: "q05_healthy",             header: "Pre_S1_Rank_Healthy" },
+        { key: "q06_safe_to_consume",     header: "Pre_S1_Rank_SafeToConsume" },
+        { key: "q08_price_justified",     header: "Pre_S1_Rank_PriceJustified" },
+        { key: "q11_versatile_use",       header: "Pre_S1_Rank_VersatileUse" },
+        { key: "q15_no_exploitation",     header: "Pre_S1_Rank_NoExploitation" }
     ];
 
     // 定義 Pre-Survey Section 1B (3 題)
@@ -266,36 +261,61 @@
     ];
 
     // ★ 最新 Post-Survey 29 題定義（完全對應 post_survey.html 中的順序與變數鍵名）
+    // 最新 Post-Survey 題庫 (35 題分析題 + 1 題 AI 歸因題)
     const POST_SURVEY_QUESTIONS = [
-        { key: "q_mc_onesize",               header: "Post_Q01_Rec_OneSizeFitsAll" },
-        { key: "q_mc_identical",             header: "Post_Q02_Rec_IdenticalForAll" },
-        { key: "q_pers_tailored",            header: "Post_Q03_Rec_TailoredInterests" },
-        { key: "q_pers_understood",          header: "Post_Q04_Rec_UnderstoodNeeds" },
-        { key: "q_pers_account",             header: "Post_Q05_Rec_TookPreferences" },
-        { key: "q_wtp_tomato",               header: "Post_Q06_WTP_CherryTomatoes" },
-        { key: "q_wtp_chicken",              header: "Post_Q07_WTP_ChickenDrumsticks" },
-        { key: "q_wtp_eggs",                 header: "Post_Q08_WTP_BrownEggs" },
-        { key: "q_wtp_strawberries",         header: "Post_Q09_WTP_Strawberries" },
-        { key: "q_sus_tomato",               header: "Post_Q10_Sus_CherryTomatoes" },
-        { key: "q_sus_chicken",              header: "Post_Q11_Sus_ChickenDrumsticks" },
-        { key: "q_sus_eggs",                 header: "Post_Q12_Sus_BrownEggs" },
-        { key: "q_sus_strawberries",         header: "Post_Q13_Sus_Strawberries" },
-        { key: "q_sat_rec_overall",          header: "Post_Q14_Sat_Rec_Overall" },
-        { key: "q_sat_rec_expectations",     header: "Post_Q15_Sat_Rec_MetExpectations" },
-        { key: "q_sat_rec_pleased",          header: "Post_Q16_Sat_Rec_Pleased" },
-        { key: "q_sat_shopping_exp",         header: "Post_Q17_Sat_PlatformExperience" },
-        { key: "q_scenario_realistic",       header: "Post_Q18_Scenario_Realistic" },
-        { key: "q_scenario_imagine_self",    header: "Post_Q19_Scenario_ImagineSelf" },
-        { key: "q_scenario_occur_real",      header: "Post_Q20_Scenario_OccurRealLife" },
-        { key: "q_env_effects",              header: "Post_Q21_Env_EffectsPurchased" },
-        { key: "q_env_protect_influence",    header: "Post_Q22_Env_ProtectInfluence" },
-        { key: "q_env_prefer_less_harm",     header: "Post_Q23_Env_PreferLessHarm" },
-        { key: "q_env_waste_resources",      header: "Post_Q24_Env_ConcernWasteResources" },
-        { key: "q_env_responsible_consumer", header: "Post_Q25_Env_ResponsibleConsumer" },
-        { key: "q_env_accept_inconvenience", header: "Post_Q26_Env_AcceptInconvenience" },
-        { key: "q_ai_familiar",              header: "Post_Q27_AI_Familiar" },
-        { key: "q_ai_positive_attitude",     header: "Post_Q28_AI_PositiveAttitude" },
-        { key: "q_ai_generated_likelihood",  header: "Post_Q29_AI_GeneratedLikelihood" }
+        // 1. 購買意願與永續性
+        { key: "q_wtp_recommended_products",  header: "Post_Q01_WTP_RecommendedProducts" },
+        { key: "q_sus_recommended_products",  header: "Post_Q02_Sus_RecommendedProducts" },
+
+        // 2. 滿意度
+        { key: "q_sat_pleased_rec",           header: "Post_Q03_Sat_PleasedRec" },
+        { key: "q_sat_satisfying_rec",        header: "Post_Q04_Sat_SatisfyingRec" },
+        { key: "q_sat_feel_happy_rec",        header: "Post_Q05_Sat_FeelHappyRec" },
+        { key: "q_sat_shopping_exp",          header: "Post_Q06_Sat_ShoppingExp" },
+
+        // 3. 重要性、關聯性與意義感
+        { key: "q_rec_important",             header: "Post_Q07_Rec_Important" },
+        { key: "q_rec_relevant",              header: "Post_Q08_Rec_Relevant" },
+        { key: "q_rec_meaningful",            header: "Post_Q09_Rec_Meaningful" },
+
+        // 4. 推薦實用性
+        { key: "q_useful_find_quickly",       header: "Post_Q10_Useful_FindQuickly" },
+        { key: "q_useful_effectiveness",      header: "Post_Q11_Useful_Effectiveness" },
+        { key: "q_useful_overall",            header: "Post_Q12_Useful_Overall" },
+        { key: "q_useful_easier_search",      header: "Post_Q13_Useful_EasierSearch" },
+        { key: "q_useful_enhance_judgment",   header: "Post_Q14_Useful_EnhanceJudgment" },
+
+        // 5. 訊息個人化
+        { key: "q_msg_understands_needs",     header: "Post_Q15_Msg_UnderstandsNeeds" },
+        { key: "q_msg_reflects_wants",        header: "Post_Q16_Msg_ReflectsWants" },
+        { key: "q_msg_preferences_account",   header: "Post_Q17_Msg_PreferencesAccount" },
+
+        // 6. 產品個人化與認真閱讀
+        { key: "q_prod_understands_needs",    header: "Post_Q18_Prod_UnderstandsNeeds" },
+        { key: "q_prod_reflects_wants",       header: "Post_Q19_Prod_ReflectsWants" },
+        { key: "q_prod_selected_needs_pref",  header: "Post_Q20_Prod_SelectedNeedsPref" },
+        { key: "q_read_msg_carefully",        header: "Post_Q21_Read_MsgCarefully" },
+
+        // 7. 情境真實性與永續重要度
+        { key: "q_scenario_realistic",        header: "Post_Q22_Scenario_Realistic" },
+        { key: "q_scenario_imagine_self",     header: "Post_Q23_Scenario_ImagineSelf" },
+        { key: "q_scenario_occur_real",       header: "Post_Q24_Scenario_OccurReal" },
+        { key: "q_sus_important_to_me",       header: "Post_Q25_Sus_ImportantToMe" },
+        { key: "q_sus_relevant_to_me",        header: "Post_Q26_Sus_RelevantToMe" },
+        { key: "q_sus_means_lot_to_me",       header: "Post_Q27_Sus_MeansLotToMe" },
+
+        // 8. 環境導向態度
+        { key: "q_env_effects",               header: "Post_Q28_Env_Effects" },
+        { key: "q_env_protect_influence",     header: "Post_Q29_Env_ProtectInfluence" },
+        { key: "q_env_prefer_less_harm",      header: "Post_Q30_Env_PreferLessHarm" },
+        { key: "q_env_waste_resources",       header: "Post_Q31_Env_WasteResources" },
+        { key: "q_env_responsible_consumer",  header: "Post_Q32_Env_ResponsibleConsumer" },
+        { key: "q_env_accept_inconvenience",  header: "Post_Q33_Env_AcceptInconvenience" },
+
+        // 9. AI 熟悉度、態度與歸因
+        { key: "q_ai_familiar",               header: "Post_Q34_AI_Familiar" },
+        { key: "q_ai_positive_attitude",      header: "Post_Q35_AI_PositiveAttitude" },
+        { key: "q_ai_generated_likelihood",   header: "Post_Q36_AI_GeneratedLikelihood" }
     ];
 
     async function login() {
@@ -588,7 +608,7 @@
                     row[q.header] = "";
                 });
 
-                // 8. 人口統計變項 (包含改制後的 Postal Code)
+                // 8. 人口統計變項
                 row["Demo_Gender"] = "";
                 row["Demo_Age"] = "";
                 row["Demo_PostalCode"] = "";
@@ -598,11 +618,11 @@
                 row["Demo_Education"] = "";
                 row["Demo_Occupation"] = "";
 
-                // ★ 新增：注意力檢查狀態欄位 ★
+                // 9. ★ 注意力檢查檢核與完成狀態 ★
                 row["Passed_Attention_Check"] = "";
                 row["Study_Status"] = "";
 
-                // 9. 質性開放題 (Q38 為必填想法，Q39 為自由回饋)
+                // 10. 質性開放題
                 row["Open_Survey_Purpose_Thoughts"] = "";
                 row["Open_Study_Feedback"] = "";
 
