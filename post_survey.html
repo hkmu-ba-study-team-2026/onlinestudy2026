@@ -232,24 +232,24 @@
             border-color: var(--accent-color);
         }
 
-        .dev-autofill-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 6px 14px;
-            background-color: #e2e8f0;
-            color: #4a5568;
-            border: 1px dashed #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+        /*.dev-autofill-btn {*/
+        /*    display: inline-block;*/
+        /*    margin-top: 12px;*/
+        /*    padding: 6px 14px;*/
+        /*    background-color: #e2e8f0;*/
+        /*    color: #4a5568;*/
+        /*    border: 1px dashed #cbd5e1;*/
+        /*    border-radius: 6px;*/
+        /*    font-size: 0.8rem;*/
+        /*    font-weight: 600;*/
+        /*    cursor: pointer;*/
+        /*    transition: all 0.2s ease;*/
+        /*}*/
 
-        .dev-autofill-btn:hover {
-            background-color: #cbd5e1;
-            color: #2d3748;
-        }
+        /*.dev-autofill-btn:hover {*/
+        /*    background-color: #cbd5e1;*/
+        /*    color: #2d3748;*/
+        /*}*/
 
         .submit-btn {
             display: block;
@@ -337,7 +337,7 @@
         <span class="academic-badge">Academic Research Study - Section 3</span>
         <h1>Welcome to Section 3</h1>
         <p style="font-size: 0.88rem; color: var(--text-secondary);">
-            For items 1–43, please recall the simulated online grocery shopping experience on FreshMart and rate your agreement using the response scale below.
+            Please recall the simulated online grocery shopping experience on FreshMart and rate your agreement using the response scale below.
         </p>
 
         <div class="scale-info">
@@ -351,7 +351,7 @@
                 <li><strong>7</strong> = Strongly agree</li>
             </ul>
         </div>
-        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>
+<!--        <button type="button" class="dev-autofill-btn" onclick="autoFillRandom()">⚡ Quick Autofill (Random) [To be removed in deployment]</button>-->
     </div>
 
     <form id="postSurveyForm" onsubmit="handlePostSurveySubmit(event)">
@@ -446,25 +446,25 @@
                 <label class="question-title">18. The recommendation message took my preferences into account. *</label>
                 <div class="scale-grid" id="q_msg_preferences_account"></div>
             </div>
+            <div class="form-group">
+                <label class="question-title">19. I read the recommendation message carefully. *</label>
+                <div class="scale-grid" id="q_read_msg_carefully"></div>
+            </div>
         </div>
 
         <!-- Group 6: Perceived Personalization of Products & Careful Reading (Items 19-22) -->
         <div class="question-group-card card-green">
             <div class="form-group">
-                <label class="question-title">19. The recommended products reflect an understanding of my needs. *</label>
+                <label class="question-title">20. The recommended products reflect an understanding of my needs. *</label>
                 <div class="scale-grid" id="q_prod_understands_needs"></div>
             </div>
             <div class="form-group">
-                <label class="question-title">20. The recommended products reflect what I want. *</label>
+                <label class="question-title">21. The recommended products reflect what I want. *</label>
                 <div class="scale-grid" id="q_prod_reflects_wants"></div>
             </div>
             <div class="form-group">
-                <label class="question-title">21. The recommended products were selected with my needs and preferences in mind. *</label>
+                <label class="question-title">22. The recommended products were selected with my needs and preferences in mind. *</label>
                 <div class="scale-grid" id="q_prod_selected_needs_pref"></div>
-            </div>
-            <div class="form-group">
-                <label class="question-title">22. I read the recommendation message carefully. *</label>
-                <div class="scale-grid" id="q_read_msg_carefully"></div>
             </div>
         </div>
 
@@ -722,9 +722,9 @@
         "q_msg_understands_needs",
         "q_msg_reflects_wants",
         "q_msg_preferences_account",
+        "q_prod_selected_needs_pref",
         "q_prod_understands_needs",
         "q_prod_reflects_wants",
-        "q_prod_selected_needs_pref",
         "q_read_msg_carefully",
         "q_scenario_realistic",
         "q_scenario_imagine_self",
