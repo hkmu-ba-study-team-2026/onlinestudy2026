@@ -6,7 +6,8 @@ let selectionSequence = [];
 let cart = [];
 let currentPID = "";
 
-const ALL_ITEMS = Array.from({ length: 30 }, (_, i) => i + 1);
+// ★ 修正 1：擴展至 36 項商品，確保 31~36 號麵包也能追蹤次序與來源 ★
+const ALL_ITEMS = Array.from({ length: 36 }, (_, i) => i + 1);
 
 function getPID() {
     let pid = localStorage.getItem("participantID");
@@ -16,18 +17,6 @@ function getPID() {
     }
     return pid.trim();
 }
-
-// document.addEventListener('DOMContentLoaded', function(){
-//     const modal = document.getElementById('welcomeModal');
-//     const closeBtn = document.getElementById('closeModalBtn');
-//     currentPID = getPID();
-//
-//     if (closeBtn && modal) {
-//         closeBtn.addEventListener('click', function() {
-//             modal.style.display = 'none';
-//         });
-//     }
-// });
 
 document.addEventListener('DOMContentLoaded', function(){
     currentPID = getPID();
@@ -69,12 +58,12 @@ function generateItemSequenceMap(seqArray) {
     return resultMap;
 }
 
-// ==================== 30 項商品資料庫（ID 1~5 為 Featured） ====================
+// ==================== 36 項商品資料庫（ID 1~5 為 Featured） ====================
 const products = [
     // 1. Featured items (置頂 5 項，ID: 1 ~ 5)
     { id: 1, name: "Tomato Cherry", price: 2.97, isFeatured: true },
     { id: 2, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
-    { id: 3, name: "Large Brown Eggs", price: 7.49, isFeatured: true },      // ★ 置頂 Eggs
+    { id: 3, name: "Large Brown Eggs", price: 7.49, isFeatured: true },
     { id: 4, name: "Strawberries", price: 2.38, isFeatured: true },
     { id: 5, name: "Greek Yogurt", price: 4.99, isFeatured: true },
 
@@ -99,21 +88,21 @@ const products = [
     { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
     { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
 
-    // 5. Seafood Market (海鮮類，ID: 21 ~ 25)
-    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },       // ★ 一般海鮮 Salmon
+    // 5. Seafood Market (海鮮類，ID: 21 ~ 26)
+    { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },
     { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
     { id: 24, name: "Breaded Fish Fillets", price: 7.99, isFeatured: false },
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
     { id: 26, name: "Tuna Pack", price: 1.25, isFeatured: false },
 
-    // 6. Dairy & Cheese (乳品/雜貨類，ID: 26 ~ 30)
+    // 6. Dairy & Cheese (乳品類，ID: 27 ~ 30)
     { id: 27, name: "Whole Milk", price: 4.99, isFeatured: false },
     { id: 28, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
     { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false },
 
-    // 7. Bread
+    // 7. Bread (麵包類，ID: 31 ~ 36)
     { id: 31, name: "Sourdough Bread", price: 5.49, isFeatured: false },
     { id: 32, name: "Butter Bread", price: 3.42, isFeatured: false },
     { id: 33, name: "Whole Wheat Bread", price: 3.99, isFeatured: false },
@@ -343,11 +332,14 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
     });
 
     const itemsArr = cart.map(item => {
-        total += item.price * item.quantity;
+        // ★ 修正 2：宣告 itemSubtotal，修復 ReferenceError ★
+        const itemSubtotal = item.price * item.quantity;
+        total += itemSubtotal;
+
         const prod = products.find(p => p.id === item.id);
         if (prod && prod.isFeatured) {
             featuredCnt += item.quantity;
-            featuredTotal += itemSubtotal; // ★ 累加精選商品消費金額
+            featuredTotal += itemSubtotal;
         }
 
         if (sourceBreakdownMap.hasOwnProperty(`Item_${item.id}_From_Featured_Qty`)) {
@@ -369,8 +361,8 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
 
     const checkoutFirebaseData = {
         participantID: currentPID || getPID(),
-        enterTime: new Date(pageStartTime).toLocaleString(),   // ★ 精準記錄進站時間
-        leaveTime: new Date(pageEndTime).toLocaleString(),     // ★ 精準記錄離站時間
+        enterTime: new Date(pageStartTime).toLocaleString(),
+        leaveTime: new Date(pageEndTime).toLocaleString(),
         checkoutTime: new Date(pageEndTime).toLocaleString(),
         nudgeContent: localStorage.getItem('nudge_text') || "",
         durationSeconds: durationInSeconds,
@@ -378,10 +370,10 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         finalCartItems: itemsArr,
         selectionSequence: selectionSequence,
         itemSequenceMap: itemSequenceMap,
-        sourceBreakdown: sourceBreakdownMap,                   // ★ 記錄 1~30 各來源數量
+        sourceBreakdown: sourceBreakdownMap,
         featuredProductCount: featuredCnt,
-        featuredProductTotalAmount: parseFloat(featuredTotal.toFixed(2)),
-        orderTotal: total
+        featuredProductTotalAmount: parseFloat(featuredTotal.toFixed(2)), // 精確儲存 Featured 總金額
+        orderTotal: parseFloat(total.toFixed(2))
     };
 
     try {
@@ -406,7 +398,8 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
 });
 
 function handleCheckoutModalConfirm() {
-    window.location.href = 'post_survey.html';
+    // ★ 修正 3：使用 replace 避免受試者回退至購物車 ★
+    window.location.replace('post_survey.html');
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
