@@ -567,6 +567,10 @@
                 // 1. Consent 區段
                 row["Participant_ID"] = pid;
                 row["Consent_Agreed_Time"] = "";
+                row["Consent_Agreed_Response"] = "";
+                row["Is_Adult_Response"] = "";
+                row["Is_Eligible"] = "";
+                row["Consent_Status"] = "";
 
                 // 2. ★ AI Nudge 推薦文案（位於 Pre-Survey Section 1 之前）★
                 row["Experiment_Condition"] = "";
@@ -634,6 +638,15 @@
                 const pid = c.participantID;
                 if (masterDataMap[pid]) {
                     masterDataMap[pid]["Consent_Agreed_Time"] = c.agreedAt || "";
+
+                    // 記錄兩題原始選擇
+                    masterDataMap[pid]["Consent_Agreed_Response"] = c.agreeConsentResponse || (c.consentGiven ? "yes" : "no") || "";
+                    masterDataMap[pid]["Is_Adult_Response"] = c.isAdultResponse || (c.isAdult ? "yes" : "no") || "";
+
+                    // 記錄資格判斷結果
+                    const isEligible = c.isEligible !== undefined ? c.isEligible : (c.consentGiven && c.isAdult);
+                    masterDataMap[pid]["Is_Eligible"] = isEligible ? "Yes" : "No";
+                    masterDataMap[pid]["Consent_Status"] = c.status || (isEligible ? "Eligible & Consented" : "Ineligible / Refused Consent");
                 }
             });
 

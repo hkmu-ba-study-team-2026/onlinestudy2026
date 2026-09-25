@@ -95,7 +95,6 @@
             display: block;
         }
 
-        /* 新增 Participant ID 輸入框樣式 */
         .pid-input {
             width: 100%;
             padding: 10px 14px;
@@ -181,7 +180,6 @@
             cursor: not-allowed;
         }
 
-        /* 彈窗遮罩 */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -346,7 +344,6 @@
 
     <form id="consentForm" onsubmit="handleConsentSubmit(event)">
         <div class="decision-section">
-            <!-- 新增 Participant ID 題目 -->
             <div class="question-block">
                 <label class="question-title" for="participantID">Prolific ID <span style="color: #dc2626;">*</span></label>
                 <input type="text" id="participantID" name="participantID" class="pid-input" required>
@@ -397,15 +394,9 @@
 
 <script>
     (function preventBackNavigation() {
-        // 先推入一筆當前頁面的歷史狀態
         window.history.pushState(null, "", window.location.href);
-
-        // 監聽上一頁 (popstate) 事件
         window.addEventListener("popstate", function () {
-            // 當使用者按上一頁時，立刻再補推一層，強迫留在當前頁面
             window.history.pushState(null, "", window.location.href);
-
-            // 可選：彈出警告通知受試者不可回退
             alert("Please do not return to the previous page. If you do so, you will not receive compensation. Thank you for your understanding.");
         });
     })();
@@ -423,39 +414,45 @@
             return;
         }
 
-        if (agreeConsent === 'no' || isAdult === 'no') {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+
+        // 判斷是否符合資格
+        const isEligible = (agreeConsent === 'yes' && isAdult === 'yes');
+
+        // ★ 核心變更：無論通過與否，皆先建立並寫入完整紀錄 ★
+        const record = {
+            participantID: participantID,
+            agreedAt: new Date().toLocaleString(),
+            agreedAtTimestamp: Date.now(),
+            agreeConsentResponse: agreeConsent,      // 記錄選擇 "yes" 或 "no"
+            isAdultResponse: isAdult,                // 記錄選擇 "yes" 或 "no"
+            consentGiven: (agreeConsent === 'yes'),  // 布林值
+            isAdult: (isAdult === 'yes'),            // 布林值
+            isEligible: isEligible,                  // 是否通過篩選
+            status: isEligible ? "Eligible & Consented" : "Ineligible / Refused Consent",
+            userAgent: navigator.userAgent
+        };
+
+        try {
+            await db.ref('consent_records').push(record);
+            console.log("Consent response successfully recorded in Firebase.");
+        } catch (err) {
+            console.error("Firebase write error:", err);
+        }
+
+        // 分流處理
+        if (!isEligible) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'I Agree & Start Survey';
             document.getElementById('ineligibleModal').style.display = 'flex';
             return;
         }
 
-        if (agreeConsent === 'yes' && isAdult === 'yes') {
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Recording & Loading...';
-
-            // 1. 存入瀏覽器 localStorage 供後續頁面讀取
-            localStorage.setItem("participantID", participantID);
-
-            // 2. 寫入 Firebase 資料庫的 consent_records 節點
-            const record = {
-                participantID: participantID,
-                agreedAt: new Date().toLocaleString(),
-                agreedAtTimestamp: Date.now(),
-                isAdult: true,
-                consentGiven: true,
-                userAgent: navigator.userAgent
-            };
-
-            try {
-                await db.ref('consent_records').push(record);
-                console.log("Consent recorded successfully in Firebase.");
-            } catch (err) {
-                console.error("Firebase write failed, continuing to survey:", err);
-            }
-
-            // 3. 跳轉至問卷頁面
-            window.location.href = 'survey.html';
-        }
+        // 通過檢核，存入 localStorage 並進入 Section 1A
+        localStorage.setItem("participantID", participantID);
+        window.location.href = 'survey.html';
     }
 
     const EXIT_REDIRECT_URL = "https://app.prolific.com/submissions/complete?cc=C1IAO83K";
