@@ -20,7 +20,7 @@ Rules:
 1. Promote their eco-sustainability based on user preferences.
 2. Emphasize the product features fitting the two most important factors in user preferences.
 3. The sentence MUST strictly start with the words "You may consider these...".
-4. Do NOT mention words like "survey", "based on your preference", "algin with you" or "scale".
+4. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
 5. Do NOT use wordings implying taking user preferences or referring to user preferences.
 6. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
 7. Output plain text only. No markdown, no quotes, no explanation.
