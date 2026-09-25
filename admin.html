@@ -406,10 +406,12 @@
     function calculateStats({ consents, orders, s1List, s2List, postSurveys }) {
         let totalRevenue = 0;
         let totalFeatured = 0;
+        let totalFeaturedRevenue = 0;
 
         orders.forEach(o => {
             totalRevenue += (o.orderTotal || 0);
             totalFeatured += (o.featuredProductCount || 0);
+            totalFeaturedRevenue += (o.featuredProductTotalAmount || 0);
         });
 
         document.getElementById("totalConsents").innerText = consents.length;
@@ -419,6 +421,9 @@
         document.getElementById("totalPostSurveys").innerText = postSurveys.length;
         document.getElementById("totalSpent").innerText = totalRevenue.toFixed(2);
         document.getElementById("totalFeatured").innerText = totalFeatured;
+        if (document.getElementById("totalFeaturedSpent")) {
+            document.getElementById("totalFeaturedSpent").innerText = totalFeaturedRevenue.toFixed(2);
+        }
     }
 
     function renderOrders(orders) {
@@ -597,6 +602,7 @@
                 row["Checkout_Time"] = "";
                 row["Order_Total_Amount"] = 0;
                 row["Featured_Items_Total_Qty"] = 0;
+                row["Featured_Items_Total_Amount"] = 0;
                 row["Total_Cart_Items_Qty"] = 0;
 
                 // 6. 商品 1 ~ 36 詳細行為（總量、來源、次序）
@@ -611,6 +617,9 @@
                 POST_SURVEY_QUESTIONS.forEach(q => {
                     row[q.header] = "";
                 });
+
+                row["Attn_Check_1_Ans"] = "";
+                row["Attn_Check_2_Ans"] = "";
 
                 // 8. 人口統計變項
                 row["Demo_Gender"] = "";
@@ -717,6 +726,17 @@
                     masterDataMap[pid]["Visit_Duration_Seconds"] = o.durationSeconds || masterDataMap[pid]["Visit_Duration_Seconds"] || 0;
                     masterDataMap[pid]["Order_Total_Amount"] = o.orderTotal || 0;
                     masterDataMap[pid]["Featured_Items_Total_Qty"] = o.featuredProductCount || 0;
+                    let calcFeaturedAmount = o.featuredProductTotalAmount;
+                    if (calcFeaturedAmount === undefined && Array.isArray(o.finalCartItems)) {
+                        calcFeaturedAmount = 0;
+                        o.finalCartItems.forEach(item => {
+                            const itemId = parseInt(item.id, 10);
+                            if (itemId >= 1 && itemId <= 5) {
+                                calcFeaturedAmount += (item.price * item.quantity);
+                            }
+                        });
+                    }
+                    masterDataMap[pid]["Featured_Items_Total_Amount"] = parseFloat((calcFeaturedAmount || 0).toFixed(2));
 
                     let totalItemCount = 0;
                     if (Array.isArray(o.finalCartItems)) {
@@ -768,6 +788,10 @@
                                 masterDataMap[pid][q.header] = p.postSurveyLikert[q.key];
                             }
                         });
+                    }
+                    if (p.attentionCheckAnswers) {
+                        masterDataMap[pid]["Attn_Check_1_Ans"] = p.attentionCheckAnswers.item15_sun_response ?? "";
+                        masterDataMap[pid]["Attn_Check_2_Ans"] = p.attentionCheckAnswers.item35_select6_response ?? "";
                     }
                     // 填入人口學特徵
                     if (p.demographics) {

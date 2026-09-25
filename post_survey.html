@@ -851,14 +851,22 @@
         const pid = localStorage.getItem("participantID") || "Anonymous";
         const formData = new FormData(event.target);
 
-        // ★ Attention Check 判定
-        // Check 1 要求選 Strongly Disagree (1)
-        // Check 2 要求選 6
+        // ★ 1. 讀取 Attention Check 原始答案 ★
+        // Item 15 (attn_check_1) 應選 1 ("Strongly disagree")
+        // Item 35 (attn_check_2) 應選 6
         const ansCheck1 = parseInt(formData.get("attn_check_1"), 10);
         const ansCheck2 = parseInt(formData.get("attn_check_2"), 10);
         const passedAttentionCheck = (ansCheck1 === 1 && ansCheck2 === 6);
 
-        // 收集量表回應
+        // ★ 2. 獨立儲存 Attention Check 原始回覆 ★
+        const attentionCheckData = {
+            item15_sun_response: isNaN(ansCheck1) ? null : ansCheck1,     // 記錄使用者填寫的數值 (1-7)
+            item35_select6_response: isNaN(ansCheck2) ? null : ansCheck2, // 記錄使用者填寫的數值 (1-7)
+            item15_passed: (ansCheck1 === 1),
+            item35_passed: (ansCheck2 === 6)
+        };
+
+        // 收集常規量表回應（保持純淨，不混雜 Attention Check 題目）
         const postSurveyResponses = {};
         scaleQuestionIds.forEach(qId => {
             postSurveyResponses[qId] = parseInt(formData.get(qId), 10);
@@ -881,12 +889,13 @@
             generalFeedback: (formData.get("open_study_feedback") || "").trim()
         };
 
-        // Firebase 記錄物件
+        // ★ 3. 整合至最終寫入 Firebase 的資料物件 ★
         const finalRecord = {
             participantID: pid,
             submittedAt: new Date().toLocaleString(),
             passedAttentionCheck: passedAttentionCheck,
             status: passedAttentionCheck ? "Completed" : "Failed Attention Check",
+            attentionCheckAnswers: attentionCheckData, // 原始注意力檢查數據
             postSurveyLikert: postSurveyResponses,
             demographics: demographicData,
             openResponses: openEndedResponses

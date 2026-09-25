@@ -334,6 +334,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
 
     let total = 0;
     let featuredCnt = 0;
+    let featuredTotal = 0;
 
     const sourceBreakdownMap = {};
     ALL_ITEMS.forEach(id => {
@@ -344,7 +345,10 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
     const itemsArr = cart.map(item => {
         total += item.price * item.quantity;
         const prod = products.find(p => p.id === item.id);
-        if (prod && prod.isFeatured) featuredCnt += item.quantity;
+        if (prod && prod.isFeatured) {
+            featuredCnt += item.quantity;
+            featuredTotal += itemSubtotal; // ★ 累加精選商品消費金額
+        }
 
         if (sourceBreakdownMap.hasOwnProperty(`Item_${item.id}_From_Featured_Qty`)) {
             sourceBreakdownMap[`Item_${item.id}_From_Featured_Qty`] += (item.featuredQty || 0);
@@ -376,6 +380,7 @@ document.getElementById('checkout-btn')?.addEventListener('click', async functio
         itemSequenceMap: itemSequenceMap,
         sourceBreakdown: sourceBreakdownMap,                   // ★ 記錄 1~30 各來源數量
         featuredProductCount: featuredCnt,
+        featuredProductTotalAmount: parseFloat(featuredTotal.toFixed(2)),
         orderTotal: total
     };
 
