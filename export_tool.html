@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FreshMart Data Exporter (Standalone Tool)</title>
+    <!-- SheetJS 與 Firebase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        // 與 admin.html 保持完全一致的 Firebase 配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcb21P40OEvHgc4S9ZSrV7nPFaLvwOcTU",
+            authDomain: "online-study-2026.firebaseapp.com",
+            databaseURL: "https://online-study-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "online-study-2026",
+            storageBucket: "online-study-2026.firebasestorage.app",
+            messagingSenderId: "359632481591",
+            appId: "1:359632481591:web:31d160c7f772841b16feb2"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+    </script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .export-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+        }
+        h2 { color: #0f172a; margin-bottom: 8px; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        .export-btn {
+            background: #16a34a;
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .export-btn:hover { background: #15803d; }
+        .export-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        #statusMsg { margin-top: 16px; font-size: 14px; font-weight: 600; color: #334155; }
+    </style>
+</head>
+<body>
+
+<div class="export-card">
+    <h2>📊 Master Dataset Exporter</h2>
+    <p>Click below to fetch the latest research data directly from Firebase and generate the consolidated master Excel spreadsheet.</p>
+    <button id="exportBtn" class="export-btn" onclick="exportData()">Download Master Excel (.xlsx)</button>
+    <div id="statusMsg"></div>
+</div>
+
+<script>
+    // 定義 Pre-Survey Section 1A 排序題（6 項產品特徵）
+    const SURVEY1_QUESTIONS = [
+        { key: "q01_sensory_experience", header: "Pre_S1_Rank_SensoryExperience" },
+        { key: "q05_healthy",             header: "Pre_S1_Rank_Healthy" },
+        { key: "q06_safe_to_consume",     header: "Pre_S1_Rank_SafeToConsume" },
+        { key: "q08_price_justified",     header: "Pre_S1_Rank_PriceJustified" },
+        { key: "q11_versatile_use",       header: "Pre_S1_Rank_VersatileUse" },
+        { key: "q15_no_exploitation",     header: "Pre_S1_Rank_NoExploitation" }
+    ];
+
+    // 定義 Pre-Survey Section 1B (3 題)[cite: 10, 11]
+    const SURVEY2_QUESTIONS = [
+        { key: "q18_friendly_courteous",  header: "Pre_S2_Q18_FriendlyCourteous" },
+        { key: "q19_polite_considerate",  header: "Pre_S2_Q19_PoliteConsiderate" },
+        { key: "q20_admit_mistakes",      header: "Pre_S2_Q20_AdmitMistakes" }
+    ];
+
+    // 與 admin.html 完全一致的最新 Post-Survey 題庫
+    const POST_SURVEY_QUESTIONS = [
+        // 1. Purchase Willingness & Perceived Sustainability (Items 1-2)
+        { key: "q_wtp_recommended_products",  header: "Post_Item01_WTP_RecommendedProducts" },
+        { key: "q_sus_recommended_products",  header: "Post_Item02_Sus_RecommendedProducts" },
+
+        // 2. Satisfaction with Recommendations & Overall (Items 3-6)
+        { key: "q_sat_pleased_rec",           header: "Post_Item03_Sat_PleasedRec" },
+        { key: "q_sat_satisfying_rec",        header: "Post_Item04_Sat_SatisfyingRec" },
+        { key: "q_sat_feel_happy_rec",        header: "Post_Item05_Sat_FeelHappyRec" },
+        { key: "q_sat_shopping_exp",          header: "Post_Item06_Sat_ShoppingExp" },
+
+        // 3. Importance, Relevance, and Meaningfulness (Items 7-9)
+        { key: "q_rec_important",             header: "Post_Item07_Rec_Important" },
+        { key: "q_rec_relevant",              header: "Post_Item08_Rec_Relevant" },
+        { key: "q_rec_meaningful",            header: "Post_Item09_Rec_Meaningful" },
+
+        // 4. Usefulness of the Recommendations (Items 10-14)
+        { key: "q_useful_find_quickly",       header: "Post_Item10_Useful_FindQuickly" },
+        { key: "q_useful_effectiveness",      header: "Post_Item11_Useful_Effectiveness" },
+        { key: "q_useful_overall",            header: "Post_Item12_Useful_Overall" },
+        { key: "q_useful_easier_search",      header: "Post_Item13_Useful_EasierSearch" },
+        { key: "q_useful_enhance_judgment",   header: "Post_Item14_Useful_EnhanceJudgment" },
+
+        // 5. Perceived Personalization of the Message & Careful Reading (Items 16-19)
+        { key: "q_msg_understands_needs",     header: "Post_Item16_Msg_UnderstandsNeeds" },
+        { key: "q_msg_reflects_wants",        header: "Post_Item17_Msg_ReflectsWants" },
+        { key: "q_msg_preferences_account",   header: "Post_Item18_Msg_PreferencesAccount" },
+        { key: "q_read_msg_carefully",        header: "Post_Item19_Read_MsgCarefully" },
+
+        // 6. Perceived Personalization of Products (Items 20-22)
+        { key: "q_prod_understands_needs",    header: "Post_Item20_Prod_UnderstandsNeeds" },
+        { key: "q_prod_reflects_wants",       header: "Post_Item21_Prod_ReflectsWants" },
+        { key: "q_prod_selected_needs_pref",  header: "Post_Item22_Prod_SelectedNeedsPref" },
+
+        // 7. Scenario Realism & Sustainability Importance (Items 23-28)
+        { key: "q_scenario_realistic",        header: "Post_Item23_Scenario_Realistic" },
+        { key: "q_scenario_imagine_self",     header: "Post_Item24_Scenario_ImagineSelf" },
+        { key: "q_scenario_occur_real",       header: "Post_Item25_Scenario_OccurReal" },
+        { key: "q_sus_important_to_me",       header: "Post_Item26_Sus_ImportantToMe" },
+        { key: "q_sus_relevant_to_me",        header: "Post_Item27_Sus_RelevantToMe" },
+        { key: "q_sus_means_lot_to_me",       header: "Post_Item28_Sus_MeansLotToMe" },
+
+        // 8. Environmental Orientation (Items 29-34)
+        { key: "q_env_effects",               header: "Post_Item29_Env_Effects" },
+        { key: "q_env_protect_influence",     header: "Post_Item30_Env_ProtectInfluence" },
+        { key: "q_env_prefer_less_harm",      header: "Post_Item31_Env_PreferLessHarm" },
+        { key: "q_env_waste_resources",       header: "Post_Item32_Env_WasteResources" },
+        { key: "q_env_responsible_consumer",  header: "Post_Item33_Env_ResponsibleConsumer" },
+        { key: "q_env_accept_inconvenience",  header: "Post_Item34_Env_AcceptInconvenience" },
+
+        // 9. AI Familiarity, Attitude & Perceived Likelihood (Items 36-38)
+        { key: "q_ai_familiar",               header: "Post_Item36_AI_Familiar" },
+        { key: "q_ai_positive_attitude",      header: "Post_Item37_AI_PositiveAttitude" },
+        { key: "q_ai_generated_likelihood",   header: "Post_Item38_AI_GeneratedLikelihood" }
+    ];
+
+    async function exportData() {
+        const btn = document.getElementById("exportBtn");
+        const status = document.getElementById("statusMsg");
+        btn.disabled = true;
+        status.innerText = "⏳ Fetching data from Firebase...";
+
+        try {
+            const [consentsSnap, s1Snap, s2Snap, legacySurveySnap, ordersSnap, visitSnap, postSurveySnap] = await Promise.all([
+                db.ref('consent_records').once('value'),
+                db.ref('survey_section1').once('value'),
+                db.ref('survey_section2').once('value'),
+                db.ref('survey_responses').once('value'),
+                db.ref('checkout_records').once('value'),
+                db.ref('visit_logs').once('value'),
+                db.ref('post_survey_records').once('value')
+            ]);
+
+            const consents = consentsSnap.val() ? Object.values(consentsSnap.val()) : [];
+            const s1List = s1Snap.val() ? Object.values(s1Snap.val()) : [];
+            const s2List = s2Snap.val() ? Object.values(s2Snap.val()) : [];
+            const legacySurveys = legacySurveySnap.val() ? Object.values(legacySurveySnap.val()) : [];
+            const orders = ordersSnap.val() ? Object.values(ordersSnap.val()) : [];
+            const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
+            const postSurveys = postSurveySnap.val() ? Object.values(postSurveySnap.val()) : [];
+
+            const allPIDs = new Set([
+                ...consents.map(c => c.participantID),
+                ...s1List.map(s => s.participantID),
+                ...s2List.map(s => s.participantID),
+                ...legacySurveys.map(l => l.participantID),
+                ...orders.map(o => o.participantID),
+                ...visits.map(v => v.participantID),
+                ...postSurveys.map(p => p.participantID)
+            ].filter(pid => pid && pid.trim() !== ""));
+
+            const masterDataMap = {};
+
+            allPIDs.forEach(pid => {
+                const row = {};
+
+                // 1. Consent 區段
+                row["Participant_ID"] = pid;
+                row["Consent_Agreed_Time"] = "";
+                row["Consent_Agreed_Response"] = "";
+                row["Is_Adult_Response"] = "";
+                row["Is_Eligible"] = "";
+                row["Consent_Status"] = "";
+
+                // 2. AI Nudge 推薦文案與分組變項
+                row["Experiment_Condition"] = "";
+                row["Random_Assignment_Val"] = "";
+                row["AI_Nudge_Text"] = "";
+
+                // 3. Pre-Survey Section 1A 區段 (6 項排序題)
+                row["Pre_S1_Submitted_Time"] = "";
+                SURVEY1_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
+                });
+
+                // 4. Pre-Survey Section 1B 區段 (3 題)[cite: 10, 11]
+                row["Pre_S2_Submitted_Time"] = "";
+                SURVEY2_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
+                });
+
+                // 5. 購物頁面瀏覽與操作總結[cite: 10, 11]
+                row["Store_Enter_Time"] = "";
+                row["Store_Leave_Time"] = "";
+                row["Visit_Duration_Seconds"] = 0;
+                row["Has_Checkout"] = "No";
+                row["Checkout_Time"] = "";
+                row["Order_Total_Amount"] = 0;
+                row["Featured_Items_Total_Qty"] = 0;
+                row["Featured_Items_Total_Amount"] = 0;
+                row["Total_Cart_Items_Qty"] = 0;
+
+                // 6. 商品 1 ~ 36 詳細行為[cite: 10, 11]
+                for (let i = 1; i <= 36; i++) {
+                    row[`Item_${i}_Total_Qty`] = 0;
+                    row[`Item_${i}_From_Featured_Qty`] = 0;
+                    row[`Item_${i}_From_Category_Qty`] = 0;
+                    row[`Seq_Item_${i}`] = "";
+                }
+
+                // 7. Post-Survey 量表題
+                POST_SURVEY_QUESTIONS.forEach(q => {
+                    row[q.header] = "";
+                });
+
+                // 注意力檢查原始作答 (Item 15 & Item 35)
+                row["Attn_Check_Item15_Ans"] = "";
+                row["Attn_Check_Item35_Ans"] = "";
+
+                // 8. 人口統計變項 (對應 Items 39-46)
+                row["Demo_Gender"] = "";
+                row["Demo_Age"] = "";
+                row["Demo_PostalCode"] = "";
+                row["Demo_Income"] = "";
+                row["Demo_Ethnicity"] = "";
+                row["Demo_MaritalStatus"] = "";
+                row["Demo_Education"] = "";
+                row["Demo_Occupation"] = "";
+
+                // 9. 注意力檢查狀態標記[cite: 10, 11]
+                row["Passed_Attention_Check"] = "";
+                row["Study_Status"] = "";
+
+                // 10. 質性開放題 (對應 Items 47-48)
+                row["Open_Survey_Purpose_Thoughts"] = "";
+                row["Open_Study_Feedback"] = "";
+
+                masterDataMap[pid] = row;
+            });
+
+            // 填充 1: Consent
+            consents.forEach(c => {
+                const pid = c.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Consent_Agreed_Time"] = c.agreedAt || "";
+                    masterDataMap[pid]["Consent_Agreed_Response"] = c.agreeConsentResponse || (c.consentGiven ? "yes" : "no") || "";
+                    masterDataMap[pid]["Is_Adult_Response"] = c.isAdultResponse || (c.isAdult ? "yes" : "no") || "";
+                    const isEligible = c.isEligible !== undefined ? c.isEligible : (c.consentGiven && c.isAdult);
+                    masterDataMap[pid]["Is_Eligible"] = isEligible ? "Yes" : "No";
+                    masterDataMap[pid]["Consent_Status"] = c.status || (isEligible ? "Eligible & Consented" : "Ineligible / Refused Consent");
+                }
+            });
+
+            // 填充 2: Pre-Survey Section 1A
+            s1List.forEach(s => {
+                const pid = s.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = s.submittedAt || "";
+                    masterDataMap[pid]["Experiment_Condition"] = s.conditionGroup || (s.isExperimental ? "AI_Personalized" : "Traditional_Static") || "";
+                    masterDataMap[pid]["Random_Assignment_Val"] = s.randomVariable !== undefined ? s.randomVariable : "";
+                    masterDataMap[pid]["AI_Nudge_Text"] = s.nudgeContent || "";
+                    if (s.responses) {
+                        SURVEY1_QUESTIONS.forEach(q => {
+                            if (s.responses[q.key] !== undefined) masterDataMap[pid][q.header] = s.responses[q.key];
+                        });
+                    }
+                }
+            });
+
+            // 填充 3: Pre-Survey Section 1B
+            s2List.forEach(s => {
+                const pid = s.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Pre_S2_Submitted_Time"] = s.submittedAt || "";
+                    if (s.responses) {
+                        SURVEY2_QUESTIONS.forEach(q => {
+                            if (s.responses[q.key] !== undefined) masterDataMap[pid][q.header] = s.responses[q.key];
+                        });
+                    }
+                }
+            });
+
+            // 舊版相容[cite: 10, 11]
+            legacySurveys.forEach(l => {
+                const pid = l.participantID;
+                if (masterDataMap[pid] && !masterDataMap[pid]["Pre_S1_Submitted_Time"]) {
+                    masterDataMap[pid]["Pre_S1_Submitted_Time"] = l.submittedAt || "";
+                    masterDataMap[pid]["AI_Nudge_Text"] = l.nudgeContent || l.nudgeText || "";
+                    if (l.responses) {
+                        SURVEY1_QUESTIONS.forEach(q => {
+                            if (l.responses[q.key] !== undefined) masterDataMap[pid][q.header] = l.responses[q.key];
+                        });
+                        SURVEY2_QUESTIONS.forEach(q => {
+                            if (l.responses[q.key] !== undefined) masterDataMap[pid][q.header] = l.responses[q.key];
+                        });
+                    }
+                }
+            });
+
+            // 填充 4: Visit Logs[cite: 10, 11]
+            visits.forEach(v => {
+                const pid = v.participantID;
+                if (masterDataMap[pid]) {
+                    if (!masterDataMap[pid]["Store_Enter_Time"]) masterDataMap[pid]["Store_Enter_Time"] = v.enter || "";
+                    if (!masterDataMap[pid]["Store_Leave_Time"]) masterDataMap[pid]["Store_Leave_Time"] = v.leave || "";
+                    if (masterDataMap[pid]["Visit_Duration_Seconds"] === 0) masterDataMap[pid]["Visit_Duration_Seconds"] = v.totalSecond || 0;
+                }
+            });
+
+            // 填充 5: 結帳與商品購買明細
+            orders.forEach(o => {
+                const pid = o.participantID;
+                if (masterDataMap[pid]) {
+                    masterDataMap[pid]["Has_Checkout"] = "Yes";
+                    masterDataMap[pid]["Checkout_Time"] = o.checkoutTime || "";
+                    masterDataMap[pid]["Store_Enter_Time"] = o.enterTime || masterDataMap[pid]["Store_Enter_Time"] || "";
+                    masterDataMap[pid]["Store_Leave_Time"] = o.checkoutTime || masterDataMap[pid]["Store_Leave_Time"] || "";
+                    masterDataMap[pid]["Visit_Duration_Seconds"] = o.durationSeconds || masterDataMap[pid]["Visit_Duration_Seconds"] || 0;
+                    masterDataMap[pid]["Order_Total_Amount"] = o.orderTotal || 0;
+                    masterDataMap[pid]["Featured_Items_Total_Qty"] = o.featuredProductCount || 0;
+
+                    let calcFeaturedAmount = o.featuredProductTotalAmount;
+                    if (calcFeaturedAmount === undefined && Array.isArray(o.finalCartItems)) {
+                        calcFeaturedAmount = 0;
+                        o.finalCartItems.forEach(item => {
+                            const itemId = parseInt(item.id, 10);
+                            if (itemId >= 1 && itemId <= 5) {
+                                calcFeaturedAmount += (item.price * item.quantity);
+                            }
+                        });
+                    }
+                    masterDataMap[pid]["Featured_Items_Total_Amount"] = parseFloat((calcFeaturedAmount || 0).toFixed(2));
+
+                    let totalItemCount = 0;
+                    if (Array.isArray(o.finalCartItems)) {
+                        o.finalCartItems.forEach(item => {
+                            const itemId = parseInt(item.id, 10);
+                            const qty = (item.quantity || 0);
+                            totalItemCount += qty;
+
+                            if (itemId >= 1 && itemId <= 36) {
+                                masterDataMap[pid][`Item_${itemId}_Total_Qty`] += qty;
+                                masterDataMap[pid][`Item_${itemId}_From_Featured_Qty`] += (item.featuredQty || 0);
+                                masterDataMap[pid][`Item_${itemId}_From_Category_Qty`] += (item.categoryQty || 0);
+                            }
+                        });
+                    }
+                    masterDataMap[pid]["Total_Cart_Items_Qty"] = totalItemCount;
+
+                    if (o.sourceBreakdown) {
+                        for (let i = 1; i <= 36; i++) {
+                            if (o.sourceBreakdown[`Item_${i}_From_Featured_Qty`] !== undefined) {
+                                masterDataMap[pid][`Item_${i}_From_Featured_Qty`] = o.sourceBreakdown[`Item_${i}_From_Featured_Qty`];
+                            }
+                            if (o.sourceBreakdown[`Item_${i}_From_Category_Qty`] !== undefined) {
+                                masterDataMap[pid][`Item_${i}_From_Category_Qty`] = o.sourceBreakdown[`Item_${i}_From_Category_Qty`];
+                            }
+                        }
+                    }
+
+                    if (o.itemSequenceMap) {
+                        for (let i = 1; i <= 36; i++) {
+                            if (o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
+                                masterDataMap[pid][`Seq_Item_${i}`] = o.itemSequenceMap[`Seq_Item_${i}`];
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 填充 6: Post-Survey 與人口變項
+            postSurveys.forEach(p => {
+                const pid = p.participantID;
+                if (masterDataMap[pid]) {
+                    // 填入 36 題量表作答
+                    if (p.postSurveyLikert) {
+                        POST_SURVEY_QUESTIONS.forEach(q => {
+                            if (p.postSurveyLikert[q.key] !== undefined) {
+                                masterDataMap[pid][q.header] = p.postSurveyLikert[q.key];
+                            }
+                        });
+                    }
+
+                    // 填入 Attention Check 原始答案
+                    if (p.attentionCheckAnswers) {
+                        masterDataMap[pid]["Attn_Check_Item15_Ans"] = p.attentionCheckAnswers.item15_sun_response ?? "";
+                        masterDataMap[pid]["Attn_Check_Item35_Ans"] = p.attentionCheckAnswers.item35_select6_response ?? "";
+                    }
+
+                    // 填入人口學特徵
+                    if (p.demographics) {
+                        masterDataMap[pid]["Demo_Gender"] = p.demographics.gender || "";
+                        masterDataMap[pid]["Demo_Age"] = p.demographics.age || "";
+                        masterDataMap[pid]["Demo_PostalCode"] = p.demographics.postalCode || p.demographics.country || "";
+                        masterDataMap[pid]["Demo_Income"] = p.demographics.income || "";
+                        masterDataMap[pid]["Demo_Ethnicity"] = p.demographics.ethnicity || "";
+                        masterDataMap[pid]["Demo_MaritalStatus"] = p.demographics.maritalStatus || "";
+                        masterDataMap[pid]["Demo_Education"] = p.demographics.education || "";
+                        masterDataMap[pid]["Demo_Occupation"] = p.demographics.occupation || "";
+                    }
+
+                    masterDataMap[pid]["Passed_Attention_Check"] = p.passedAttentionCheck !== undefined ? (p.passedAttentionCheck ? "Yes" : "No") : "";
+                    masterDataMap[pid]["Study_Status"] = p.status || "";
+
+                    // 填入質性開放題
+                    if (p.openResponses) {
+                        masterDataMap[pid]["Open_Survey_Purpose_Thoughts"] = p.openResponses.surveyPurposeThoughts || "";
+                        masterDataMap[pid]["Open_Study_Feedback"] = p.openResponses.generalFeedback || "";
+                    }
+                }
+            });
+
+            // 產出 Excel（工作表名稱與 admin.html 一致設為 All_Research_Data）
+            const wb = XLSX.utils.book_new();
+            const wsMaster = XLSX.utils.json_to_sheet(Object.values(masterDataMap));
+            XLSX.utils.book_append_sheet(wb, wsMaster, "All_Research_Data");
+
+            const dateStr = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `FreshMart_Master_Data_${dateStr}.xlsx`);
+
+            status.innerText = `✅ Success! Exported ${Object.keys(masterDataMap).length} records.`;
+        } catch (err) {
+            console.error("Export error:", err);
+            status.innerText = "❌ Export failed. Please check console for details.";
+        } finally {
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
