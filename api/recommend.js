@@ -19,11 +19,12 @@ Write a single concise sentence (under 100 words) recommending these featured pr
 Rules:
 1. Promote their eco-sustainability based on user preferences.
 2. Emphasize the product features fitting the most important factor (userPreference score = 1) in user preferences.
-3. The sentence MUST strictly start with the words "You may consider these...".
-4. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
-5. Do NOT use wordings implying taking user preferences or referring to user preferences.
-6. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
-7. Output plain text only. No markdown, no quotes, no explanation.
+3. Extend and focus heavily on describing the features of the products satisfying the most important user preferences.
+4. The sentence MUST strictly start with the words "You may consider these...".
+5. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
+6. Do NOT use wordings implying taking user preferences or referring to user preferences.
+7. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
+8. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
