@@ -311,7 +311,7 @@
                 <div class="product-info">
                     <h3>Organic Strawberries</h3>
                     <h3>1 Lb</h3>
-                    <p>$2.38</p>
+                    <p>$3.68</p>
                     <button class="add-btn" data-id="4" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -767,7 +767,15 @@
         const popupNudgeText = document.getElementById('popupNudgeText');
         const bannerTextContainer = document.getElementById('bannerTextContainer');
 
-        const textSentence = localStorage.getItem('nudge_text') || 'These items are eco-friendly, freshly sourced, and sustainable for your daily meals.';
+        // 1. 取得文案或預設文案
+        let textSentence = localStorage.getItem('nudge_text') || "These items are eco-friendly, freshly sourced, and sustainable for your daily meals.";
+
+// 2. 將開頭或句中的 "these" / "These" 替換為 "the items with an 'eco-friendly' badge"
+// （此處使用 /these/i 自動忽略大小寫，並將開頭首字母轉為大寫 The）
+        textSentence = textSentence.replace(/^these\b/i, "The items with an 'eco-friendly' badge");
+        textSentence = textSentence.replace(/\bthese\b/g, "the items with an 'eco-friendly' badge");
+
+// 3. 注入至彈窗與置頂橫幅
         if (popupNudgeText) {
             popupNudgeText.textContent = textSentence;
         }
