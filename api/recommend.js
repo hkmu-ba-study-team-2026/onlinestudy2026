@@ -11,14 +11,14 @@ async function getAiRecommendationsFromGemini(products, preferences) {
         : [];
 
     const promptText = `
-User Preferences from survey (1-6 scale, 1 is extremely important, 6 is not at all important): ${JSON.stringify(preferences)}
+User Preferences from survey (1-6 score, 1 is extremely important, 6 is not at all important): ${JSON.stringify(preferences)}
 Featured Products (with descriptions): ${JSON.stringify(simplifiedProducts)}
 
 Task:
-Write a single concise sentence (under 70 words) recommending these featured products.
+Write a single concise sentence (under 100 words) recommending these featured products.
 Rules:
 1. Promote their eco-sustainability based on user preferences.
-2. Emphasize the product features fitting the two most important factors in user preferences.
+2. Emphasize the product features fitting the most important factor (userPreference score = 1) in user preferences.
 3. The sentence MUST strictly start with the words "You may consider these...".
 4. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
 5. Do NOT use wordings implying taking user preferences or referring to user preferences.

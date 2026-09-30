@@ -728,11 +728,13 @@
                     masterDataMap[pid]["Order_Total_Amount"] = o.orderTotal || 0;
                     masterDataMap[pid]["Featured_Items_Total_Qty"] = o.featuredProductCount || 0;
 
+                    // 在 admin.html 的 orders 填充邏輯中：
                     let calcFeaturedAmount = o.featuredProductTotalAmount;
                     if (calcFeaturedAmount === undefined && Array.isArray(o.finalCartItems)) {
                         calcFeaturedAmount = 0;
                         o.finalCartItems.forEach(item => {
                             const itemId = parseInt(item.id, 10);
+                            // ★ ID 1 到 5 精確代表 5 項精選環保品 ★
                             if (itemId >= 1 && itemId <= 5) {
                                 calcFeaturedAmount += (item.price * item.quantity);
                             }

@@ -60,35 +60,35 @@ function generateItemSequenceMap(seqArray) {
 
 // ==================== 36 項商品資料庫（ID 1~5 為 Featured） ====================
 const products = [
-    // 1. Featured items (置頂 5 項，ID: 1 ~ 5)
-    { id: 1, name: "Tomato Cherry", price: 2.97, isFeatured: true },
-    { id: 2, name: "Chicken Drumsticks", price: 1.77, isFeatured: true },
-    { id: 3, name: "Large Brown Eggs", price: 7.49, isFeatured: true },
-    { id: 4, name: "Strawberries", price: 2.38, isFeatured: true },
+    // 1. Featured items (精選 5 項，ID: 1 ~ 5)
+    { id: 1, name: "Organic Cherry Tomato", price: 3.48, isFeatured: true },
+    { id: 2, name: "100% Natural Chicken Drumsticks", price: 2.29, isFeatured: true },
+    { id: 3, name: "Cage-Free Eggs", price: 7.49, isFeatured: true },
+    { id: 4, name: "Organic Strawberries", price: 2.38, isFeatured: true },
     { id: 5, name: "Greek Yogurt", price: 4.99, isFeatured: true },
 
-    // 2. Fresh Fruits (水果類，ID: 6 ~ 10)
+    // 2. Fresh Fruits (常規水果，ID: 6 ~ 10)
     { id: 6, name: "Red Apple", price: 1.47, isFeatured: false },
-    { id: 7, name: "Blueberries", price: 2.99, isFeatured: false },
+    { id: 7, name: "Strawberries", price: 2.38, isFeatured: false },
     { id: 8, name: "Banana Bunch", price: 0.99, isFeatured: false },
     { id: 9, name: "Oranges", price: 4.99, isFeatured: false },
     { id: 10, name: "Lemon", price: 0.74, isFeatured: false },
 
-    // 3. Fresh Vegetables (蔬菜類，ID: 11 ~ 15)
-    { id: 11, name: "Avocado", price: 2.59, isFeatured: false },
-    { id: 12, name: "Sweet Potato", price: 1.95, isFeatured: false },
+    // 3. Fresh Vegetables (常規蔬菜，ID: 11 ~ 15)
+    { id: 11, name: "Cherry Tomato", price: 2.97, isFeatured: false },
+    { id: 12, name: "Avocado", price: 2.59, isFeatured: false },
     { id: 13, name: "Cucumber", price: 2.08, isFeatured: false },
     { id: 14, name: "Bi-Color Corn", price: 0.50, isFeatured: false },
     { id: 15, name: "Peeled Baby Carrots", price: 1.32, isFeatured: false },
 
-    // 4. Fresh Meat (肉類，ID: 16 ~ 20)
-    { id: 16, name: "Ground Beef", price: 6.99, isFeatured: false },
-    { id: 17, name: "Chicken Breasts Fillets", price: 2.79, isFeatured: false },
+    // 4. Fresh Meat (常規肉類，ID: 16 ~ 20)
+    { id: 16, name: "Chicken Drumsticks", price: 1.99, isFeatured: false },
+    { id: 17, name: "Ground Beef", price: 6.99, isFeatured: false },
     { id: 18, name: "Beef Sirloin Steaks", price: 15.24, isFeatured: false },
     { id: 19, name: "Pork Loin Chops", price: 7.38, isFeatured: false },
     { id: 20, name: "Ground Turkey Meat", price: 5.46, isFeatured: false },
 
-    // 5. Seafood Market (海鮮類，ID: 21 ~ 26)
+    // 5. Seafood Market (常規海鮮，ID: 21 ~ 26)
     { id: 21, name: "Smoked Salmon", price: 8.98, isFeatured: false },
     { id: 22, name: "Raw Shrimp Pack", price: 7.64, isFeatured: false },
     { id: 23, name: "Cod Fillets", price: 13.78, isFeatured: false },
@@ -96,13 +96,13 @@ const products = [
     { id: 25, name: "Tilapia Fillets", price: 5.99, isFeatured: false },
     { id: 26, name: "Tuna Pack", price: 1.25, isFeatured: false },
 
-    // 6. Dairy & Cheese (乳品類，ID: 27 ~ 30)
-    { id: 27, name: "Whole Milk", price: 4.99, isFeatured: false },
-    { id: 28, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
-    { id: 29, name: "Unsalted Butter", price: 2.99, isFeatured: false },
+    // 6. Dairy & Cheese (常規乳品雜貨，ID: 27 ~ 30)
+    { id: 27, name: "Yogurt", price: 3.99, isFeatured: false },
+    { id: 28, name: "Eggs", price: 6.19, isFeatured: false },
+    { id: 29, name: "Cheddar Cheese", price: 1.65, isFeatured: false },
     { id: 30, name: "Four Cheese Blend", price: 1.90, isFeatured: false },
 
-    // 7. Bread (麵包類，ID: 31 ~ 36)
+    // 7. Bakery (常規麵包，ID: 31 ~ 36)
     { id: 31, name: "Sourdough Bread", price: 5.49, isFeatured: false },
     { id: 32, name: "Butter Bread", price: 3.42, isFeatured: false },
     { id: 33, name: "Whole Wheat Bread", price: 3.99, isFeatured: false },

@@ -95,40 +95,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-        }
-
-        /* 鎖定滾動時套用的樣式 */
-        body.scroll-locked {
-            overflow: hidden !important;
-            height: 100vh !important;
-        }
-
-        /* 5 秒閱讀 Featured 浮動提示條 */
-        .featured-lock-toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            color: #ffffff;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        /* 鎖定時導覽列不可點擊 */
-        .sub-menu.locked a {
-            pointer-events: none;
-            opacity: 0.5;
-            cursor: not-allowed;
+            margin-bottom: 16px;
         }
 
         .rec-banner {
@@ -136,24 +103,21 @@
             border: 2px solid #22c55e;
             border-left: 8px solid #15803d;
             border-radius: 12px;
-            padding: 24px;
+            padding: 18px 22px;
             margin-bottom: 25px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);
         }
 
         .rec-banner-content {
             background: #ffffff;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 16px 20px;
             border: 2px solid #16a34a;
             box-shadow: 0 4px 18px rgba(22, 163, 74, 0.18);
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-top: 15px;
             animation: gentlePulse 3s infinite ease-in-out;
         }
 
@@ -170,115 +134,11 @@
 
         .nudge-text-highlight {
             color: #064e3b;
-            font-size: 1.12rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            line-height: 1.45;
+            line-height: 1.5;
             margin: 0;
             letter-spacing: 0.2px;
-        }
-
-        /* More Info 按鈕樣式 */
-        .btn-more-info {
-            display: inline-block;
-            margin-top: 6px;
-            padding: 4px 10px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #2563eb;
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .btn-more-info:hover {
-            background-color: #dbeafe;
-            color: #1d4ed8;
-            border-color: #93c5fd;
-        }
-
-        /* 彈出對話框遮罩 */
-        .info-modal-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(15, 23, 42, 0.45);
-            backdrop-filter: blur(2px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 彈出對話框卡片主體 */
-        .info-modal-box {
-            background-color: #ffffff;
-            max-width: 360px;
-            width: 90%;
-            padding: 22px 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            text-align: left;
-            animation: modalPop 0.2s ease-out;
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .info-modal-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .info-modal-close {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: #94a3b8;
-            cursor: pointer;
-            line-height: 1;
-            padding: 2px 6px;
-        }
-
-        .info-modal-close:hover {
-            color: #475569;
-        }
-
-        .info-modal-text {
-            font-size: 0.9rem;
-            color: #475569;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .info-modal-btn {
-            display: block;
-            width: 100%;
-            padding: 8px 0;
-            background-color: #2563eb;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .info-modal-btn:hover {
-            background-color: #1d4ed8;
         }
 
         .eco-badge {
@@ -339,7 +199,7 @@
     </div>
 </div>
 
-<!-- 第二個彈窗：特顯 Nudge Text -->
+<!-- 第二個彈窗：特顯 Nudge Text 與 5 張精選商品圖片 -->
 <div id="nudgeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); align-items: center; justify-content: center; z-index: 9999;">
     <div style="background: #ffffff; padding: 28px 24px; border-radius: 14px; max-width: 580px; width: 92%; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.25); border: 2px solid #22c55e;">
         <span style="display: inline-block; background: #dcfce7; color: #15803d; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
@@ -348,30 +208,28 @@
         <h2 style="color: #0f172a; margin-bottom: 12px; font-size: 19px; font-weight: 800;">Please read the message carefully:</h2>
         <h3 style="color: #0f172a; margin-bottom: 12px; font-size: 19px; font-weight: 800;">A Special Note for Your Shopping</h3>
 
-        <!-- Nudge 文字高亮展示區塊 -->
         <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-left: 5px solid #16a34a; border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; text-align: left;">
             <p id="popupNudgeText" style="color: #064e3b; font-size: 14px; font-weight: 700; line-height: 1.5; margin: 0;">
                 Loading ...
             </p>
         </div>
 
-        <!-- ★ 5 張精選商品圖片展示列 ★ -->
         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px;">
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
-                <img src="assets/tomato.jpg" alt="Cherry Tomato" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
-                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Cherry Tomato</span>
+                <img src="assets/organic_cherry_tomato.jpg" alt="Organic Cherry Tomato" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Organic Tomato</span>
             </div>
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
-                <img src="assets/chicken-drum.jpg" alt="Chicken Drumsticks" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
-                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Chicken Drum</span>
+                <img src="assets/natural_chicken_drum.jpg" alt="Natural Chicken Drumsticks" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Natural Chicken</span>
             </div>
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
-                <img src="assets/eggs.jpg" alt="Large Brown Eggs" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
-                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Brown Eggs</span>
+                <img src="assets/cage_free_eggs.jpg" alt="Cage-Free Eggs" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Cage-Free Eggs</span>
             </div>
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
-                <img src="assets/strawberries.jpg" alt="Strawberries" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
-                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Strawberries</span>
+                <img src="assets/organic_strawberries.jpg" alt="Organic Strawberries" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
+                <span style="font-size: 11px; font-weight: 600; color: #334155; line-height: 1.2;">Organic Strawberries</span>
             </div>
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; background: #fafafa; display: flex; flex-direction: column; align-items: center;">
                 <img src="assets/greek-yogurt.jpg" alt="Greek Yogurt" style="width: 100%; height: 55px; object-fit: contain; border-radius: 4px; margin-bottom: 4px;">
@@ -379,7 +237,6 @@
             </div>
         </div>
 
-        <!-- 5 秒倒數按鈕 -->
         <button id="closeNudgeModalBtn" disabled style="background: #94a3b8; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; cursor: not-allowed; font-size: 15px; width: 100%; transition: all 0.3s ease;">
             Please read carefully (5s)
         </button>
@@ -405,7 +262,6 @@
 <section class="sub-nav">
     <div class="container sub-wrap">
         <nav class="sub-menu">
-            <a href="#products" class="link-normal">Featured</a>
             <a href="#fruits" class="link-normal">Fruits</a>
             <a href="#vegetables" class="link-normal">Vegetables</a>
             <a href="#meat" class="link-normal">Meat</a>
@@ -416,90 +272,23 @@
     </div>
 </section>
 
-<!-- 1. 精選置頂區 (ID: 1 ~ 5) -->
-<section id="products" class="products-section">
+<!-- 1. 置頂 Nudge 提示橫幅區塊 -->
+<section id="recommendation-notice" class="products-section" style="padding-bottom: 0;">
     <div class="container">
-
         <div class="featured-header-bar">
-            <h2 style="margin: 0;">Featured eco-sustainable items</h2>
+            <h2 style="margin: 0; font-size: 1.3rem;">Recommendation Notice</h2>
             <div id="budgetDisplay" class="budget-badge">
                 Remaining Budget: $<span id="remainingBudget">50.00</span>
             </div>
         </div>
 
         <div class="rec-banner" id="featuredBanner">
-            <div class="products-grid" id="productWrap">
-                <!-- 1. Tomato Cherry (ID: 1) -->
-                <div class="product-card" data-id="1" data-type="featured">
-                    <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
-                    <div class="product-info">
-                        <h3>Cherry Tomato</h3>
-                        <h3>10 Ounce</h3>
-                        <p>$2.97</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Cherry Tomato')">More info</button>
-                        <button class="add-btn" data-id="1" data-source="featured">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 2. Chicken Drumsticks (ID: 2) -->
-                <div class="product-card" data-id="2" data-type="featured">
-                    <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
-                    <div class="product-info">
-                        <h3>Chicken Drumsticks</h3>
-                        <h3>1 Lb</h3>
-                        <p>$1.77</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Chicken Drumsticks')">More info</button>
-                        <button class="add-btn" data-id="2" data-source="featured">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 3. Large Brown Eggs (ID: 3) -->
-                <div class="product-card" data-id="3" data-type="featured">
-                    <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
-                    <div class="product-info">
-                        <h3>Large Brown Eggs</h3>
-                        <h3>12 Count</h3>
-                        <p>$7.49</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Large Brown Eggs')">More info</button>
-                        <button class="add-btn" data-id="3" data-source="featured">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 4. Strawberries (ID: 4) -->
-                <div class="product-card" data-id="4" data-type="featured">
-                    <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
-                    <div class="product-info">
-                        <h3>Strawberries</h3>
-                        <h3>1 Lb</h3>
-                        <p>$2.38</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Strawberries')">More info</button>
-                        <button class="add-btn" data-id="4" data-source="featured">Add to Cart</button>
-                    </div>
-                </div>
-
-                <!-- 5. Greek Yogurt (ID: 5) -->
-                <div class="product-card" data-id="5" data-type="featured">
-                    <span class="eco-badge">Eco-friendly</span>
-                    <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek Yogurt"></div>
-                    <div class="product-info">
-                        <h3>Greek Yogurt</h3>
-                        <h3>32 Ounce</h3>
-                        <p>$4.99</p>
-                        <button type="button" class="btn-more-info" onclick="openInfoModal('Greek Yogurt')">More info</button>
-                        <button class="add-btn" data-id="5" data-source="featured">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
             <div id="bannerTextContainer" class="rec-banner-content"></div>
         </div>
     </div>
 </section>
 
-<!-- 2. Fruits (包含複製的 Strawberries ID: 4) -->
+<!-- 2. Fruits (包含精選 ID 4 與常規 ID 6~10) -->
 <section id="fruits" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -515,22 +304,23 @@
                     <button class="add-btn" data-id="6" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="4" data-type="fruits">
+            <!-- ★ Featured Item 4 ★ -->
+            <div class="product-card" data-id="4" data-type="featured">
                 <span class="eco-badge">Eco-friendly</span>
-                <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
+                <div class="product-image"><img src="assets/organic_strawberries.jpg" alt="Organic Strawberries"></div>
                 <div class="product-info">
-                    <h3>Strawberries</h3>
+                    <h3>Organic Strawberries</h3>
                     <h3>1 Lb</h3>
                     <p>$2.38</p>
                     <button class="add-btn" data-id="4" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="7" data-type="fruits">
-                <div class="product-image"><img src="assets/blueberry.jpg" alt="Blueberries"></div>
+                <div class="product-image"><img src="assets/strawberries.jpg" alt="Strawberries"></div>
                 <div class="product-info">
-                    <h3>Blueberries</h3>
-                    <h3>1 Pint</h3>
-                    <p>$2.99</p>
+                    <h3>Strawberries</h3>
+                    <h3>1 Lb</h3>
+                    <p>$2.38</p>
                     <button class="add-btn" data-id="7" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -565,38 +355,39 @@
     </div>
 </section>
 
-<!-- 3. Vegetables (包含複製的 Tomato Cherry ID: 1) -->
+<!-- 3. Vegetables (包含精選 ID 1 與常規 ID 11~15) -->
 <section id="vegetables" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Vegetables</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="1" data-type="vegetables">
+            <!-- ★ Featured Item 1 ★ -->
+            <div class="product-card" data-id="1" data-type="featured">
                 <span class="eco-badge">Eco-friendly</span>
-                <div class="product-image"><img src="assets/tomato.jpg" alt="Tomato"></div>
+                <div class="product-image"><img src="assets/organic_cherry_tomato.jpg" alt="Organic Cherry Tomato"></div>
                 <div class="product-info">
-                    <h3>Cherry Tomato</h3>
+                    <h3>Organic Cherry Tomato</h3>
                     <h3>10 Ounce</h3>
-                    <p>$2.97</p>
+                    <p>$3.48</p>
                     <button class="add-btn" data-id="1" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="11" data-type="vegetables">
+                <div class="product-image"><img src="assets/cherry_tomato.jpg" alt="Cherry Tomato"></div>
+                <div class="product-info">
+                    <h3>Cherry Tomato</h3>
+                    <h3>10 Ounce</h3>
+                    <p>$2.97</p>
+                    <button class="add-btn" data-id="11" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="12" data-type="vegetables">
                 <div class="product-image"><img src="assets/avocado.jpg" alt="Avocado"></div>
                 <div class="product-info">
                     <h3>Avocado</h3>
                     <h3>1 Count</h3>
                     <p>$2.59</p>
-                    <button class="add-btn" data-id="11" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="12" data-type="vegetables">
-                <div class="product-image"><img src="assets/sweet-potato.jpg" alt="SweetPotato"></div>
-                <div class="product-info">
-                    <h3>Sweet Potato</h3>
-                    <h3>1 Each</h3>
-                    <p>$1.95</p>
                     <button class="add-btn" data-id="12" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -631,38 +422,39 @@
     </div>
 </section>
 
-<!-- 4. Meat (包含複製的 Chicken Drumsticks ID: 2) -->
+<!-- 4. Meat (包含精選 ID 2 與常規 ID 16~20) -->
 <section id="meat" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Fresh Meat</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="2" data-type="meat">
+            <!-- ★ Featured Item 2 ★ -->
+            <div class="product-card" data-id="2" data-type="featured">
                 <span class="eco-badge">Eco-friendly</span>
-                <div class="product-image"><img src="assets/chicken-drum.jpg" alt="Chicken Drum"></div>
+                <div class="product-image"><img src="assets/natural_chicken_drum.jpg" alt="Natural Chicken Drumsticks"></div>
                 <div class="product-info">
-                    <h3>Chicken Drumsticks</h3>
+                    <h3>100% Natural Chicken Drumsticks</h3>
                     <h3>1 Lb</h3>
-                    <p>$1.77</p>
+                    <p>$2.29</p>
                     <button class="add-btn" data-id="2" data-source="category">Add to Cart</button>
                 </div>
             </div>
             <div class="product-card" data-id="16" data-type="meat">
+                <div class="product-image"><img src="assets/chicken_drums.jpg" alt="Chicken Drumsticks"></div>
+                <div class="product-info">
+                    <h3>Chicken Drumsticks</h3>
+                    <h3>1 Lb</h3>
+                    <p>$1.99</p>
+                    <button class="add-btn" data-id="16" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-id="17" data-type="meat">
                 <div class="product-image"><img src="assets/ground-beef.jpg" alt="Beef"></div>
                 <div class="product-info">
                     <h3>Ground Beef</h3>
                     <h3>1 Lb</h3>
                     <p>$6.99</p>
-                    <button class="add-btn" data-id="16" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="17" data-type="meat">
-                <div class="product-image"><img src="assets/chicken-breasts.jpg" alt="Chicken Breasts"></div>
-                <div class="product-info">
-                    <h3>Chicken Breasts Fillets</h3>
-                    <h3>1 Lb</h3>
-                    <p>$2.79</p>
                     <button class="add-btn" data-id="17" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -697,7 +489,7 @@
     </div>
 </section>
 
-<!-- 5. Seafood Market (Smoked Salmon ID: 21) -->
+<!-- 5. Seafood Market (常規 ID 21 ~ 26) -->
 <section id="seafood" class="products-section">
     <div class="container">
         <div class="cate-head">
@@ -762,14 +554,15 @@
     </div>
 </section>
 
-<!-- 6. Pantry & Dairy (包含複製的 Eggs ID: 3 與 Greek Yogurt ID: 5) -->
+<!-- 6. Pantry & Dairy (包含精選 ID 5、ID 3 與常規 ID 27~30) -->
 <section id="dairy" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Dairy, Cheese & Eggs</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="5" data-type="dairy">
+            <!-- ★ Featured Item 5 ★ -->
+            <div class="product-card" data-id="5" data-type="featured">
                 <span class="eco-badge">Eco-friendly</span>
                 <div class="product-image"><img src="assets/greek-yogurt.jpg" alt="Greek-Yogurt"></div>
                 <div class="product-info">
@@ -779,40 +572,41 @@
                     <button class="add-btn" data-id="5" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="3" data-type="dairy">
-                <span class="eco-badge">Eco-friendly</span>
-                <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
+            <div class="product-card" data-id="27" data-type="dairy">
+                <div class="product-image"><img src="assets/yogurt.jpg" alt="Yogurt"></div>
                 <div class="product-info">
-                    <h3>Large Brown Eggs</h3>
-                    <h3>12 Count</h3>
+                    <h3>Yogurt</h3>
+                    <h3>32 Ounce</h3>
+                    <p>$3.99</p>
+                    <button class="add-btn" data-id="27" data-source="category">Add to Cart</button>
+                </div>
+            </div>
+            <!-- ★ Featured Item 3 ★ -->
+            <div class="product-card" data-id="3" data-type="featured">
+                <span class="eco-badge">Eco-friendly</span>
+                <div class="product-image"><img src="assets/cage_free_eggs.jpg" alt="Cage-Free Eggs"></div>
+                <div class="product-info">
+                    <h3>Cage-Free Eggs</h3>
+                    <h3>12 Counts</h3>
                     <p>$7.49</p>
                     <button class="add-btn" data-id="3" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="27" data-type="dairy">
-                <div class="product-image"><img src="assets/milk.png" alt="Milk"></div>
+            <div class="product-card" data-id="28" data-type="dairy">
+                <div class="product-image"><img src="assets/eggs.jpg" alt="Eggs"></div>
                 <div class="product-info">
-                    <h3>Whole Milk</h3>
-                    <h3>64 Ounce</h3>
-                    <p>$4.99</p>
-                    <button class="add-btn" data-id="27" data-source="category">Add to Cart</button>
+                    <h3>Eggs</h3>
+                    <h3>12 Counts</h3>
+                    <p>$6.19</p>
+                    <button class="add-btn" data-id="28" data-source="category">Add to Cart</button>
                 </div>
             </div>
-            <div class="product-card" data-id="28" data-type="dairy">
+            <div class="product-card" data-id="29" data-type="dairy">
                 <div class="product-image"><img src="assets/cheddar-cheese.jpg" alt="Cheddar Cheese"></div>
                 <div class="product-info">
                     <h3>Cheddar Cheese</h3>
                     <h3>8 Ounce, 10 Slices</h3>
                     <p>$1.65</p>
-                    <button class="add-btn" data-id="28" data-source="category">Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-id="29" data-type="dairy">
-                <div class="product-image"><img src="assets/butter.jpg" alt="Butter"></div>
-                <div class="product-info">
-                    <h3>Unsalted Butter</h3>
-                    <h3>16 Ounce</h3>
-                    <p>$2.99</p>
                     <button class="add-btn" data-id="29" data-source="category">Add to Cart</button>
                 </div>
             </div>
@@ -829,13 +623,14 @@
     </div>
 </section>
 
+<!-- 7. Bakery (常規 ID 31 ~ 36) -->
 <section id="bakery" class="products-section">
     <div class="container">
         <div class="cate-head">
             <h2>Bakery</h2>
         </div>
         <div class="products-grid">
-            <div class="product-card" data-id="31" data-type="dairy">
+            <div class="product-card" data-id="31" data-type="bakery">
                 <div class="product-image"><img src="assets/sourdough.jpg" alt="Sourdough"></div>
                 <div class="product-info">
                     <h3>Sourdough Bread</h3>
@@ -893,6 +688,7 @@
     </div>
 </section>
 
+<!-- Shopping Cart Section -->
 <section id="cart" class="cart-section">
     <div class="container">
         <h2 class="section-title">Your Shopping Cart</h2>
@@ -940,7 +736,7 @@
 
 <div id="budgetExceededModal" class="modal-overlay" style="display: none;">
     <div class="modal-card">
-        <h3 class="modal-title" style="color: #dc2626;">⚠️ Budget Limit Exceeded</h3>
+        <h3 class="modal-title" style="color: #dc2626;">⚠ Budget Limit Exceeded</h3>
         <p id="budgetExceededMessage" class="modal-message"></p>
         <div class="modal-actions">
             <button type="button" class="modal-btn confirm-btn" style="background-color: #dc2626;" onclick="closeBudgetModal()">
@@ -950,67 +746,20 @@
     </div>
 </div>
 
-<div id="productInfoModal" class="info-modal-backdrop" onclick="closeInfoModal(event)">
-    <div class="info-modal-box" onclick="event.stopPropagation()">
-        <div class="info-modal-title">
-            <span id="modalProductTitle">Product Info</span>
-            <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
-        </div>
-        <p id="modalProductText" class="info-modal-text">
-            <!-- 預留讓你自訂的那句話 -->
-            This is where your custom sentence will be placed.
-        </p>
-        <button class="info-modal-btn" onclick="closeInfoModal()">Got it</button>
-    </div>
-</div>
-
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="script.js"></script>
 <script>
     (function preventBackNavigation() {
-        // 先推入一筆當前頁面的歷史狀態
         window.history.pushState(null, "", window.location.href);
-
-        // 監聽上一頁 (popstate) 事件
         window.addEventListener("popstate", function () {
-            // 當使用者按上一頁時，立刻再補推一層，強迫留在當前頁面
             window.history.pushState(null, "", window.location.href);
-
-            // 可選：彈出警告通知受試者不可回退
             alert("Please do not return to the previous page. If you do so, you will not receive compensation. Thank you for your understanding.");
         });
     })();
 
-    const featuredInfoDescriptions = {
-        "Cherry Tomato": "You may consider these vine-ripened, hand-picked cherry tomatoes. Their Fair Trade and EFI certifications support fair wages and safe working conditions.",
-        "Chicken Drumsticks": "You may consider these chicken drumsticks from chickens raised with outdoor access and without antibiotics or added hormones. The packaging is also made from 100% recyclable plastic.",
-        "Large Brown Eggs": "You may consider these responsibly produced eggs. The hens have year-round outdoor access, and the product supports farmers while allowing you to trace the eggs back to the farm.",
-        "Strawberries": "You may consider these certified sustainable strawberries, made with at least 95% organic ingredients.",
-        "Greek Yogurt": "You may consider this slowly crafted Greek yogurt, made with organic ingredients and USDA-certified organic whole milk."
-    };
-
-    function openInfoModal(productName) {
-        const modal = document.getElementById("productInfoModal");
-        const titleEl = document.getElementById("modalProductTitle");
-        const textEl = document.getElementById("modalProductText");
-
-        titleEl.textContent = productName;
-        // 若字典有定義則使用自訂句子，否則使用預設句子
-        textEl.textContent = featuredInfoDescriptions[productName] || "Special curated item for your shopping list.";
-
-        modal.style.display = "flex";
-    }
-
-    function closeInfoModal(e) {
-        if (!e || e.target.id === "productInfoModal" || e.target.classList.contains("info-modal-close") || e.target.classList.contains("info-modal-btn")) {
-            document.getElementById("productInfoModal").style.display = "none";
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function(){
         const MAX_BUDGET = 50.00;
 
-        // 1. 取得 DOM 元素
         const welcomeModal = document.getElementById('welcomeModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const nudgeModal = document.getElementById('nudgeModal');
@@ -1018,7 +767,6 @@
         const popupNudgeText = document.getElementById('popupNudgeText');
         const bannerTextContainer = document.getElementById('bannerTextContainer');
 
-        // 2. 注入 Nudge 文案
         const textSentence = localStorage.getItem('nudge_text') || 'These items are eco-friendly, freshly sourced, and sustainable for your daily meals.';
         if (popupNudgeText) {
             popupNudgeText.textContent = textSentence;
@@ -1027,7 +775,6 @@
             bannerTextContainer.innerHTML = `<h2 class="nudge-text-highlight">${textSentence}</h2>`;
         }
 
-        // 3. ★ 啟動第一個彈窗 5 秒強制倒數 ★
         if (welcomeModal && closeModalBtn) {
             let countdown1 = 5;
             closeModalBtn.disabled = true;
@@ -1046,7 +793,6 @@
                 }
             }, 1000);
 
-            // 覆蓋 script.js 的預設行為，強制等倒數完點擊才切換到第二個彈窗
             closeModalBtn.onclick = function(e) {
                 e.stopPropagation();
                 if (!closeModalBtn.disabled) {
@@ -1056,7 +802,6 @@
             };
         }
 
-        // 4. ★ 第二個彈窗（Nudge）5 秒強制倒數 ★
         function showNudgeModal() {
             if (!nudgeModal || !closeNudgeModalBtn) return;
             nudgeModal.style.display = 'flex';
@@ -1086,7 +831,6 @@
             };
         }
 
-        // 5. 購物車預算更新功能
         function updateRemainingBudgetDisplay() {
             let currentTotal = 0;
             if (typeof cart !== 'undefined' && Array.isArray(cart)) {
@@ -1122,7 +866,6 @@
 
         updateRemainingBudgetDisplay();
 
-        // 6. 搜尋欄位邏輯
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const allCards = document.querySelectorAll('.product-card');
