@@ -707,43 +707,46 @@
     const ATTENTION_FAILED_REDIRECT_URL = "https://app.prolific.com/submissions/complete?cc=C1IG4ZHS";
 
     // 最新構面的主要量表題清單（共 35 題分析題 + 1 題 AI 歸因題，不含 2 題 attention check）
+    // ★ 順序嚴格對齊表單 Items 1~38 ★
     const scaleQuestionIds = [
-        "q_wtp_recommended_products",
-        "q_sus_recommended_products",
-        "q_sat_pleased_rec",
-        "q_sat_satisfying_rec",
-        "q_sat_feel_happy_rec",
-        "q_sat_shopping_exp",
-        "q_rec_important",
-        "q_rec_relevant",
-        "q_rec_meaningful",
-        "q_useful_find_quickly",
-        "q_useful_effectiveness",
-        "q_useful_overall",
-        "q_useful_easier_search",
-        "q_useful_enhance_judgment",
-        "q_msg_understands_needs",
-        "q_msg_reflects_wants",
-        "q_msg_preferences_account",
-        "q_prod_selected_needs_pref",
-        "q_prod_understands_needs",
-        "q_prod_reflects_wants",
-        "q_read_msg_carefully",
-        "q_scenario_realistic",
-        "q_scenario_imagine_self",
-        "q_scenario_occur_real",
-        "q_sus_important_to_me",
-        "q_sus_relevant_to_me",
-        "q_sus_means_lot_to_me",
-        "q_env_effects",
-        "q_env_protect_influence",
-        "q_env_prefer_less_harm",
-        "q_env_waste_resources",
-        "q_env_responsible_consumer",
-        "q_env_accept_inconvenience",
-        "q_ai_familiar",
-        "q_ai_positive_attitude",
-        "q_ai_generated_likelihood"
+        "q_wtp_recommended_products",   // Item 1
+        "q_sus_recommended_products",   // Item 2
+        "q_sat_pleased_rec",            // Item 3
+        "q_sat_satisfying_rec",         // Item 4
+        "q_sat_feel_happy_rec",         // Item 5
+        "q_sat_shopping_exp",           // Item 6
+        "q_rec_important",              // Item 7
+        "q_rec_relevant",               // Item 8
+        "q_rec_meaningful",             // Item 9
+        "q_useful_find_quickly",        // Item 10
+        "q_useful_effectiveness",       // Item 11
+        "q_useful_overall",             // Item 12
+        "q_useful_easier_search",       // Item 13
+        "q_useful_enhance_judgment",    // Item 14
+        // Item 15 為 attn_check_1
+        "q_msg_understands_needs",      // Item 16
+        "q_msg_reflects_wants",         // Item 17
+        "q_msg_preferences_account",    // Item 18
+        "q_read_msg_carefully",         // Item 19
+        "q_prod_understands_needs",     // Item 20
+        "q_prod_reflects_wants",        // Item 21
+        "q_prod_selected_needs_pref",   // Item 22
+        "q_scenario_realistic",         // Item 23
+        "q_scenario_imagine_self",      // Item 24
+        "q_scenario_occur_real",        // Item 25
+        "q_sus_important_to_me",        // Item 26
+        "q_sus_relevant_to_me",         // Item 27
+        "q_sus_means_lot_to_me",        // Item 28
+        "q_env_effects",                // Item 29
+        "q_env_protect_influence",      // Item 30
+        "q_env_prefer_less_harm",       // Item 31
+        "q_env_waste_resources",        // Item 32
+        "q_env_responsible_consumer",   // Item 33
+        "q_env_accept_inconvenience",   // Item 34
+        // Item 35 為 attn_check_2
+        "q_ai_familiar",                // Item 36
+        "q_ai_positive_attitude",       // Item 37
+        "q_ai_generated_likelihood"     // Item 38
     ];
 
     // Attention Check 題目 ID

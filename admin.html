@@ -254,31 +254,31 @@
         { key: "q15_no_exploitation",     header: "Pre_S1_Rank_NoExploitation" }
     ];
 
-    // 定義 Pre-Survey Section 1B (3 題)
+    // 定義 Pre-Survey Section 1B (3 題)[cite: 6]
     const SURVEY2_QUESTIONS = [
         { key: "q18_friendly_courteous",  header: "Pre_S2_Q18_FriendlyCourteous" },
         { key: "q19_polite_considerate",  header: "Pre_S2_Q19_PoliteConsiderate" },
         { key: "q20_admit_mistakes",      header: "Pre_S2_Q20_AdmitMistakes" }
     ];
 
-    // 最新 Post-Survey 題庫 (35 題分析題 + 1 題 AI 歸因題，完全對齊 post_survey.html 的實際順序)
+    // 最新 Post-Survey 題庫 (35 題分析題 + 1 題 AI 歸因題，完全對齊 post_survey.html 的實際順序)[cite: 6]
     const POST_SURVEY_QUESTIONS = [
-        // 1. 購買意願與永續性 (Item 1-2)
+        // 1. 購買意願與永續性 (Item 1-2)[cite: 6]
         { key: "q_wtp_recommended_products",  header: "Post_Q01_WTP_RecommendedProducts" },
         { key: "q_sus_recommended_products",  header: "Post_Q02_Sus_RecommendedProducts" },
 
-        // 2. 滿意度 (Item 3-6)
+        // 2. 滿意度 (Item 3-6)[cite: 6]
         { key: "q_sat_pleased_rec",           header: "Post_Q03_Sat_PleasedRec" },
         { key: "q_sat_satisfying_rec",        header: "Post_Q04_Sat_SatisfyingRec" },
         { key: "q_sat_feel_happy_rec",        header: "Post_Q05_Sat_FeelHappyRec" },
         { key: "q_sat_shopping_exp",          header: "Post_Q06_Sat_ShoppingExp" },
 
-        // 3. 重要性、關聯性與意義感 (Item 7-9)
+        // 3. 重要性、關聯性與意義感 (Item 7-9)[cite: 6]
         { key: "q_rec_important",             header: "Post_Q07_Rec_Important" },
         { key: "q_rec_relevant",              header: "Post_Q08_Rec_Relevant" },
         { key: "q_rec_meaningful",            header: "Post_Q09_Rec_Meaningful" },
 
-        // 4. 推薦實用性 (Item 10-14)
+        // 4. 推薦實用性 (Item 10-14)[cite: 6]
         { key: "q_useful_find_quickly",       header: "Post_Q10_Useful_FindQuickly" },
         { key: "q_useful_effectiveness",      header: "Post_Q11_Useful_Effectiveness" },
         { key: "q_useful_overall",            header: "Post_Q12_Useful_Overall" },
@@ -287,18 +287,18 @@
 
         // (Item 15 為 Attention Check 1，獨立記錄)
 
-        // 5. 訊息個人化與認真閱讀 (Item 16-19)
+        // 5. 訊息個人化與認真閱讀 (Item 16-19)[cite: 6]
         { key: "q_msg_understands_needs",     header: "Post_Q16_Msg_UnderstandsNeeds" },
         { key: "q_msg_reflects_wants",        header: "Post_Q17_Msg_ReflectsWants" },
         { key: "q_msg_preferences_account",   header: "Post_Q18_Msg_PreferencesAccount" },
         { key: "q_read_msg_carefully",        header: "Post_Q19_Read_MsgCarefully" },
 
-        // 6. 產品個人化 (Item 20-22)
+        // 6. 產品個人化 (Item 20-22)[cite: 6]
         { key: "q_prod_understands_needs",    header: "Post_Q20_Prod_UnderstandsNeeds" },
         { key: "q_prod_reflects_wants",       header: "Post_Q21_Prod_ReflectsWants" },
         { key: "q_prod_selected_needs_pref",  header: "Post_Q22_Prod_SelectedNeedsPref" },
 
-        // 7. 情境真實性與永續重要度 (Item 23-28)
+        // 7. 情境真實性與永續重要度 (Item 23-28)[cite: 6]
         { key: "q_scenario_realistic",        header: "Post_Q23_Scenario_Realistic" },
         { key: "q_scenario_imagine_self",     header: "Post_Q24_Scenario_ImagineSelf" },
         { key: "q_scenario_occur_real",       header: "Post_Q25_Scenario_OccurReal" },
@@ -306,7 +306,7 @@
         { key: "q_sus_relevant_to_me",        header: "Post_Q27_Sus_RelevantToMe" },
         { key: "q_sus_means_lot_to_me",       header: "Post_Q28_Sus_MeansLotToMe" },
 
-        // 8. 環境導向態度 (Item 29-34)
+        // 8. 環境導向態度 (Item 29-34)[cite: 6]
         { key: "q_env_effects",               header: "Post_Q29_Env_Effects" },
         { key: "q_env_protect_influence",     header: "Post_Q30_Env_ProtectInfluence" },
         { key: "q_env_prefer_less_harm",      header: "Post_Q31_Env_PreferLessHarm" },
@@ -316,7 +316,7 @@
 
         // (Item 35 為 Attention Check 2，獨立記錄)
 
-        // 9. AI 熟悉度、態度與歸因 (Item 36-38)
+        // 9. AI 熟悉度、態度與歸因 (Item 36-38)[cite: 6]
         { key: "q_ai_familiar",               header: "Post_Q36_AI_Familiar" },
         { key: "q_ai_positive_attitude",      header: "Post_Q37_AI_PositiveAttitude" },
         { key: "q_ai_generated_likelihood",   header: "Post_Q38_AI_GeneratedLikelihood" }
@@ -521,7 +521,7 @@
         }
     }
 
-    // ★★★ 單一工作表（Single Sheet）完整匯出函式 ★★★
+    // ★★★ 單一工作表（Single Sheet）完整匯出函式 ★★★[cite: 6]
     async function exportFirebaseToExcel() {
         const exportBtn = document.querySelector(".export-btn");
         if (exportBtn) {
@@ -556,7 +556,7 @@
             const visits = visitSnap.val() ? Object.values(visitSnap.val()) : [];
             const postSurveys = postSurveySnap.val() ? Object.values(postSurveySnap.val()) : [];
 
-            // 匯總所有有參與記錄的受試者 ID
+            // 匯總所有有參與記錄的受試者 ID[cite: 6]
             const allPIDs = new Set([
                 ...consents.map(c => c.participantID),
                 ...s1List.map(s => s.participantID),
@@ -569,11 +569,11 @@
 
             const masterDataMap = {};
 
-            // 嚴格依照流程時間順序初始化所有欄位鍵名
+            // 嚴格依照流程時間順序初始化所有欄位鍵名[cite: 6]
             allPIDs.forEach(pid => {
                 const row = {};
 
-                // 1. Consent 區段
+                // 1. Consent 區段[cite: 6]
                 row["Participant_ID"] = pid;
                 row["Consent_Agreed_Time"] = "";
                 row["Consent_Agreed_Response"] = "";
@@ -581,24 +581,24 @@
                 row["Is_Eligible"] = "";
                 row["Consent_Status"] = "";
 
-                // 2. AI Nudge 推薦文案與隨機變數
+                // 2. AI Nudge 推薦文案與隨機變數[cite: 6]
                 row["Experiment_Condition"] = "";
                 row["Random_Assignment_Val"] = "";
                 row["AI_Nudge_Text"] = "";
 
-                // 3. Pre-Survey Section 1A 區段 (6 項排序題)
+                // 3. Pre-Survey Section 1A 區段 (6 項排序題)[cite: 6]
                 row["Pre_S1_Submitted_Time"] = "";
                 SURVEY1_QUESTIONS.forEach(q => {
                     row[q.header] = "";
                 });
 
-                // 4. Pre-Survey Section 1B 區段 (3 題)
+                // 4. Pre-Survey Section 1B 區段 (3 題)[cite: 6]
                 row["Pre_S2_Submitted_Time"] = "";
                 SURVEY2_QUESTIONS.forEach(q => {
                     row[q.header] = "";
                 });
 
-                // 5. 購物頁面瀏覽與操作總結
+                // 5. 購物頁面瀏覽與操作總結[cite: 6]
                 row["Store_Enter_Time"] = "";
                 row["Store_Leave_Time"] = "";
                 row["Visit_Duration_Seconds"] = 0;
@@ -609,7 +609,7 @@
                 row["Featured_Items_Total_Amount"] = 0;
                 row["Total_Cart_Items_Qty"] = 0;
 
-                // 6. 商品 1 ~ 36 詳細行為（總量、來源、次序）
+                // 6. 商品 1 ~ 36 詳細行為（總量、來源、次序）[cite: 6]
                 for (let i = 1; i <= 36; i++) {
                     row[`Item_${i}_Total_Qty`] = 0;
                     row[`Item_${i}_From_Featured_Qty`] = 0;
@@ -617,16 +617,16 @@
                     row[`Seq_Item_${i}`] = "";
                 }
 
-                // 7. Post-Survey 量表題 (36 題)
+                // 7. Post-Survey 量表題 (36 題)[cite: 6]
                 POST_SURVEY_QUESTIONS.forEach(q => {
                     row[q.header] = "";
                 });
 
-                // 8. 注意力檢查題目填寫數值 (1-7)
-                row["Attn_Check_1_Ans"] = "";
-                row["Attn_Check_2_Ans"] = "";
+                // ★ 修正處：與填充賦值統一命名 ★
+                row["Attn_Check_Item15_Ans"] = "";
+                row["Attn_Check_Item35_Ans"] = "";
 
-                // 9. 人口統計變項
+                // 8. 人口統計變項 (對應 Items 39-46)
                 row["Demo_Gender"] = "";
                 row["Demo_Age"] = "";
                 row["Demo_PostalCode"] = "";
@@ -636,18 +636,18 @@
                 row["Demo_Education"] = "";
                 row["Demo_Occupation"] = "";
 
-                // 10. 注意力檢查檢核與完成狀態
+                // 9. 注意力檢查狀態標記[cite: 6]
                 row["Passed_Attention_Check"] = "";
                 row["Study_Status"] = "";
 
-                // 11. 質性開放題
+                // 10. 質性開放題 (對應 Items 47-48)
                 row["Open_Survey_Purpose_Thoughts"] = "";
                 row["Open_Study_Feedback"] = "";
 
                 masterDataMap[pid] = row;
             });
 
-            // 填充 1: Consent
+            // 填充 1: Consent[cite: 6]
             consents.forEach(c => {
                 const pid = c.participantID;
                 if (masterDataMap[pid]) {
@@ -660,7 +660,7 @@
                 }
             });
 
-            // 填充 2: Pre-Survey Section 1A
+            // 填充 2: Pre-Survey Section 1A[cite: 6]
             s1List.forEach(s => {
                 const pid = s.participantID;
                 if (masterDataMap[pid]) {
@@ -676,7 +676,7 @@
                 }
             });
 
-            // 填充 3: Pre-Survey Section 1B
+            // 填充 3: Pre-Survey Section 1B[cite: 6]
             s2List.forEach(s => {
                 const pid = s.participantID;
                 if (masterDataMap[pid]) {
@@ -689,7 +689,7 @@
                 }
             });
 
-            // 舊版 survey_responses 相容回填
+            // 舊版相容[cite: 6]
             legacySurveys.forEach(l => {
                 const pid = l.participantID;
                 if (masterDataMap[pid] && !masterDataMap[pid]["Pre_S1_Submitted_Time"]) {
@@ -706,7 +706,7 @@
                 }
             });
 
-            // 填充 4: Visit Logs (備用補齊進出時間)
+            // 填充 4: Visit Logs[cite: 6]
             visits.forEach(v => {
                 const pid = v.participantID;
                 if (masterDataMap[pid]) {
@@ -716,7 +716,7 @@
                 }
             });
 
-            // 填充 5: 結帳與商品購買明細
+            // 填充 5: 結帳與商品購買明細[cite: 6]
             orders.forEach(o => {
                 const pid = o.participantID;
                 if (masterDataMap[pid]) {
@@ -728,13 +728,11 @@
                     masterDataMap[pid]["Order_Total_Amount"] = o.orderTotal || 0;
                     masterDataMap[pid]["Featured_Items_Total_Qty"] = o.featuredProductCount || 0;
 
-                    // 在 admin.html 的 orders 填充邏輯中：
                     let calcFeaturedAmount = o.featuredProductTotalAmount;
                     if (calcFeaturedAmount === undefined && Array.isArray(o.finalCartItems)) {
                         calcFeaturedAmount = 0;
                         o.finalCartItems.forEach(item => {
                             const itemId = parseInt(item.id, 10);
-                            // ★ ID 1 到 5 精確代表 5 項精選環保品 ★
                             if (itemId >= 1 && itemId <= 5) {
                                 calcFeaturedAmount += (item.price * item.quantity);
                             }
@@ -758,7 +756,6 @@
                     }
                     masterDataMap[pid]["Total_Cart_Items_Qty"] = totalItemCount;
 
-                    // 若訂單存有來源分解字典
                     if (o.sourceBreakdown) {
                         for (let i = 1; i <= 36; i++) {
                             if (o.sourceBreakdown[`Item_${i}_From_Featured_Qty`] !== undefined) {
@@ -770,7 +767,6 @@
                         }
                     }
 
-                    // 加車順序對應
                     if (o.itemSequenceMap) {
                         for (let i = 1; i <= 36; i++) {
                             if (o.itemSequenceMap[`Seq_Item_${i}`] !== undefined) {
@@ -781,11 +777,11 @@
                 }
             });
 
-            // 填充 6: Post-Survey 與人口變項
+            // 填充 6: Post-Survey 與人口變項[cite: 6]
             postSurveys.forEach(p => {
                 const pid = p.participantID;
                 if (masterDataMap[pid]) {
-                    // 填入 36 題量表作答
+                    // 填入 36 題量表作答[cite: 6]
                     if (p.postSurveyLikert) {
                         POST_SURVEY_QUESTIONS.forEach(q => {
                             if (p.postSurveyLikert[q.key] !== undefined) {
@@ -793,12 +789,14 @@
                             }
                         });
                     }
+
                     // 填入 Attention Check 原始填寫數值 (1-7)
                     if (p.attentionCheckAnswers) {
-                        masterDataMap[pid]["Attn_Check_1_Ans"] = p.attentionCheckAnswers.item15_sun_response ?? "";
-                        masterDataMap[pid]["Attn_Check_2_Ans"] = p.attentionCheckAnswers.item35_select6_response ?? "";
+                        masterDataMap[pid]["Attn_Check_Item15_Ans"] = p.attentionCheckAnswers.item15_sun_response ?? "";
+                        masterDataMap[pid]["Attn_Check_Item35_Ans"] = p.attentionCheckAnswers.item35_select6_response ?? "";
                     }
-                    // 填入人口學特徵
+
+                    // 填入人口學特徵[cite: 6]
                     if (p.demographics) {
                         masterDataMap[pid]["Demo_Gender"] = p.demographics.gender || "";
                         masterDataMap[pid]["Demo_Age"] = p.demographics.age || "";
@@ -809,9 +807,11 @@
                         masterDataMap[pid]["Demo_Education"] = p.demographics.education || "";
                         masterDataMap[pid]["Demo_Occupation"] = p.demographics.occupation || "";
                     }
+
                     masterDataMap[pid]["Passed_Attention_Check"] = p.passedAttentionCheck !== undefined ? (p.passedAttentionCheck ? "Yes" : "No") : "";
                     masterDataMap[pid]["Study_Status"] = p.status || "";
-                    // 填入質性開放題
+
+                    // 填入質性開放題[cite: 6]
                     if (p.openResponses) {
                         masterDataMap[pid]["Open_Survey_Purpose_Thoughts"] = p.openResponses.surveyPurposeThoughts || "";
                         masterDataMap[pid]["Open_Study_Feedback"] = p.openResponses.generalFeedback || "";
@@ -819,7 +819,7 @@
                 }
             });
 
-            // 建立單一工作表 Workbook
+            // 建立單一工作表 Workbook[cite: 6]
             const wb = XLSX.utils.book_new();
             const masterRows = Object.values(masterDataMap);
             const wsMaster = XLSX.utils.json_to_sheet(masterRows);
