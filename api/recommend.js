@@ -20,7 +20,7 @@ Rules:
 1. Promote their eco-sustainability based on user preferences.
 2. Emphasize the product features fitting the most important factor (userPreference score = 1) in user preferences.
 3. Extend and focus heavily on describing the features of the products satisfying the most important user preferences.
-4. The whole paragraphs MUST be strictly LESSS THAN 50 WORDS.
+4. The whole paragraphs MUST be strictly LESSS THAN 30 WORDS.
 5. Do mention that these items are displayed with an "eco-friendly" batch.
 6. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
 7. Do NOT use wordings implying taking user preferences or referring to user preferences.
