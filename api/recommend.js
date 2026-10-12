@@ -20,11 +20,11 @@ Rules:
 1. Promote their eco-sustainability based on user preferences.
 2. Emphasize the product features fitting the most important factor (userPreference score = 1) in user preferences.
 3. Extend and focus heavily on describing the features of the products satisfying the most important user preferences.
-4. The sentence MUST strictly start with the sentence "Consider items with an ‘eco-friendly’ badge, which are produced using sustainable practices.", then continue with the recommendation.
-5. The whole paragraphs MUST be strictly LESSS THAN 100 WORDS.
+4. The whole paragraphs MUST be strictly LESSS THAN 50 WORDS.
+5. Do mention that these items are displayed with an "eco-friendly" batch.
 6. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
 7. Do NOT use wordings implying taking user preferences or referring to user preferences.
-8. Do NOT mention the name of the products. ONLY mention the features, advantage and benefits of them.
+8. Do NOT directly mention the name of the products. ONLY mention the features, advantage and benefits of them.
 9. Output plain text only. No markdown, no quotes, no explanation.
 `;
 
