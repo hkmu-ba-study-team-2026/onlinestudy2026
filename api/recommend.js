@@ -10,22 +10,7 @@ async function getAiRecommendationsFromGemini(products, preferences) {
         ? products.map(p => (typeof p === 'string' ? p : (p.name || String(p))))
         : [];
 
-    const promptText = `
-User Preferences from survey (1-6 score, 1 is extremely important, 6 is not at all important): ${JSON.stringify(preferences)}
-Featured Products (with descriptions): ${JSON.stringify(simplifiedProducts)}
 
-Task:
-Write a single concise sentence recommending these featured products.
-Rules:
-1. Promote their eco-sustainability based on user preferences.
-2. Emphasize the product features fitting the most important factor (userPreference score = 1) in user preferences.
-3. Extend and focus heavily on describing the features of the products satisfying the most important user preferences.
-4. The recommendation MUST STRICTLY be written as "Consider items with an ‘eco-friendly’ badge, which are produced using sustainable practices.", followed by the recommendation which should be STRICTLY LESS THAN 15 WORDS.
-6. Do NOT mention words like "survey", "based on your preference", "align with you" or "scale".
-7. Do NOT use wordings implying taking user preferences or referring to user preferences.
-8. Do NOT directly mention the name of the products. ONLY mention the features, advantage and benefits of them.
-9. Output plain text only. No markdown, no quotes, no explanation.
-`;
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
 
