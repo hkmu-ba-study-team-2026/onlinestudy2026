@@ -26,7 +26,6 @@ app.use('/api/recommend', (req, res) => recommendHandler(req, res));
 
 app.listen(PORT, () => {
     console.log(`=================================`);
-    console.g
     console.log(`🚀 Localhost server running at:`);
     console.log(`👉 http://localhost:${PORT}`);
     console.log(`=================================`);
